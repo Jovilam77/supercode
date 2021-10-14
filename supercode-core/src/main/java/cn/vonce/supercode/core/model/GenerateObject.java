@@ -2,8 +2,8 @@ package cn.vonce.supercode.core.model;
 
 import cn.vonce.supercode.core.config.GenerateConfig;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 生成对象
@@ -15,23 +15,67 @@ import java.util.Map;
  */
 public class GenerateObject {
 
-    private GenerateConfig generateConfig;
-    private List<Map<String, Object>> columnInfoList;
+    private List<FiledInfo> filedInfoList;
+    private FiledInfo id;
+    private GenerateConfig config;
+    private String className;
+    private String tableName;
+    private String comm;
+    private Date date;
 
-    public GenerateConfig getGenerateConfig() {
-        return generateConfig;
+    public List<FiledInfo> getFiledInfoList() {
+        return filedInfoList;
     }
 
-    public void setGenerateConfig(GenerateConfig generateConfig) {
-        this.generateConfig = generateConfig;
+    public void setFiledInfoList(List<FiledInfo> filedInfoList) {
+        this.filedInfoList = filedInfoList;
     }
 
-    public List<Map<String, Object>> getColumnInfoList() {
-        return columnInfoList;
+    public FiledInfo getId() {
+        return id;
     }
 
-    public void setColumnInfoList(List<Map<String, Object>> columnInfoList) {
-        this.columnInfoList = columnInfoList;
+    public void setId(FiledInfo id) {
+        this.id = id;
     }
 
+    public GenerateConfig getConfig() {
+        return config;
+    }
+
+    public void setConfig(GenerateConfig config) {
+        this.config = config;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public String getComm() {
+        return comm;
+    }
+
+    public void setComm(String comm) {
+        this.comm = comm;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 }
