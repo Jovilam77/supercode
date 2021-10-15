@@ -11,7 +11,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * ${comm} 实体类
+ * ${tableInfo.comment} 实体类
  *
  * @author ${config.author}
  * @version ${config.version}
@@ -19,7 +19,7 @@ import java.util.Date;
  * @date ${date}
  */
 <#if config.useLombok == true>@Data</#if>
-<#if config.useSqlBean == true>@SqlTable("${tableName}")</#if>
+<#if config.useSqlBean == true>@SqlTable("${tableInfo.name}")</#if>
 public class ${className} {
 
 <#list filedInfoList as filedInfo>

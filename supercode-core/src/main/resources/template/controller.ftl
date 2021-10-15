@@ -4,7 +4,7 @@ import ${config.basePackage.model.${className};
 import ${config.basePackage.service.${className}Service;
 import cn.vonce.common.base.BaseController;
 import cn.vonce.common.bean.RS;
-<#if config.getDocType().name() == 'Swagger2'>
+<#if config.getDocType().name() == 'Swagger'>
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 </#if>
@@ -14,15 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * ${comm} 控制器
+ * ${tableInfo.comment} 控制器
  *
  * @author ${config.author}
  * @version ${config.version}
  * @email ${config.email}
  * @date ${date}
  */
-<#if config.getDocType().name() == 'Swagger2'>
-@Api(description = "${comm} 控制器")
+<#if config.getDocType().name() == 'Swagger'>
+@Api(description = "${tableInfo.comment} 控制器")
 </#if>
 @RequestMapping("/${className?cap_first}/")
 @RestController
@@ -31,7 +31,7 @@ public class ${className}Controller extends BaseController {
     @Autowired
     private ${className}Service ${className?cap_first}Service;
 
-<#if config.getDocType().name() == 'Swagger2'>
+<#if config.getDocType().name() == 'Swagger'>
     @ApiOperation(value = "根据id查询", notes = "")
 </#if>
     @GetMapping("getById")
@@ -40,7 +40,7 @@ public class ${className}Controller extends BaseController {
         return super.successHint("根据id查询成功", ${className?cap_first});
     }
 
-<#if config.getDocType().name() == 'Swagger2'>
+<#if config.getDocType().name() == 'Swagger'>
     @ApiOperation(value = "查询全部", notes = "")
 </#if>
     @GetMapping("getAll")
@@ -49,7 +49,7 @@ public class ${className}Controller extends BaseController {
         return super.successHint("查询全部成功", ${className?cap_first}List);
     }
 
-<#if config.getDocType().name() == 'Swagger2'>
+<#if config.getDocType().name() == 'Swagger'>
     @ApiOperation(value = "新增", notes = "")
 </#if>
     @PostMapping("add")
@@ -61,7 +61,7 @@ public class ${className}Controller extends BaseController {
         return super.othersHint("新增失败");
     }
 
-<#if config.getDocType().name() == 'Swagger2'>
+<#if config.getDocType().name() == 'Swagger'>
     @ApiOperation(value = "根据id修改", notes = "")
 </#if>
     @PostMapping("updateById")
@@ -77,7 +77,7 @@ public class ${className}Controller extends BaseController {
         return super.othersHint("根据id修改失败");
     }
 
-<#if config.getDocType().name() == 'Swagger2'>
+<#if config.getDocType().name() == 'Swagger'>
     @ApiOperation(value = "根据id删除", notes = "")
 </#if>
     @PostMapping("deleteById")

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * ${comm} 业务实现
+ * ${tableInfo.comment} 业务实现
  *
  * @author ${config.author}
  * @version ${config.version}

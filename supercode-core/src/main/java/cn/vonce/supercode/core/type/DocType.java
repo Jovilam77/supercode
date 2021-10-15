@@ -10,6 +10,6 @@ package cn.vonce.supercode.core.type;
  */
 public enum DocType {
 
-    Swagger2, SmartDoc
+    Swagger, SmartDoc
 
 }

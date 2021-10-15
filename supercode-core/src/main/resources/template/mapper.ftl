@@ -4,7 +4,7 @@ import ${config.basePackage}.model.${className};
 import java.util.List;
 
 /**
- * ${comm} dao
+ * ${tableInfo.comment} dao
  *
  * @author ${config.author}
  * @version ${config.version}
@@ -19,7 +19,7 @@ public interface ${className}Mapper {
      * @param ${id.name}
      * @return
      */
-     @Select("SELECT * FROM ${tableName} WHERE ${id.columnInfo.name} = #{${id.name,jdbcType=${id.columnInfo.type}}} ")
+     @Select("SELECT * FROM ${tableInfo.name} WHERE ${id.columnInfo.name} = #{${id.name,jdbcType=${id.columnInfo.type}}} ")
     ${className} selectById(${id.type} ${id.name});
 
     /**
@@ -27,7 +27,7 @@ public interface ${className}Mapper {
      *
      * @return
      */
-     @Select("SELECT * FROM ${tableName} ")
+     @Select("SELECT * FROM ${tableInfo.name} ")
     List<${className}> selectAll();
 
     /**
@@ -36,7 +36,7 @@ public interface ${className}Mapper {
      * @param ${className?cap_first}
      * @return
      */
-     @Insert({ "insert into ${tableName} "(<#list filedInfoList as filedInfo>${filedInfo.columnInfo.name}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list> )",
+     @Insert({ "insert into ${tableInfo.name} "(<#list filedInfoList as filedInfo>${filedInfo.columnInfo.name}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list> )",
      			"values (<#list filedInfoList as filedInfo>#{${filedInfo.name},jdbcType=${filedInfo.columnInfo.type}}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>)" })
     int insert(${className} ${className?cap_first});
 
@@ -46,7 +46,7 @@ public interface ${className}Mapper {
      * @param ${className?cap_first}
      * @return
      */
-     @Update({ "update ${tableName}", "set <#list filedInfoList as filedInfo>${filedInfo.columnInfo.name} = #{${filedInfo.name},jdbcType=${filedInfo.columnInfo.type}}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>",
+     @Update({ "update ${tableInfo.name}", "set <#list filedInfoList as filedInfo>${filedInfo.columnInfo.name} = #{${filedInfo.name},jdbcType=${filedInfo.columnInfo.type}}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>",
      			"where ${id.columnInfo.name} = #{${id.name},jdbcType=${id.columnInfo.type}}" })
     int updateById(${className} ${className?cap_first});
 
@@ -56,7 +56,7 @@ public interface ${className}Mapper {
      * @param ${id.name}
      * @return
      */
-     @Delete({ "delete from ${tableName} where ${id.columnInfo.name} = #{${id.name,jdbcType=${id.columnInfo.type}}}" })
+     @Delete({ "delete from ${tableInfo.name} where ${id.columnInfo.name} = #{${id.name,jdbcType=${id.columnInfo.type}}}" })
     int deleteById(${id.type} ${id.name});
 
 }

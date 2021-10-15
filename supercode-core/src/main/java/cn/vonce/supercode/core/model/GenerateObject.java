@@ -1,5 +1,6 @@
 package cn.vonce.supercode.core.model;
 
+import cn.vonce.sql.bean.TableInfo;
 import cn.vonce.supercode.core.config.GenerateConfig;
 
 import java.util.Date;
@@ -15,13 +16,20 @@ import java.util.List;
  */
 public class GenerateObject {
 
+    private TableInfo tableInfo;
     private List<FiledInfo> filedInfoList;
     private FiledInfo id;
     private GenerateConfig config;
     private String className;
-    private String tableName;
-    private String comm;
     private Date date;
+
+    public TableInfo getTableInfo() {
+        return tableInfo;
+    }
+
+    public void setTableInfo(TableInfo tableInfo) {
+        this.tableInfo = tableInfo;
+    }
 
     public List<FiledInfo> getFiledInfoList() {
         return filedInfoList;
@@ -53,22 +61,6 @@ public class GenerateObject {
 
     public void setClassName(String className) {
         this.className = className;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public String getComm() {
-        return comm;
-    }
-
-    public void setComm(String comm) {
-        this.comm = comm;
     }
 
     public Date getDate() {
