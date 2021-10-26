@@ -35,7 +35,7 @@ public class ${className}Controller extends BaseController {
     @ApiOperation(value = "根据id查询", notes = "")
 </#if>
     @GetMapping("getById")
-    public RS getById(${id.type} ${id.name}) {
+    public RS getById(${id.typeName} ${id.name}) {
         ${className} ${className?cap_first} = ${className?cap_first}Service.selectById(${id.name});
         return super.successHint("根据id查询成功", ${className?cap_first});
     }
@@ -81,7 +81,7 @@ public class ${className}Controller extends BaseController {
     @ApiOperation(value = "根据id删除", notes = "")
 </#if>
     @PostMapping("deleteById")
-    public RS deleteById(${id.type} ${id.name}) {
+    public RS deleteById(${id.typeName} ${id.name}) {
         int i = ${className?cap_first}Service.deleteById(${id.name});
         if (i > 0) {
             return super.successHint("根据id删除成功");

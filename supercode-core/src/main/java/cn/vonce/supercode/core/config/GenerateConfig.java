@@ -46,6 +46,11 @@ public class GenerateConfig {
      */
     private DocType docType = DocType.SmartDoc;
 
+    /**
+     * 生成的目标路径
+     */
+    private String targetPath;
+
     public String getAuthor() {
         return author;
     }
@@ -108,5 +113,13 @@ public class GenerateConfig {
 
     public void setDocType(DocType docType) {
         this.docType = docType;
+    }
+
+    public String getTargetPath() {
+        return targetPath;
+    }
+
+    public void setTargetPath(String targetPath) {
+        this.targetPath = targetPath;
     }
 }

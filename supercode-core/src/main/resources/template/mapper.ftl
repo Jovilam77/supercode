@@ -19,8 +19,8 @@ public interface ${className}Mapper {
      * @param ${id.name}
      * @return
      */
-     @Select("SELECT * FROM ${tableInfo.name} WHERE ${id.columnInfo.name} = #{${id.name,jdbcType=${id.columnInfo.type}}} ")
-    ${className} selectById(${id.type} ${id.name});
+     @Select("SELECT * FROM ${tableInfo.name} WHERE ${id.columnInfo.name} = #{${id.name,jdbcType=${id.columnInfo.typeName}}} ")
+    ${className} selectById(${id.typeName} ${id.name});
 
     /**
      * 查询全部
@@ -37,7 +37,7 @@ public interface ${className}Mapper {
      * @return
      */
      @Insert({ "insert into ${tableInfo.name} "(<#list filedInfoList as filedInfo>${filedInfo.columnInfo.name}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list> )",
-     			"values (<#list filedInfoList as filedInfo>#{${filedInfo.name},jdbcType=${filedInfo.columnInfo.type}}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>)" })
+     			"values (<#list filedInfoList as filedInfo>#{${filedInfo.name},jdbcType=${filedInfo.columnInfo.typeName}}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>)" })
     int insert(${className} ${className?cap_first});
 
     /**
@@ -46,8 +46,8 @@ public interface ${className}Mapper {
      * @param ${className?cap_first}
      * @return
      */
-     @Update({ "update ${tableInfo.name}", "set <#list filedInfoList as filedInfo>${filedInfo.columnInfo.name} = #{${filedInfo.name},jdbcType=${filedInfo.columnInfo.type}}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>",
-     			"where ${id.columnInfo.name} = #{${id.name},jdbcType=${id.columnInfo.type}}" })
+     @Update({ "update ${tableInfo.name}", "set <#list filedInfoList as filedInfo>${filedInfo.columnInfo.name} = #{${filedInfo.name},jdbcType=${filedInfo.columnInfo.typeName}}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>",
+     			"where ${id.columnInfo.name} = #{${id.name},jdbcType=${id.columnInfo.typeName}}" })
     int updateById(${className} ${className?cap_first});
 
     /**
@@ -56,7 +56,7 @@ public interface ${className}Mapper {
      * @param ${id.name}
      * @return
      */
-     @Delete({ "delete from ${tableInfo.name} where ${id.columnInfo.name} = #{${id.name,jdbcType=${id.columnInfo.type}}}" })
-    int deleteById(${id.type} ${id.name});
+     @Delete({ "delete from ${tableInfo.name} where ${id.columnInfo.name} = #{${id.name,jdbcType=${id.columnInfo.typeName}}}" })
+    int deleteById(${id.typeName} ${id.name});
 
 }

@@ -28,16 +28,16 @@ public class ${className} {
      */
     <#if config.useSqlBean == true && filedInfo.columnInfo.pk == true>@SqlId</#if>
     <#if config.useSqlBean == true>@SqlColumn(value = "${filedInfo.columnInfo.name}")</#if>
-    private ${filedInfo.type} ${filedInfo.name};
+    private ${filedInfo.typeName} ${filedInfo.name};
 </#list>
 
 <#if config.useLombok == false>
 <#list filedInfoList as filedInfo>
-        public ${filedInfo.type} get${filedInfo.name?cap_first}() {
+        public ${filedInfo.typeName} get${filedInfo.name?cap_first}() {
             return ${filedInfo.name};
         }
 
-        public void set${filedInfo.name?cap_first}(${filedInfo.type} ${filedInfo.name}) {
+        public void set${filedInfo.name?cap_first}(${filedInfo.typeName} ${filedInfo.name}) {
             this.${filedInfo.name} = ${filedInfo.name};
         }
 </#list>

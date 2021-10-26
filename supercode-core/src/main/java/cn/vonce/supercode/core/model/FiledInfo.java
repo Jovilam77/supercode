@@ -13,8 +13,8 @@ import cn.vonce.sql.bean.ColumnInfo;
 public class FiledInfo {
 
     private String name;
-    private String fullName;
-    private String type;
+    private String typeName;
+    private String typeFullName;
     private ColumnInfo columnInfo;
 
     public String getName() {
@@ -25,20 +25,20 @@ public class FiledInfo {
         this.name = name;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getTypeName() {
+        return typeName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
-    public String getType() {
-        return type;
+    public String getTypeFullName() {
+        return typeFullName;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypeFullName(String typeFullName) {
+        this.typeFullName = typeFullName;
     }
 
     public ColumnInfo getColumnInfo() {

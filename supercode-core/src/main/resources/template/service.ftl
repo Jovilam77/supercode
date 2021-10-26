@@ -14,7 +14,7 @@ import java.util.List;
  * @email ${config.email}
  * @date ${date}
  */
-public interface ${className}Service <#if config.useSqlBean == true>extends SqlBeanService<${className}, ${id.type}></#if> {
+public interface ${className}Service <#if config.useSqlBean == true>extends SqlBeanService<${className}, ${id.typeName}></#if> {
 
 <#if config.useSqlBean == false>
     /**
@@ -23,7 +23,7 @@ public interface ${className}Service <#if config.useSqlBean == true>extends SqlB
      * @param ${id.name}
      * @return
      */
-    ${className} selectById(${id.type} ${id.name});
+    ${className} selectById(${id.typeName} ${id.name});
 
     /**
      * 查询全部
@@ -54,7 +54,7 @@ public interface ${className}Service <#if config.useSqlBean == true>extends SqlB
      * @param ${id.name}
      * @return
      */
-    int deleteById(${id.type} ${id.name});
+    int deleteById(${id.typeName} ${id.name});
 </#if>
 
 }

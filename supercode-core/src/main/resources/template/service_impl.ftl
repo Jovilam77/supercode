@@ -17,7 +17,7 @@ import java.util.List;
  * @date ${date}
  */
  @Service
-public class ${className}ServiceImpl <#if config.useSqlBean == true>extends MybatisSqlBeanServiceImpl<${className}, ${id.type}></#if> implements ${className}Service {
+public class ${className}ServiceImpl <#if config.useSqlBean == true>extends MybatisSqlBeanServiceImpl<${className}, ${id.typeName}></#if> implements ${className}Service {
 
     @Autowired
     private ${className}Mapper ${className?cap_first}Mapper;
@@ -30,7 +30,7 @@ public class ${className}ServiceImpl <#if config.useSqlBean == true>extends Myba
      * @return
      */
 	@Override
-    public ${className} selectById(${id.type} ${id.name}) {
+    public ${className} selectById(${id.typeName} ${id.name}) {
 		return ${className?cap_first}Mapper.selectById(${id.name});
     }
 
@@ -73,7 +73,7 @@ public class ${className}ServiceImpl <#if config.useSqlBean == true>extends Myba
      * @return
      */
 	@Override
-    public int deleteById(${id.type} ${id.name}) {
+    public int deleteById(${id.typeName} ${id.name}) {
 		return ${className?cap_first}Mapper.selectById(${id.name});
     }
 </#if>
