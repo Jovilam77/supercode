@@ -14,7 +14,7 @@ import java.util.List;
  * @email imjovi@qq.com
  * @date 2021-10-12 11:53:22
  */
-public class GenerateObject {
+public class ClassInfo {
 
     private TableInfo tableInfo;
     private List<FiledInfo> filedInfoList;

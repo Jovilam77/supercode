@@ -1,7 +1,7 @@
 package ${config.basePackage}.controller;
 
-import ${config.basePackage.model.${className};
-import ${config.basePackage.service.${className}Service;
+import ${config.basePackage}.model.${className};
+import ${config.basePackage}.service.${className}Service;
 import cn.vonce.common.base.BaseController;
 import cn.vonce.common.bean.RS;
 <#if config.getDocType().name() == 'Swagger'>
@@ -14,30 +14,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * ${tableInfo.comment} 控制器
+ * ${tableInfo.comment!} 控制器
  *
- * @author ${config.author}
- * @version ${config.version}
- * @email ${config.email}
- * @date ${date}
- */
-<#if config.getDocType().name() == 'Swagger'>
+ * @author ${config.author!}
+ * @version ${config.version!}
+ * @email ${config.email!}
+ * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
+ */<#if config.getDocType().name() == 'Swagger'>
 @Api(description = "${tableInfo.comment} 控制器")
 </#if>
-@RequestMapping("/${className?cap_first}/")
+@RequestMapping("/${className?uncap_first}/")
 @RestController
 public class ${className}Controller extends BaseController {
 
     @Autowired
-    private ${className}Service ${className?cap_first}Service;
+    private ${className}Service ${className?uncap_first}Service;
 
 <#if config.getDocType().name() == 'Swagger'>
     @ApiOperation(value = "根据id查询", notes = "")
 </#if>
     @GetMapping("getById")
     public RS getById(${id.typeName} ${id.name}) {
-        ${className} ${className?cap_first} = ${className?cap_first}Service.selectById(${id.name});
-        return super.successHint("根据id查询成功", ${className?cap_first});
+        ${className} ${className?uncap_first} = ${className?uncap_first}Service.selectById(${id.name});
+        return super.successHint("根据id查询成功", ${className?uncap_first});
     }
 
 <#if config.getDocType().name() == 'Swagger'>
@@ -45,16 +44,16 @@ public class ${className}Controller extends BaseController {
 </#if>
     @GetMapping("getAll")
     public RS getAll() {
-        List<${className}> ${className?cap_first}List = ${className?cap_first}Service.selectAll();
-        return super.successHint("查询全部成功", ${className?cap_first}List);
+        List<${className}> ${className?uncap_first}List = ${className?uncap_first}Service.selectAll();
+        return super.successHint("查询全部成功", ${className?uncap_first}List);
     }
 
 <#if config.getDocType().name() == 'Swagger'>
     @ApiOperation(value = "新增", notes = "")
 </#if>
     @PostMapping("add")
-    public RS add(@RequestBody ${className} ${className?cap_first}) {
-        int i = ${className?cap_first}Service.insert(${className?cap_first});
+    public RS add(@RequestBody ${className} ${className?uncap_first}) {
+        int i = ${className?uncap_first}Service.insert(${className?uncap_first});
         if (i > 0) {
             return super.successHint("新增成功");
         }
@@ -65,11 +64,11 @@ public class ${className}Controller extends BaseController {
     @ApiOperation(value = "根据id修改", notes = "")
 </#if>
     @PostMapping("updateById")
-    public RS updateById(@RequestBody ${className} ${className?cap_first}) {
+    public RS updateById(@RequestBody ${className} ${className?uncap_first}) {
     <#if config.useSqlBean == true>
-        int i = ${className?cap_first}Service.updateByBeanId(${className?cap_first}, true, false);
+        int i = ${className?uncap_first}Service.updateByBeanId(${className?uncap_first}, true, false);
     <#else>
-        int i = ${className?cap_first}Service.updateById(${className?cap_first});
+        int i = ${className?uncap_first}Service.updateById(${className?uncap_first});
     </#if>
         if (i > 0) {
             return super.successHint("根据id修改成功");
@@ -82,7 +81,7 @@ public class ${className}Controller extends BaseController {
 </#if>
     @PostMapping("deleteById")
     public RS deleteById(${id.typeName} ${id.name}) {
-        int i = ${className?cap_first}Service.deleteById(${id.name});
+        int i = ${className?uncap_first}Service.deleteById(${id.name});
         if (i > 0) {
             return super.successHint("根据id删除成功");
         }

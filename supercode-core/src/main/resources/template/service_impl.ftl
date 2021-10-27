@@ -9,18 +9,18 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * ${tableInfo.comment} 业务实现
+ * ${tableInfo.comment!} 业务实现
  *
- * @author ${config.author}
- * @version ${config.version}
- * @email ${config.email}
- * @date ${date}
+ * @author ${config.author!}
+ * @version ${config.version!}
+ * @email ${config.email!}
+ * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */
  @Service
 public class ${className}ServiceImpl <#if config.useSqlBean == true>extends MybatisSqlBeanServiceImpl<${className}, ${id.typeName}></#if> implements ${className}Service {
 
     @Autowired
-    private ${className}Mapper ${className?cap_first}Mapper;
+    private ${className}Mapper ${className?uncap_first}Mapper;
 
 <#if config.useSqlBean == false>
     /**
@@ -31,7 +31,7 @@ public class ${className}ServiceImpl <#if config.useSqlBean == true>extends Myba
      */
 	@Override
     public ${className} selectById(${id.typeName} ${id.name}) {
-		return ${className?cap_first}Mapper.selectById(${id.name});
+		return ${className?uncap_first}Mapper.selectById(${id.name});
     }
 
     /**
@@ -41,29 +41,29 @@ public class ${className}ServiceImpl <#if config.useSqlBean == true>extends Myba
      */
 	@Override
     public List<${className}> selectAll() {
-		return ${className?cap_first}Mapper.selectAll();
+		return ${className?uncap_first}Mapper.selectAll();
     }
 
     /**
      * 新增
      *
-     * @param ${className?cap_first}
+     * @param ${className?uncap_first}
      * @return
      */
 	@Override
-    public int insert(${className} ${className?cap_first}) {
-		return ${className?cap_first}Mapper.insert(${className?cap_first});
+    public int insert(${className} ${className?uncap_first}) {
+		return ${className?uncap_first}Mapper.insert(${className?uncap_first});
     }
 
     /**
      * 根据id修改
      *
-     * @param ${className?cap_first}
+     * @param ${className?uncap_first}
      * @return
      */
 	@Override
-    public int updateById(${className} ${className?cap_first}) {
-		return ${className?cap_first}Mapper.insert(${className?cap_first});
+    public int updateById(${className} ${className?uncap_first}) {
+		return ${className?uncap_first}Mapper.insert(${className?uncap_first});
     }
 
     /**
@@ -74,7 +74,7 @@ public class ${className}ServiceImpl <#if config.useSqlBean == true>extends Myba
      */
 	@Override
     public int deleteById(${id.typeName} ${id.name}) {
-		return ${className?cap_first}Mapper.selectById(${id.name});
+		return ${className?uncap_first}Mapper.selectById(${id.name});
     }
 </#if>
 

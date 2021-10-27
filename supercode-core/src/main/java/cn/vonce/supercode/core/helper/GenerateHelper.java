@@ -7,12 +7,13 @@ import cn.vonce.sql.uitls.StringUtil;
 import cn.vonce.supercode.core.config.GenerateConfig;
 import cn.vonce.supercode.core.map.JdbcMapJava;
 import cn.vonce.supercode.core.model.FiledInfo;
-import cn.vonce.supercode.core.model.GenerateObject;
+import cn.vonce.supercode.core.model.ClassInfo;
 import cn.vonce.supercode.core.util.FreemarkerUtil;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import org.springframework.stereotype.Component;
+import freemarker.template.Configuration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,39 +27,71 @@ import java.util.concurrent.*;
  * @email imjovi@qq.com
  * @date 2021-10-26 20:01:11
  */
-@Component
 public class GenerateHelper {
 
-    public void start(GenerateConfig generateConfig, TableService tableService) {
-        List<GenerateObject> generateObjectList = getGenerateObjectList(generateConfig, tableService);
-        FreemarkerUtil freemarkerUtil = getFreemarkerUtil(generateConfig);
+    public static void start(GenerateConfig config, TableService tableService) throws IOException {
+        List<ClassInfo> classInfoList = getGenerateObjectList(config, tableService);
+        FreemarkerUtil freemarkerUtil = getFreemarkerUtil(config);
+        File targerDir = null;
+        File modelDir;
+        File mapperDir;
+        File serviceDir;
+        File serviceImplDir;
+        File controllerDir;
+        String packPath = config.getBasePackage().replace(".", File.separator);
+        if (StringUtil.isNotEmpty(config.getTargetPath())) {
+            targerDir = new File(config.getTargetPath());
+        } else {
+            //默认生成地址
+        }
+        if (!targerDir.exists()) {
+            targerDir.mkdirs();
+        }
+        modelDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + "model");
+        mapperDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + "mapper");
+        serviceDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + "service");
+        serviceImplDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + "service" + File.separator + "impl");
+        controllerDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + "controller");
+        modelDir.mkdirs();
+        mapperDir.mkdirs();
+        serviceDir.mkdirs();
+        serviceImplDir.mkdirs();
+        controllerDir.mkdirs();
         ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build();
         ExecutorService pool = new ThreadPoolExecutor(5, 20,
                 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<Runnable>(1024), threadFactory, new ThreadPoolExecutor.AbortPolicy());
-        for (GenerateObject generateObject : generateObjectList) {
-            pool.execute(() -> freemarkerUtil.fprint(generateObject, "model.ftl", generateConfig.getTargetPath() + File.separator + generateObject.getClassName() + "Model"));
-            pool.execute(() -> freemarkerUtil.fprint(generateObject, "mapper.ftl", generateConfig.getTargetPath() + File.separator + generateObject.getClassName() + "Mapper"));
-            pool.execute(() -> freemarkerUtil.fprint(generateObject, "service.ftl", generateConfig.getTargetPath() + File.separator + generateObject.getClassName() + "Service"));
-            pool.execute(() -> freemarkerUtil.fprint(generateObject, "service_impl.ftl", generateConfig.getTargetPath() + File.separator + generateObject.getClassName() + "ServiceImpl"));
-            pool.execute(() -> freemarkerUtil.fprint(generateObject, "controller.ftl", generateConfig.getTargetPath() + File.separator + generateObject.getClassName() + "Controller"));
+        for (ClassInfo classInfo : classInfoList) {
+            pool.execute(() -> freemarkerUtil.fprint(classInfo, "model.ftl", modelDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "Model.java"));
+            pool.execute(() -> freemarkerUtil.fprint(classInfo, "mapper.ftl", mapperDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "Mapper.java"));
+            pool.execute(() -> freemarkerUtil.fprint(classInfo, "service.ftl", serviceDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "Service.java"));
+            pool.execute(() -> freemarkerUtil.fprint(classInfo, "service_impl.ftl", serviceImplDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "ServiceImpl.java"));
+            pool.execute(() -> freemarkerUtil.fprint(classInfo, "controller.ftl", controllerDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "Controller.java"));
         }
         pool.shutdown();
     }
 
-    public List<GenerateObject> getGenerateObjectList(GenerateConfig generateConfig, TableService tableService) {
+    public static List<ClassInfo> getGenerateObjectList(GenerateConfig config, TableService tableService) {
         List<TableInfo> tableInfoList = tableService.getTableList(null);
         if (tableInfoList == null || tableInfoList.isEmpty()) {
             return null;
         }
         Date date = new Date();
-        List<GenerateObject> generateObjectList = new ArrayList<>();
+        List<ClassInfo> classInfoList = new ArrayList<>();
         for (TableInfo tableInfo : tableInfoList) {
-            GenerateObject generateObject = new GenerateObject();
-            generateObject.setConfig(generateConfig);
-            generateObject.setClassName(StringUtil.underlineToHump(tableInfo.getName()));
-            generateObject.setTableInfo(tableInfo);
-            generateObject.setDate(date);
+            ClassInfo classInfo = new ClassInfo();
+            classInfo.setConfig(config);
+            String newTableName;
+            if (config.isBePrefix() && StringUtil.isNotEmpty(config.getPrefix()) && tableInfo.getName().indexOf(config.getPrefix()) == 0) {
+                newTableName = tableInfo.getName().substring(config.getPrefix().length());
+            } else if (config.isBePrefix()) {
+                newTableName = tableInfo.getName().substring(tableInfo.getName().indexOf("_") + 1);
+            } else {
+                newTableName = tableInfo.getName();
+            }
+            classInfo.setClassName(newTableName.substring(0, 1).toUpperCase() + StringUtil.underlineToHump(newTableName.substring(1)));
+            classInfo.setTableInfo(tableInfo);
+            classInfo.setDate(date);
             List<ColumnInfo> columnInfoList = tableService.getColumnInfoList(tableInfo.getName());
             if (columnInfoList != null && !columnInfoList.isEmpty()) {
                 List<FiledInfo> filedInfoList = new ArrayList<>();
@@ -68,28 +101,34 @@ public class GenerateHelper {
                     filedInfo = new FiledInfo();
                     filedInfo.setColumnInfo(columnInfo);
                     filedInfo.setName(StringUtil.underlineToHump(columnInfo.getName()));
-                    filedInfo.setTypeName(clazz.getTypeName());
+                    filedInfo.setTypeName(clazz.getSimpleName());
                     filedInfo.setTypeFullName(clazz.getName());
                     if (columnInfo.getPk()) {
-                        generateObject.setId(filedInfo);
+                        classInfo.setId(filedInfo);
                     }
                     filedInfoList.add(filedInfo);
                 }
-                generateObject.setFiledInfoList(filedInfoList);
+                classInfo.setFiledInfoList(filedInfoList);
             }
-            generateObjectList.add(generateObject);
+            classInfoList.add(classInfo);
         }
-        return generateObjectList;
+        return classInfoList;
     }
 
     /**
      * 获取
      *
-     * @param generateConfig
+     * @param config
      * @return
      */
-    public FreemarkerUtil getFreemarkerUtil(GenerateConfig generateConfig) {
-        FreemarkerUtil freemarkerUtil = FreemarkerUtil.getInstance("2.3.31", "D:\\wk\\project\\supercode\\supercode-core\\src\\main\\resources");
+    public static FreemarkerUtil getFreemarkerUtil(GenerateConfig config) throws IOException {
+        FreemarkerUtil freemarkerUtil = null;
+        if (StringUtil.isNotEmpty(config.getTemplatePath())) {
+            File file = new File(config.getTemplatePath());
+            freemarkerUtil = FreemarkerUtil.getInstance(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS.toString(), file);
+        } else {
+            freemarkerUtil = FreemarkerUtil.getInstance(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS.toString(), "/resources");
+        }
         return freemarkerUtil;
     }
 }

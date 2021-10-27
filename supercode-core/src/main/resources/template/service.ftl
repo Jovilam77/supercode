@@ -7,12 +7,12 @@ import ${config.basePackage}.model.${className};
 import java.util.List;
 
 /**
- * ${tableInfo.comment} 业务接口
+ * ${tableInfo.comment!} 业务接口
  *
- * @author ${config.author}
- * @version ${config.version}
- * @email ${config.email}
- * @date ${date}
+ * @author ${config.author!}
+ * @version ${config.version!}
+ * @email ${config.email!}
+ * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */
 public interface ${className}Service <#if config.useSqlBean == true>extends SqlBeanService<${className}, ${id.typeName}></#if> {
 
@@ -35,18 +35,18 @@ public interface ${className}Service <#if config.useSqlBean == true>extends SqlB
     /**
      * 新增
      *
-     * @param ${className?cap_first}
+     * @param ${className?uncap_first}
      * @return
      */
-    int insert(${className} ${className?cap_first});
+    int insert(${className} ${className?uncap_first});
 
     /**
      * 根据id修改
      *
-     * @param ${className?cap_first}
+     * @param ${className?uncap_first}
      * @return
      */
-    int updateById(${className} ${className?cap_first});
+    int updateById(${className} ${className?uncap_first});
 
     /**
      * 根据id删除

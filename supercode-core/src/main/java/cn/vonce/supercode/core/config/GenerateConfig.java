@@ -38,6 +38,14 @@ public class GenerateConfig {
      */
     private boolean useSqlBean = true;
     /**
+     * 是否存在表名前缀
+     */
+    private boolean bePrefix;
+    /**
+     * 表前缀,如果bePrefix=true,prefix为空则默认处理表前缀, 例如t_user,自动去除t_
+     */
+    private String prefix;
+    /**
      * dao持久化框架类型 默认使用Mybatis
      */
     private DaoType daoType = DaoType.MyBatis;
@@ -45,7 +53,10 @@ public class GenerateConfig {
      * 文档类型 默认使用SmartDoc
      */
     private DocType docType = DocType.SmartDoc;
-
+    /**
+     * 模板路径
+     */
+    private String templatePath;
     /**
      * 生成的目标路径
      */
@@ -99,6 +110,22 @@ public class GenerateConfig {
         this.useSqlBean = useSqlBean;
     }
 
+    public boolean isBePrefix() {
+        return bePrefix;
+    }
+
+    public void setBePrefix(boolean bePrefix) {
+        this.bePrefix = bePrefix;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
     public DaoType getDaoType() {
         return daoType;
     }
@@ -113,6 +140,14 @@ public class GenerateConfig {
 
     public void setDocType(DocType docType) {
         this.docType = docType;
+    }
+
+    public String getTemplatePath() {
+        return templatePath;
+    }
+
+    public void setTemplatePath(String templatePath) {
+        this.templatePath = templatePath;
     }
 
     public String getTargetPath() {
