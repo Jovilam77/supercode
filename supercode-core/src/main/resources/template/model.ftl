@@ -8,8 +8,9 @@ import cn.vonce.sql.annotation.SqlTable;
 <#if config.useLombok == true>
 import lombok.Data;
 </#if>
-import java.util.Date;
-import java.math.BigDecimal;
+<#list otherTypeSet as otherType>
+import ${otherType};
+</#list>
 
 /**
  * ${tableInfo.comment!} 实体类

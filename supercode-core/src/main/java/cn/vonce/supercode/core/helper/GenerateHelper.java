@@ -15,9 +15,7 @@ import freemarker.template.Configuration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 
 /**
@@ -97,6 +95,7 @@ public class GenerateHelper {
             List<ColumnInfo> columnInfoList = tableService.getColumnInfoList(tableInfo.getName());
             if (columnInfoList != null && !columnInfoList.isEmpty()) {
                 List<FiledInfo> filedInfoList = new ArrayList<>();
+                Set<String> otherTypeSet = new HashSet<>();
                 FiledInfo filedInfo;
                 for (ColumnInfo columnInfo : columnInfoList) {
                     Class<?> clazz = JdbcMapJava.getJavaType(columnInfo.getType());
@@ -108,9 +107,13 @@ public class GenerateHelper {
                     if (columnInfo.getPk()) {
                         classInfo.setId(filedInfo);
                     }
+                    if (filedInfo.getTypeFullName().indexOf("java.lang") == -1) {
+                        otherTypeSet.add(filedInfo.getTypeFullName());
+                    }
                     filedInfoList.add(filedInfo);
                 }
                 classInfo.setFiledInfoList(filedInfoList);
+                classInfo.setOtherTypeSet(otherTypeSet);
             }
             classInfoList.add(classInfo);
         }

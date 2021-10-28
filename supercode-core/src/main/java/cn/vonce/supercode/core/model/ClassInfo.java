@@ -4,7 +4,9 @@ import cn.vonce.sql.bean.TableInfo;
 import cn.vonce.supercode.core.config.GenerateConfig;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 生成对象
@@ -18,6 +20,7 @@ public class ClassInfo {
 
     private TableInfo tableInfo;
     private List<FiledInfo> filedInfoList;
+    private Set<String> otherTypeSet;
     private FiledInfo id;
     private GenerateConfig config;
     private String className;
@@ -37,6 +40,14 @@ public class ClassInfo {
 
     public void setFiledInfoList(List<FiledInfo> filedInfoList) {
         this.filedInfoList = filedInfoList;
+    }
+
+    public Set<String> getOtherTypeSet() {
+        return otherTypeSet;
+    }
+
+    public void setOtherTypeSet(Set<String> otherTypeSet) {
+        this.otherTypeSet = otherTypeSet;
     }
 
     public FiledInfo getId() {
