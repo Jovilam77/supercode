@@ -9,6 +9,7 @@ import cn.vonce.sql.annotation.SqlTable;
 import lombok.Data;
 </#if>
 import java.util.Date;
+import java.math.BigDecimal;
 
 /**
  * ${tableInfo.comment!} 实体类

@@ -1,6 +1,10 @@
 package ${config.basePackage}.mapper;
 
 import ${config.basePackage}.model.${className};
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import java.util.List;
 
 /**
@@ -19,7 +23,7 @@ public interface ${className}Mapper {
      * @param ${id.name}
      * @return
      */
-    @Select("SELECT * FROM ${tableInfo.name} WHERE ${id.columnInfo.name!} = ${r"#"}{${id.name},jdbcType=${id.columnInfo.type}})
+    @Select("SELECT * FROM ${tableInfo.name} WHERE ${id.columnInfo.name!} = ${r"#"}{${id.name},jdbcType=${id.columnInfo.type}}")
     ${className} selectById(${id.typeName} ${id.name});
 
     /**
@@ -36,8 +40,9 @@ public interface ${className}Mapper {
      * @param ${className?uncap_first}
      * @return
      */
-    @Insert({ "insert into ${tableInfo.name} "(<#list filedInfoList as filedInfo>${filedInfo.columnInfo.name}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list> )",
-     			"values (<#list filedInfoList as filedInfo>${r"#"}{${filedInfo.name},jdbcType=${filedInfo.columnInfo.type}}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>)" })
+    @Insert({ "insert into ${tableInfo.name} ",
+              "(<#list filedInfoList as filedInfo>${filedInfo.columnInfo.name}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list> )",
+     		  "values (<#list filedInfoList as filedInfo>${r"#"}{${filedInfo.name},jdbcType=${filedInfo.columnInfo.type}}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>)" })
     int insert(${className} ${className?uncap_first});
 
     /**
@@ -49,7 +54,7 @@ public interface ${className}Mapper {
     @Update({ "update ${tableInfo.name}",
               "set "<#list filedInfoList as filedInfo>,
               "${filedInfo.columnInfo.name} = ${r"#"}{${filedInfo.name},jdbcType=${filedInfo.columnInfo.type}}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if>"</#list>,
-     			"where ${id.columnInfo.name} = ${r"#"}{${id.name},jdbcType=${id.columnInfo.type})
+     		  "where ${id.columnInfo.name} = ${r"#"}{${id.name},jdbcType=${id.columnInfo.type}}"})
     int updateById(${className} ${className?uncap_first});
 
     /**
@@ -58,7 +63,7 @@ public interface ${className}Mapper {
      * @param ${id.name}
      * @return
      */
-    @Delete({ "delete from ${tableInfo.name} where ${id.columnInfo.name} = ${r"#"}{${id.name},jdbcType=${id.columnInfo.type}})
+    @Delete({ "delete from ${tableInfo.name} where ${id.columnInfo.name} = ${r"#"}{${id.name},jdbcType=${id.columnInfo.type}}"})
     int deleteById(${id.typeName} ${id.name});
 
 }

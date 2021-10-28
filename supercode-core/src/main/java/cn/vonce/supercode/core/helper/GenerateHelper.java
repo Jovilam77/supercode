@@ -3,6 +3,7 @@ package cn.vonce.supercode.core.helper;
 import cn.vonce.sql.bean.ColumnInfo;
 import cn.vonce.sql.bean.TableInfo;
 import cn.vonce.sql.service.TableService;
+import cn.vonce.sql.uitls.DateUtil;
 import cn.vonce.sql.uitls.StringUtil;
 import cn.vonce.supercode.core.config.GenerateConfig;
 import cn.vonce.supercode.core.map.JdbcMapJava;
@@ -39,8 +40,9 @@ public class GenerateHelper {
         File serviceImplDir;
         File controllerDir;
         String packPath = config.getBasePackage().replace(".", File.separator);
+        String dateString = DateUtil.dateToString(new Date(), "yyyyMMddHHmmss");
         if (StringUtil.isNotEmpty(config.getTargetPath())) {
-            targerDir = new File(config.getTargetPath());
+            targerDir = new File(config.getTargetPath() + File.separator + dateString);
         } else {
             //默认生成地址
         }
@@ -62,7 +64,7 @@ public class GenerateHelper {
                 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<Runnable>(1024), threadFactory, new ThreadPoolExecutor.AbortPolicy());
         for (ClassInfo classInfo : classInfoList) {
-            pool.execute(() -> freemarkerUtil.fprint(classInfo, "model.ftl", modelDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "Model.java"));
+            pool.execute(() -> freemarkerUtil.fprint(classInfo, "model.ftl", modelDir.getAbsolutePath() + File.separator + classInfo.getClassName() + ".java"));
             pool.execute(() -> freemarkerUtil.fprint(classInfo, "mapper.ftl", mapperDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "Mapper.java"));
             pool.execute(() -> freemarkerUtil.fprint(classInfo, "service.ftl", serviceDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "Service.java"));
             pool.execute(() -> freemarkerUtil.fprint(classInfo, "service_impl.ftl", serviceImplDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "ServiceImpl.java"));

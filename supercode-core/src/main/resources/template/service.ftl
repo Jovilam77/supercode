@@ -2,9 +2,10 @@ package ${config.basePackage}.service;
 
 <#if config.useSqlBean == true>
 import cn.vonce.sql.service.SqlBeanService;
+<#else>
+import java.util.List;
 </#if>
 import ${config.basePackage}.model.${className};
-import java.util.List;
 
 /**
  * ${tableInfo.comment!} 业务接口

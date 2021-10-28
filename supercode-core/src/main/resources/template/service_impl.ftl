@@ -1,12 +1,15 @@
 package ${config.basePackage}.service.impl;
 
 <#if config.useSqlBean == true>
-import cn.vonce.sql.service.SqlBeanService;
+import cn.vonce.sql.spring.service.MybatisSqlBeanServiceImpl;
+<#else>
+import java.util.List;
 </#if>
+import ${config.basePackage}.mapper.${className}Mapper;
 import ${config.basePackage}.model.${className};
 import ${config.basePackage}.service.${className}Service;
 import org.springframework.stereotype.Service;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * ${tableInfo.comment!} 业务实现
