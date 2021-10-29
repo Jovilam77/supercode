@@ -21,7 +21,7 @@ import java.util.List;
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */
 <#if config.getDocType().name() == 'Swagger'>
-@Api(description = "${tableInfo.comment} 控制器")
+@Api(value = "${tableInfo.comment} 控制器")
 </#if>
 @RequestMapping("/${className?uncap_first}/")
 @RestController
