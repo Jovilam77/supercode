@@ -2,9 +2,7 @@ package cn.vonce.supercode.core.model;
 
 import cn.vonce.sql.bean.TableInfo;
 import cn.vonce.supercode.core.config.GenerateConfig;
-
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 

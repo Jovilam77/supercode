@@ -1,11 +1,11 @@
 package ${config.basePackage}.model;
 
-<#if config.useSqlBean == true>
+<#if config.useSqlBean>
 import cn.vonce.sql.annotation.SqlColumn;
 import cn.vonce.sql.annotation.SqlId;
 import cn.vonce.sql.annotation.SqlTable;
 </#if>
-<#if config.useLombok == true>
+<#if config.useLombok>
 import lombok.Data;
 </#if>
 <#list otherTypeSet as otherType>
@@ -19,21 +19,21 @@ import ${otherType};
  * @version ${config.version!}
  * @email ${config.email!}
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
- */<#if config.useLombok == true>
-@Data</#if><#if config.useSqlBean == true>
+ */<#if config.useLombok>
+@Data</#if><#if config.useSqlBean>
 @SqlTable("${tableInfo.name}")</#if>
 public class ${className} {
 
 <#list filedInfoList as filedInfo>
     /**
      * ${filedInfo.columnInfo.comment!}
-     */<#if config.useSqlBean == true && filedInfo.columnInfo.pk == true>
-    @SqlId</#if><#if config.useSqlBean == true>
+     */<#if config.useSqlBean && filedInfo.columnInfo.pk>
+    @SqlId</#if><#if config.useSqlBean>
     @SqlColumn(value = "${filedInfo.columnInfo.name}")</#if>
     private ${filedInfo.typeName} ${filedInfo.name};
 </#list>
 
-<#if config.useLombok == false>
+<#if !config.useLombok>
 <#list filedInfoList as filedInfo>
     public ${filedInfo.typeName} get${filedInfo.name?cap_first}() {
         return ${filedInfo.name};

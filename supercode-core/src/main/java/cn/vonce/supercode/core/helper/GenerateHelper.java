@@ -9,6 +9,7 @@ import cn.vonce.supercode.core.config.GenerateConfig;
 import cn.vonce.supercode.core.map.JdbcMapJava;
 import cn.vonce.supercode.core.model.FiledInfo;
 import cn.vonce.supercode.core.model.ClassInfo;
+import cn.vonce.supercode.core.type.DaoType;
 import cn.vonce.supercode.core.util.FreemarkerUtil;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import freemarker.template.Configuration;
@@ -48,7 +49,7 @@ public class GenerateHelper {
             targerDir.mkdirs();
         }
         modelDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + "model");
-        mapperDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + "mapper");
+        mapperDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + (config.getDaoType() == DaoType.MyBatis ? "mapper" : "jdbc"));
         serviceDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + "service");
         serviceImplDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + "service" + File.separator + "impl");
         controllerDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + "controller");
@@ -63,7 +64,7 @@ public class GenerateHelper {
                 new LinkedBlockingQueue<Runnable>(1024), threadFactory, new ThreadPoolExecutor.AbortPolicy());
         for (ClassInfo classInfo : classInfoList) {
             pool.execute(() -> freemarkerUtil.fprint(classInfo, "model.ftl", modelDir.getAbsolutePath() + File.separator + classInfo.getClassName() + ".java"));
-            pool.execute(() -> freemarkerUtil.fprint(classInfo, "mapper.ftl", mapperDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "Mapper.java"));
+            pool.execute(() -> freemarkerUtil.fprint(classInfo, "mapper.ftl", mapperDir.getAbsolutePath() + File.separator + classInfo.getClassName() + (config.getDaoType() == DaoType.MyBatis ? "Mapper.java" : "Jdbc.java")));
             pool.execute(() -> freemarkerUtil.fprint(classInfo, "service.ftl", serviceDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "Service.java"));
             pool.execute(() -> freemarkerUtil.fprint(classInfo, "service_impl.ftl", serviceImplDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "ServiceImpl.java"));
             pool.execute(() -> freemarkerUtil.fprint(classInfo, "controller.ftl", controllerDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "Controller.java"));

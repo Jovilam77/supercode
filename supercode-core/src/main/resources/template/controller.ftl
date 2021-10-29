@@ -19,7 +19,8 @@ import java.util.List;
  * @version ${config.version!}
  * @email ${config.email!}
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
- */<#if config.getDocType().name() == 'Swagger'>
+ */
+<#if config.getDocType().name() == 'Swagger'>
 @Api(description = "${tableInfo.comment} 控制器")
 </#if>
 @RequestMapping("/${className?uncap_first}/")
@@ -30,7 +31,14 @@ public class ${className}Controller extends BaseController {
     private ${className}Service ${className?uncap_first}Service;
 
 <#if config.getDocType().name() == 'Swagger'>
-    @ApiOperation(value = "根据id查询", notes = "")
+    @ApiOperation(value = "根据id查询")
+<#else>
+    /**
+     * 根据id查询
+     *
+     * @param ${id.name}
+     * @return
+     */
 </#if>
     @GetMapping("getById")
     public RS getById(${id.typeName} ${id.name}) {
@@ -39,7 +47,13 @@ public class ${className}Controller extends BaseController {
     }
 
 <#if config.getDocType().name() == 'Swagger'>
-    @ApiOperation(value = "查询全部", notes = "")
+    @ApiOperation(value = "查询全部")
+<#else>
+    /**
+     * 查询全部
+     *
+     * @return
+     */
 </#if>
     @GetMapping("getAll")
     public RS getAll() {
@@ -48,7 +62,14 @@ public class ${className}Controller extends BaseController {
     }
 
 <#if config.getDocType().name() == 'Swagger'>
-    @ApiOperation(value = "新增", notes = "")
+    @ApiOperation(value = "新增")
+<#else>
+    /**
+     * 新增
+     *
+     * @param ${className?uncap_first}
+     * @return
+     */
 </#if>
     @PostMapping("add")
     public RS add(@RequestBody ${className} ${className?uncap_first}) {
@@ -60,11 +81,18 @@ public class ${className}Controller extends BaseController {
     }
 
 <#if config.getDocType().name() == 'Swagger'>
-    @ApiOperation(value = "根据id修改", notes = "")
+    @ApiOperation(value = "根据id修改")
+<#else>
+    /**
+     * 根据id修改
+     *
+     * @param ${className?uncap_first}
+     * @return
+     */
 </#if>
     @PostMapping("updateById")
     public RS updateById(@RequestBody ${className} ${className?uncap_first}) {
-    <#if config.useSqlBean == true>
+    <#if config.useSqlBean>
         int i = ${className?uncap_first}Service.updateByBeanId(${className?uncap_first}, true, false);
     <#else>
         int i = ${className?uncap_first}Service.updateById(${className?uncap_first});
@@ -76,7 +104,14 @@ public class ${className}Controller extends BaseController {
     }
 
 <#if config.getDocType().name() == 'Swagger'>
-    @ApiOperation(value = "根据id删除", notes = "")
+    @ApiOperation(value = "根据id删除")
+<#else>
+    /**
+     * 根据id删除
+     *
+     * @param ${id.name}
+     * @return
+     */
 </#if>
     @PostMapping("deleteById")
     public RS deleteById(${id.typeName} ${id.name}) {

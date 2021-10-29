@@ -1,6 +1,6 @@
 package ${config.basePackage}.service;
 
-<#if config.useSqlBean == true>
+<#if config.useSqlBean>
 import cn.vonce.sql.service.SqlBeanService;
 <#else>
 import java.util.List;
@@ -15,9 +15,9 @@ import ${config.basePackage}.model.${className};
  * @email ${config.email!}
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */
-public interface ${className}Service <#if config.useSqlBean == true>extends SqlBeanService<${className}, ${id.typeName}></#if> {
+public interface ${className}Service <#if config.useSqlBean>extends SqlBeanService<${className}, ${id.typeName}></#if> {
 
-<#if config.useSqlBean == false>
+<#if !config.useSqlBean>
     /**
      * 根据id查询
      *
