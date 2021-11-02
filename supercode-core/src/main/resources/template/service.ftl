@@ -8,7 +8,7 @@ import java.util.List;
 import ${config.basePackage}.model.${className};
 
 /**
- * ${tableInfo.comment!} 业务接口
+ * ${tableInfo.comm!} 业务接口
  *
  * @author ${config.author!}
  * @version ${config.version!}

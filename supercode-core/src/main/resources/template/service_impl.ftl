@@ -20,7 +20,7 @@ import ${config.basePackage}.service.${className}Service;
 import org.springframework.stereotype.Service;
 
 /**
- * ${tableInfo.comment!} 业务实现
+ * ${tableInfo.comm!} 业务实现
  *
  * @author ${config.author!}
  * @version ${config.version!}

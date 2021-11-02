@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>${tableInfo.name!} <#if tableInfo.comment??>(${tableInfo.comment!})</#if></title>
+<title>${tableInfo.name!} <#if tableInfo.comm??>(${tableInfo.comm!})</#if></title>
 <style>
 .markdown-body {
     box-sizing: border-box;
@@ -714,7 +714,7 @@ ul li.task{
 </head>
 <body class="markdown-body">
 <h4 id="数据库表文档说明">数据库表文档说明</h4>
-<pre><code>${tableInfo.name!} <#if tableInfo.comment??>(${tableInfo.comment!})</#if></code></pre>
+<pre><code>${tableInfo.name!} <#if tableInfo.comm??>(${tableInfo.comm!})</#if></code></pre>
 <table>
 <thead>
 <tr>
@@ -739,8 +739,8 @@ ul li.task{
 <td align="center">${filedInfo.columnInfo.pk?c}</td>
 <td align="center">${filedInfo.columnInfo.fk?c}</td>
 <td align="center">${filedInfo.columnInfo.length!}</td>
-<td align="center">${filedInfo.columnInfo.decimal!}</td>
-<td align="center">${filedInfo.columnInfo.comment!}</td>
+<td align="center">${filedInfo.columnInfo.scale!}</td>
+<td align="center">${filedInfo.columnInfo.comm!}</td>
 </tr>
 </#list>
 </tbody>

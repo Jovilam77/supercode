@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 /**
- * ${tableInfo.comment!} dao
+ * ${tableInfo.comm!} dao
  *
  * @author ${config.author!}
  * @version ${config.version!}

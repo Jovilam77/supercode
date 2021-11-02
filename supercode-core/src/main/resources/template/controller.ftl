@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * ${tableInfo.comment!} 控制器
+ * ${tableInfo.comm!} 控制器
  *
  * @author ${config.author!}
  * @version ${config.version!}
@@ -21,7 +21,7 @@ import java.util.List;
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */
 <#if config.getJavaDocType().name() == 'Swagger'>
-@Api(value = "${tableInfo.comment!} 控制器")
+@Api(value = "${tableInfo.comm!} 控制器")
 </#if>
 @RequestMapping("/${className?uncap_first}/")
 @RestController

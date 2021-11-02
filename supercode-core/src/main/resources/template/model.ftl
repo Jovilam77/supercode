@@ -13,7 +13,7 @@ import ${otherType};
 </#list>
 
 /**
- * ${tableInfo.comment!} 实体类
+ * ${tableInfo.comm!} 实体类
  *
  * @author ${config.author!}
  * @version ${config.version!}
@@ -26,7 +26,7 @@ public class ${className} {
 
 <#list filedInfoList as filedInfo>
     /**
-     * ${filedInfo.columnInfo.comment!}
+     * ${filedInfo.columnInfo.comm!}
      */<#if config.useSqlBean && filedInfo.columnInfo.pk>
     @SqlId</#if><#if config.useSqlBean>
     @SqlColumn(value = "${filedInfo.columnInfo.name}")</#if>
