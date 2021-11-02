@@ -1,7 +1,8 @@
 package cn.vonce.supercode.core.config;
 
-import cn.vonce.supercode.core.type.DaoType;
-import cn.vonce.supercode.core.type.DocType;
+import cn.vonce.supercode.core.type.JdbcDaoType;
+import cn.vonce.supercode.core.type.JavaDocType;
+import cn.vonce.supercode.core.type.JdbcDocType;
 
 /**
  * 生成配置
@@ -46,13 +47,17 @@ public class GenerateConfig {
      */
     private String prefix;
     /**
-     * dao持久化框架类型 默认使用Mybatis
+     * Jdbc Dao持久化框架类型 默认使用Mybatis
      */
-    private DaoType daoType = DaoType.MyBatis;
+    private JdbcDaoType jdbcDaoType = JdbcDaoType.MyBatis;
     /**
-     * 文档类型 默认使用SmartDoc
+     * 数据库 文档类型 默认使用Html
      */
-    private DocType docType = DocType.SmartDoc;
+    private JdbcDocType jdbcDocType = JdbcDocType.Html;
+    /**
+     * Java 文档类型 默认使用SmartDoc
+     */
+    private JavaDocType javaDocType = JavaDocType.SmartDoc;
     /**
      * 模板路径
      */
@@ -126,20 +131,28 @@ public class GenerateConfig {
         this.prefix = prefix;
     }
 
-    public DaoType getDaoType() {
-        return daoType;
+    public JdbcDaoType getJdbcDaoType() {
+        return jdbcDaoType;
     }
 
-    public void setDaoType(DaoType daoType) {
-        this.daoType = daoType;
+    public void setJdbcDaoType(JdbcDaoType jdbcDaoType) {
+        this.jdbcDaoType = jdbcDaoType;
     }
 
-    public DocType getDocType() {
-        return docType;
+    public JdbcDocType getJdbcDocType() {
+        return jdbcDocType;
     }
 
-    public void setDocType(DocType docType) {
-        this.docType = docType;
+    public void setJdbcDocType(JdbcDocType jdbcDocType) {
+        this.jdbcDocType = jdbcDocType;
+    }
+
+    public JavaDocType getJavaDocType() {
+        return javaDocType;
+    }
+
+    public void setJavaDocType(JavaDocType javaDocType) {
+        this.javaDocType = javaDocType;
     }
 
     public String getTemplatePath() {

@@ -9,15 +9,13 @@ import cn.vonce.supercode.core.config.GenerateConfig;
 import cn.vonce.supercode.core.map.JdbcMapJava;
 import cn.vonce.supercode.core.model.FiledInfo;
 import cn.vonce.supercode.core.model.ClassInfo;
-import cn.vonce.supercode.core.type.DaoType;
+import cn.vonce.supercode.core.type.JdbcDaoType;
 import cn.vonce.supercode.core.util.FreemarkerUtil;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import freemarker.template.Configuration;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.*;
 
 /**
  * 生成助手
@@ -38,6 +36,7 @@ public class GenerateHelper {
         File serviceDir;
         File serviceImplDir;
         File controllerDir;
+        File sqlDocDir;
         String packPath = config.getBasePackage().replace(".", File.separator);
         String dateString = DateUtil.dateToString(new Date(), "yyyyMMddHHmmss");
         if (StringUtil.isNotEmpty(config.getTargetPath())) {
@@ -49,27 +48,30 @@ public class GenerateHelper {
             targerDir.mkdirs();
         }
         modelDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + "model");
-        mapperDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + (config.getDaoType() == DaoType.MyBatis ? "mapper" : "jdbc"));
+        mapperDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + (config.getJdbcDaoType() == JdbcDaoType.MyBatis ? "mapper" : "jdbc"));
         serviceDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + "service");
         serviceImplDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + "service" + File.separator + "impl");
         controllerDir = new File(targerDir.getAbsolutePath() + File.separator + packPath + File.separator + "controller");
+        sqlDocDir = new File(targerDir.getAbsolutePath() + File.separator + "dbDoc");
         modelDir.mkdirs();
         mapperDir.mkdirs();
         serviceDir.mkdirs();
         serviceImplDir.mkdirs();
         controllerDir.mkdirs();
-        ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build();
-        ExecutorService pool = new ThreadPoolExecutor(5, 20,
-                0L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<Runnable>(1024), threadFactory, new ThreadPoolExecutor.AbortPolicy());
+        sqlDocDir.mkdirs();
+//        ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build();
+//        ExecutorService pool = new ThreadPoolExecutor(5, 20,
+//                0L, TimeUnit.MILLISECONDS,
+//                new LinkedBlockingQueue<>(1024), threadFactory, new ThreadPoolExecutor.AbortPolicy());
         for (ClassInfo classInfo : classInfoList) {
-            pool.execute(() -> freemarkerUtil.fprint(classInfo, "model.ftl", modelDir.getAbsolutePath() + File.separator + classInfo.getClassName() + ".java"));
-            pool.execute(() -> freemarkerUtil.fprint(classInfo, "mapper.ftl", mapperDir.getAbsolutePath() + File.separator + classInfo.getClassName() + (config.getDaoType() == DaoType.MyBatis ? "Mapper.java" : "Jdbc.java")));
-            pool.execute(() -> freemarkerUtil.fprint(classInfo, "service.ftl", serviceDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "Service.java"));
-            pool.execute(() -> freemarkerUtil.fprint(classInfo, "service_impl.ftl", serviceImplDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "ServiceImpl.java"));
-            pool.execute(() -> freemarkerUtil.fprint(classInfo, "controller.ftl", controllerDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "Controller.java"));
+            freemarkerUtil.fprint(classInfo, "model.ftl", modelDir.getAbsolutePath() + File.separator + classInfo.getClassName() + ".java");
+            freemarkerUtil.fprint(classInfo, "mapper.ftl", mapperDir.getAbsolutePath() + File.separator + classInfo.getClassName() + (config.getJdbcDaoType() == JdbcDaoType.MyBatis ? "Mapper.java" : "Jdbc.java"));
+            freemarkerUtil.fprint(classInfo, "service.ftl", serviceDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "Service.java");
+            freemarkerUtil.fprint(classInfo, "service_impl.ftl", serviceImplDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "ServiceImpl.java");
+            freemarkerUtil.fprint(classInfo, "controller.ftl", controllerDir.getAbsolutePath() + File.separator + classInfo.getClassName() + "Controller.java");
+            freemarkerUtil.fprint(classInfo, config.getJdbcDocType().getTemplateName(), sqlDocDir.getAbsolutePath() + File.separator + classInfo.getTableInfo().getName() + config.getJdbcDocType().getSuffix());
         }
-        pool.shutdown();
+//        pool.shutdown();
     }
 
     public static List<ClassInfo> getGenerateObjectList(GenerateConfig config, TableService tableService) {
@@ -112,6 +114,9 @@ public class GenerateHelper {
                         otherTypeSet.add(filedInfo.getTypeFullName());
                     }
                     filedInfoList.add(filedInfo);
+                }
+                if (classInfo.getId() == null) {
+                    classInfo.setId(filedInfoList.get(0));
                 }
                 classInfo.setFiledInfoList(filedInfoList);
                 classInfo.setOtherTypeSet(otherTypeSet);

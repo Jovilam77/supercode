@@ -1,7 +1,7 @@
-package ${config.basePackage}.<#if config.getDaoType().name() == 'MyBatis'>mapper<#else>jdbc</#if>;
+package ${config.basePackage}.<#if config.getJdbcDaoType().name() == 'MyBatis'>mapper<#else>jdbc</#if>;
 
 import ${config.basePackage}.model.${className};
-<#if config.getDaoType().name() == 'MyBatis'>
+<#if config.getJdbcDaoType().name() == 'MyBatis'>
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
@@ -19,9 +19,9 @@ import java.util.List;
  * @email ${config.email!}
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */
-public <#if config.getDaoType().name() == 'MyBatis'>interface<#else>class</#if> ${className}<#if config.getDaoType().name() == 'MyBatis'>Mapper<#else>Jdbc</#if> {
+public <#if config.getJdbcDaoType().name() == 'MyBatis'>interface<#else>class</#if> ${className}<#if config.getJdbcDaoType().name() == 'MyBatis'>Mapper<#else>Jdbc</#if> {
 
-<#if config.getDaoType().name() == 'MyBatis'>
+<#if config.getJdbcDaoType().name() == 'MyBatis'>
     /**
      * 根据id查询
      *
@@ -44,7 +44,7 @@ public <#if config.getDaoType().name() == 'MyBatis'>interface<#else>class</#if> 
     }
 </#if>
 
-<#if config.getDaoType().name() == 'MyBatis'>
+<#if config.getJdbcDaoType().name() == 'MyBatis'>
     /**
      * 查询全部
      *
@@ -65,7 +65,7 @@ public <#if config.getDaoType().name() == 'MyBatis'>interface<#else>class</#if> 
     }
 </#if>
 
-<#if config.getDaoType().name() == 'MyBatis'>
+<#if config.getJdbcDaoType().name() == 'MyBatis'>
     /**
      * 新增
      *
@@ -94,7 +94,7 @@ public <#if config.getDaoType().name() == 'MyBatis'>interface<#else>class</#if> 
     }
 </#if>
 
-<#if config.getDaoType().name() == 'MyBatis'>
+<#if config.getJdbcDaoType().name() == 'MyBatis'>
     /**
      * 根据id修改
      *
@@ -124,7 +124,7 @@ public <#if config.getDaoType().name() == 'MyBatis'>interface<#else>class</#if> 
     }
 </#if>
 
-<#if config.getDaoType().name() == 'MyBatis'>
+<#if config.getJdbcDaoType().name() == 'MyBatis'>
     /**
      * 根据id删除
      *

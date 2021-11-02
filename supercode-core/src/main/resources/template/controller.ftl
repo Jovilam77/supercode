@@ -4,7 +4,7 @@ import ${config.basePackage}.model.${className};
 import ${config.basePackage}.service.${className}Service;
 import cn.vonce.common.base.BaseController;
 import cn.vonce.common.bean.RS;
-<#if config.getDocType().name() == 'Swagger'>
+<#if config.getJavaDocType().name() == 'Swagger'>
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 </#if>
@@ -20,8 +20,8 @@ import java.util.List;
  * @email ${config.email!}
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */
-<#if config.getDocType().name() == 'Swagger'>
-@Api(value = "${tableInfo.comment} 控制器")
+<#if config.getJavaDocType().name() == 'Swagger'>
+@Api(value = "${tableInfo.comment!} 控制器")
 </#if>
 @RequestMapping("/${className?uncap_first}/")
 @RestController
@@ -30,7 +30,7 @@ public class ${className}Controller extends BaseController {
     @Autowired
     private ${className}Service ${className?uncap_first}Service;
 
-<#if config.getDocType().name() == 'Swagger'>
+<#if config.getJavaDocType().name() == 'Swagger'>
     @ApiOperation(value = "根据id查询")
 <#else>
     /**
@@ -46,7 +46,7 @@ public class ${className}Controller extends BaseController {
         return super.successHint("根据id查询成功", ${className?uncap_first});
     }
 
-<#if config.getDocType().name() == 'Swagger'>
+<#if config.getJavaDocType().name() == 'Swagger'>
     @ApiOperation(value = "查询全部")
 <#else>
     /**
@@ -61,7 +61,7 @@ public class ${className}Controller extends BaseController {
         return super.successHint("查询全部成功", ${className?uncap_first}List);
     }
 
-<#if config.getDocType().name() == 'Swagger'>
+<#if config.getJavaDocType().name() == 'Swagger'>
     @ApiOperation(value = "新增")
 <#else>
     /**
@@ -80,7 +80,7 @@ public class ${className}Controller extends BaseController {
         return super.othersHint("新增失败");
     }
 
-<#if config.getDocType().name() == 'Swagger'>
+<#if config.getJavaDocType().name() == 'Swagger'>
     @ApiOperation(value = "根据id修改")
 <#else>
     /**
@@ -103,7 +103,7 @@ public class ${className}Controller extends BaseController {
         return super.othersHint("根据id修改失败");
     }
 
-<#if config.getDocType().name() == 'Swagger'>
+<#if config.getJavaDocType().name() == 'Swagger'>
     @ApiOperation(value = "根据id删除")
 <#else>
     /**

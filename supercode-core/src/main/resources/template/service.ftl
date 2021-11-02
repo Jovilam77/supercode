@@ -24,7 +24,7 @@ public interface ${className}Service <#if config.useSqlBean>extends SqlBeanServi
      * @param ${id.name}
      * @return
      */
-    ${className} selectById(${id.typeName} ${id.name});
+    ${className} selectById(${id.typeName!} ${id.name!});
 
     /**
      * 查询全部
