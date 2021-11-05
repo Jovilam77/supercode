@@ -25,7 +25,7 @@ import java.util.List;
 </#if>
 @RequestMapping("/${className?uncap_first}/")
 @RestController
-public class ${className}Controller extends BaseController {
+public class ${className}Controller<#if config.useSqlBean> extends BaseController</#if> {
 
     @Autowired
     private ${className}Service ${className?uncap_first}Service;
@@ -41,9 +41,9 @@ public class ${className}Controller extends BaseController {
      */
 </#if>
     @GetMapping("getById")
-    public RS getById(${id.typeName} ${id.name}) {
+    public <#if config.useSqlBean>RS<#else>${className}</#if> getById(${id.typeName} ${id.name}) {
         ${className} ${className?uncap_first} = ${className?uncap_first}Service.selectById(${id.name});
-        return super.successHint("根据id查询成功", ${className?uncap_first});
+        return <#if config.useSqlBean>super.successHint("根据id查询成功", ${className?uncap_first})<#else>${className?uncap_first}</#if>;
     }
 
 <#if config.getJavaDocType().name() == 'Swagger'>
@@ -56,9 +56,9 @@ public class ${className}Controller extends BaseController {
      */
 </#if>
     @GetMapping("getAll")
-    public RS getAll() {
+    public <#if config.useSqlBean>RS<#else>List<${className}></#if> getAll() {
         List<${className}> ${className?uncap_first}List = ${className?uncap_first}Service.selectAll();
-        return super.successHint("查询全部成功", ${className?uncap_first}List);
+        return <#if config.useSqlBean>super.successHint("查询全部成功", ${className?uncap_first}List)<#else>${className?uncap_first}List</#if>;
     }
 
 <#if config.getJavaDocType().name() == 'Swagger'>
@@ -72,12 +72,12 @@ public class ${className}Controller extends BaseController {
      */
 </#if>
     @PostMapping("add")
-    public RS add(@RequestBody ${className} ${className?uncap_first}) {
+    public <#if config.useSqlBean>RS<#else>String</#if> add(@RequestBody ${className} ${className?uncap_first}) {
         int i = ${className?uncap_first}Service.insert(${className?uncap_first});
         if (i > 0) {
-            return super.successHint("新增成功");
+            return <#if config.useSqlBean>super.successHint("新增成功")<#else>"新增成功"</#if>;
         }
-        return super.othersHint("新增失败");
+        return <#if config.useSqlBean>super.othersHint("新增失败")<#else>"新增失败"</#if>;
     }
 
 <#if config.getJavaDocType().name() == 'Swagger'>
@@ -91,16 +91,16 @@ public class ${className}Controller extends BaseController {
      */
 </#if>
     @PostMapping("updateById")
-    public RS updateById(@RequestBody ${className} ${className?uncap_first}) {
+    public <#if config.useSqlBean>RS<#else>String</#if> updateById(@RequestBody ${className} ${className?uncap_first}) {
     <#if config.useSqlBean>
         int i = ${className?uncap_first}Service.updateByBeanId(${className?uncap_first}, true, false);
     <#else>
         int i = ${className?uncap_first}Service.updateById(${className?uncap_first});
     </#if>
         if (i > 0) {
-            return super.successHint("根据id修改成功");
+            return <#if config.useSqlBean>super.successHint("根据id修改成功")<#else>"根据id修改成功"</#if>;
         }
-        return super.othersHint("根据id修改失败");
+        return <#if config.useSqlBean>super.othersHint("根据id修改失败")<#else>"根据id修改失败"</#if>;
     }
 
 <#if config.getJavaDocType().name() == 'Swagger'>
@@ -114,12 +114,12 @@ public class ${className}Controller extends BaseController {
      */
 </#if>
     @PostMapping("deleteById")
-    public RS deleteById(${id.typeName} ${id.name}) {
+    public <#if config.useSqlBean>RS<#else>String</#if> deleteById(${id.typeName} ${id.name}) {
         int i = ${className?uncap_first}Service.deleteById(${id.name});
         if (i > 0) {
-            return super.successHint("根据id删除成功");
+            return <#if config.useSqlBean>super.successHint("根据id删除成功")<#else>"根据id删除成功"</#if>;
         }
-        return super.othersHint("根据id删除失败");
+        return <#if config.useSqlBean>super.othersHint("根据id删除失败")<#else>"根据id删除失败"</#if>;
     }
 
 }
