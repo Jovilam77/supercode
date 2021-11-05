@@ -42,7 +42,7 @@ public class ${className} {
     public void set${filedInfo.name?cap_first}(${filedInfo.typeName} ${filedInfo.name}) {
         this.${filedInfo.name} = ${filedInfo.name};
     }
+
 </#list>
 </#if>
-
 }

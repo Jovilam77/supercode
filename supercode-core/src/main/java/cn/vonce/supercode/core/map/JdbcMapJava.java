@@ -65,7 +65,13 @@ public class JdbcMapJava {
     public static Class<?> getJavaType(String jdbcType) {
         Class<?> javaType = map.get(jdbcType.toUpperCase());
         if (javaType == null) {
-            return Object.class;
+            if (jdbcType.contains("(")) {
+                jdbcType = jdbcType.substring(0, jdbcType.indexOf("("));
+                javaType = map.get(jdbcType.toUpperCase());
+            }
+            if (javaType == null) {
+                return Object.class;
+            }
         }
         return javaType;
     }
