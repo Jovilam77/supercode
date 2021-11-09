@@ -10,7 +10,7 @@ package cn.vonce.supercode.core.type;
  */
 public enum JdbcDocType {
 
-    Html("db_html.ftl", ".html"), Markdown("db_markdown.ftl", ".md");
+    Html("db_html.ftl", ".html"), Markdown("db_markdown.ftl", ".md"), Word("db_word.ftl", ".doc");
 
     JdbcDocType(String templateName, String suffix) {
         this.templateName = templateName;

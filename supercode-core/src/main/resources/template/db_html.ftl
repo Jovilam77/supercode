@@ -714,6 +714,8 @@ ul li.task{
 </head>
 <body class="markdown-body">
 <h4 id="数据库表文档说明">数据库表文档说明</h4>
+<h6 id="作者">作者：${config.author!}</h6>
+<h6 id="日期">日期：${date?string('yyyy-MM-dd HH:mm:ss')}</h6>
 <pre><code>${tableInfo.name!} <#if tableInfo.comm??>(${tableInfo.comm!})</#if></code></pre>
 <table>
 <thead>
