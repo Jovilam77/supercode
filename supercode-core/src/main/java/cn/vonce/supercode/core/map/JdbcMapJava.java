@@ -28,6 +28,7 @@ public class JdbcMapJava {
         map.put("FLOAT", Float.class);
         map.put("REAL", Float.class);
         map.put("DOUBLE", Double.class);
+        map.put("NUMBER", Double.class);
         map.put("DECIMAL", BigDecimal.class);
         map.put("NUMERIC", BigDecimal.class);
         map.put("SMALLMONEY", BigDecimal.class);
