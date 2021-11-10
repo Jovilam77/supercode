@@ -41,7 +41,7 @@ public class GenerateConfig {
     /**
      * 是否存在表名前缀
      */
-    private boolean bePrefix;
+    private boolean bePrefix = true;
     /**
      * 表前缀,如果bePrefix=true,prefix为空则默认处理表前缀, 例如t_user,自动去除t_
      */
