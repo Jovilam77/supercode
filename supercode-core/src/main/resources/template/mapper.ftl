@@ -72,9 +72,9 @@ public <#if config.getJdbcDaoType().name() == 'MyBatis'>interface<#else>class</#
      * @param ${className?uncap_first}
      * @return
      */
-    @Insert({ "insert into ${tableInfo.name} ",
+    @Insert({ "INSERT INTO ${tableInfo.name} ",
               "(<#list filedInfoList as filedInfo>${filedInfo.columnInfo.name}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list> )",
-     		  "values (<#list filedInfoList as filedInfo>",
+     		  "VALUES (<#list filedInfoList as filedInfo>",
      		  "${r"#"}{${filedInfo.name}, jdbcType=${filedInfo.columnInfo.type}}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>)" })
     int insert(${className} ${className?uncap_first});
 <#else>
@@ -86,9 +86,9 @@ public <#if config.getJdbcDaoType().name() == 'MyBatis'>interface<#else>class</#
      * @return
      */
     public static int insert(JdbcTemplate jdbcTemplate, ${className} ${className?uncap_first}) {
-    	String sql = "insert into ${tableInfo.name} " +
+    	String sql = "INSERT INTO ${tableInfo.name} " +
     	             "(<#list filedInfoList as filedInfo>${filedInfo.columnInfo.name}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list> )" +
-		             "values (<#list filedInfoList as filedInfo>?<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>)";
+		             "VALUES (<#list filedInfoList as filedInfo>?<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>)";
 		Object[] args = {<#list filedInfoList as filedInfo>${className?uncap_first}.get${filedInfo.name?cap_first}()<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>};
 		return jdbcTemplate.update(sql, args);
     }
@@ -101,10 +101,10 @@ public <#if config.getJdbcDaoType().name() == 'MyBatis'>interface<#else>class</#
      * @param ${className?uncap_first}
      * @return
      */
-    @Update({ "update ${tableInfo.name}",
-              "set "<#list filedInfoList as filedInfo>,
+    @Update({ "UPDATE ${tableInfo.name}",
+              "SET "<#list filedInfoList as filedInfo>,
               "${filedInfo.columnInfo.name} = ${r"#"}{${filedInfo.name},jdbcType=${filedInfo.columnInfo.type}}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if>"</#list>,
-     		  "where ${id.columnInfo.name} = ${r"#"}{${id.name}, jdbcType=${id.columnInfo.type}}"})
+     		  "WHERE ${id.columnInfo.name} = ${r"#"}{${id.name}, jdbcType=${id.columnInfo.type}}" })
     int updateById(${className} ${className?uncap_first});
 <#else>
     /**
@@ -115,10 +115,10 @@ public <#if config.getJdbcDaoType().name() == 'MyBatis'>interface<#else>class</#
      * @return
      */
     public static int updateById(JdbcTemplate jdbcTemplate, ${className} ${className?uncap_first}) {
-    	String sql = "update ${tableInfo.name}" +
-    	             "set " +
+    	String sql = "UPDATE ${tableInfo.name}" +
+    	             "SET " +
 		             "<#list filedInfoList as filedInfo>${filedInfo.columnInfo.name} = ?<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>" +
-		             "where ${id.columnInfo.name} = ?";
+		             "WHERE ${id.columnInfo.name} = ?";
 		Object[] args = {<#list filedInfoList as filedInfo>${className?uncap_first}.get${filedInfo.name?cap_first}()<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>, ${className?uncap_first}.get${id.name?cap_first}()};
 		return jdbcTemplate.update(sql, args);
     }
@@ -131,7 +131,7 @@ public <#if config.getJdbcDaoType().name() == 'MyBatis'>interface<#else>class</#
      * @param ${id.name}
      * @return
      */
-    @Delete({ "delete from ${tableInfo.name} where ${id.columnInfo.name} = ${r"#"}{${id.name}, jdbcType=${id.columnInfo.type}}"})
+    @Delete("DELETE FROM ${tableInfo.name} WHERE ${id.columnInfo.name} = ${r"#"}{${id.name}, jdbcType=${id.columnInfo.type}}")
     int deleteById(${id.typeName} ${id.name});
 <#else>
     /**
@@ -142,7 +142,7 @@ public <#if config.getJdbcDaoType().name() == 'MyBatis'>interface<#else>class</#
      * @return
      */
     public static int deleteById(JdbcTemplate jdbcTemplate, ${id.typeName} ${id.name}) {
-    	String sql = "delete from ${tableInfo.name} where ${id.columnInfo.name} = ?";
+    	String sql = "DELETE FROM ${tableInfo.name} WHERE ${id.columnInfo.name} = ?";
 		return jdbcTemplate.update(sql, ${id.name});
     }
 </#if>
