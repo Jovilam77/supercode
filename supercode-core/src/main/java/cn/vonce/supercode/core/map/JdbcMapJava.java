@@ -49,7 +49,7 @@ public class JdbcMapJava {
         map.put("MEDIUMTEXT", String.class);
         map.put("LONGBLOB", String.class);
         map.put("LONGTEXT", String.class);
-        //日期类型类型
+        //日期类型
         map.put("DATE", java.sql.Date.class);
         map.put("TIME", java.sql.Time.class);
         map.put("YEAR", Integer.class);
