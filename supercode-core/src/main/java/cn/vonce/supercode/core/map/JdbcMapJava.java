@@ -37,7 +37,9 @@ public class JdbcMapJava {
         map.put("CHAR", String.class);
         map.put("NCHAR", String.class);
         map.put("VARCHAR", String.class);
+        map.put("VARCHAR2", String.class);
         map.put("NVARCHAR", String.class);
+        map.put("NVARCHAR2", String.class);
         map.put("TINYBLOB", String.class);
         map.put("TINYTEXT", String.class);
         map.put("BLOB", String.class);

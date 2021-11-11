@@ -29,6 +29,13 @@ import java.util.concurrent.*;
  */
 public class GenerateHelper {
 
+    /**
+     * 构建生成
+     *
+     * @param config
+     * @param tableService
+     * @throws IOException
+     */
     public static void build(GenerateConfig config, TableService tableService) throws IOException {
         List<TableInfo> tableInfoList = getTableInfoList(config, tableService);
         Map<String, String> filePaths = getFilePaths(config);
@@ -52,6 +59,13 @@ public class GenerateHelper {
         pool.shutdown();
     }
 
+    /**
+     * 获取要生成的数据表信息
+     *
+     * @param config
+     * @param tableService
+     * @return
+     */
     public static List<TableInfo> getTableInfoList(GenerateConfig config, TableService tableService) {
         List<TableInfo> tableInfoList = tableService.getTableList(null);
         if (tableInfoList == null || tableInfoList.isEmpty()) {
@@ -60,6 +74,14 @@ public class GenerateHelper {
         return tableInfoList;
     }
 
+    /**
+     * 获取生成所需的对象列表
+     *
+     * @param config
+     * @param tableInfoList
+     * @param tableService
+     * @return
+     */
     public static List<ClassInfo> getGenerateObjectList(GenerateConfig config, List<TableInfo> tableInfoList, TableService tableService) {
         Date date = new Date();
         List<ClassInfo> classInfoList = new ArrayList<>();
@@ -108,6 +130,14 @@ public class GenerateHelper {
         return classInfoList;
     }
 
+    /**
+     * 创建要生成的文件
+     *
+     * @param config
+     * @param filePaths
+     * @param classInfoList
+     * @throws IOException
+     */
     public static void make(GenerateConfig config, Map<String, String> filePaths, List<ClassInfo> classInfoList) throws IOException {
         FreemarkerUtil freemarkerUtil = getFreemarkerUtil(config);
         for (ClassInfo classInfo : classInfoList) {
@@ -120,6 +150,12 @@ public class GenerateHelper {
         }
     }
 
+    /**
+     * 获取各个文件生成的目标地址
+     *
+     * @param config
+     * @return
+     */
     public static Map<String, String> getFilePaths(GenerateConfig config) {
         Map<String, String> filePaths = new HashMap<>();
         File targerDir;
@@ -162,7 +198,7 @@ public class GenerateHelper {
     }
 
     /**
-     * 获取
+     * 获取FreemarkerUtil
      *
      * @param config
      * @return
