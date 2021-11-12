@@ -40,7 +40,7 @@ public class GenerateHelper {
         List<TableInfo> tableInfoList = getTableInfoList(config, tableService);
         Map<String, String> filePaths = getFilePaths(config);
         ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build();
-        ExecutorService pool = new ThreadPoolExecutor(5, 10,
+        ExecutorService pool = new ThreadPoolExecutor(3, 5,
                 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>(1024), threadFactory, new ThreadPoolExecutor.AbortPolicy());
         int num = 10;
