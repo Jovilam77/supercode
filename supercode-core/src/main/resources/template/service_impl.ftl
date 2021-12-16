@@ -9,12 +9,13 @@ import cn.vonce.sql.spring.service.SpringJdbcSqlBeanServiceImpl;
 import java.util.List;
 </#if>
 <#if !config.useSqlBean && config.getJdbcDaoType().name() == 'MyBatis'>
+import org.springframework.beans.factory.annotation.Autowired;
 import ${config.basePackage}.mapper.${className}Mapper;
 <#elseif !config.useSqlBean && config.getJdbcDaoType().name() == 'SpringJdbc'>
+import org.springframework.beans.factory.annotation.Autowired;
 import ${config.basePackage}.jdbc.${className}Jdbc;
 import org.springframework.jdbc.core.JdbcTemplate;
 </#if>
-import org.springframework.beans.factory.annotation.Autowired;
 import ${config.basePackage}.model.${className};
 import ${config.basePackage}.service.${className}Service;
 import org.springframework.stereotype.Service;
