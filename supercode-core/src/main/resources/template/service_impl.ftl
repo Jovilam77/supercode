@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ${className}ServiceImpl <#if config.useSqlBean && config.getJdbcDaoType().name() == 'MyBatis' >extends MybatisSqlBeanServiceImpl <${className}, ${id.typeName}><#elseif config.useSqlBean && config.getJdbcDaoType().name() == 'SpringJdbc'>extends SpringJdbcSqlBeanServiceImpl <${className}, ${id.typeName}></#if>implements ${className}Service {
 
-<#if config.getJdbcDaoType().name() == 'MyBatis'>
+<#if !config.useSqlBean && config.getJdbcDaoType().name() == 'MyBatis'>
     @Autowired
     private ${className}Mapper ${className?uncap_first}Mapper;
 </#if>
