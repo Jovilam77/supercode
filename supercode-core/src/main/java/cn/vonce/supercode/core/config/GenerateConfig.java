@@ -1,5 +1,6 @@
 package cn.vonce.supercode.core.config;
 
+import cn.vonce.sql.uitls.StringUtil;
 import cn.vonce.supercode.core.type.JdbcDaoType;
 import cn.vonce.supercode.core.type.JavaDocType;
 import cn.vonce.supercode.core.type.JdbcDocType;
@@ -41,7 +42,7 @@ public class GenerateConfig {
     /**
      * 是否存在表名前缀
      */
-    private boolean bePrefix = true;
+    private boolean bePrefix = false;
     /**
      * 表前缀,如果bePrefix=true,prefix为空则默认处理表前缀, 例如t_user,自动去除t_
      */
@@ -129,6 +130,11 @@ public class GenerateConfig {
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
+        if (StringUtil.isNotEmpty(this.prefix)) {
+            this.bePrefix = true;
+        } else {
+            this.bePrefix = false;
+        }
     }
 
     public JdbcDaoType getJdbcDaoType() {
