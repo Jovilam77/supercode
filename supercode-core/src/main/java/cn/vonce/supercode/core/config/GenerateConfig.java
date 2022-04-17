@@ -40,6 +40,10 @@ public class GenerateConfig {
      */
     private boolean useSqlBean = true;
     /**
+     * 是否生成为RestFulApi
+     */
+    private boolean useRestfulApi = true;
+    /**
      * 是否存在表名前缀
      */
     private boolean bePrefix = false;
@@ -106,6 +110,14 @@ public class GenerateConfig {
 
     public void setUseLombok(boolean useLombok) {
         this.useLombok = useLombok;
+    }
+
+    public boolean isUseRestfulApi() {
+        return useRestfulApi;
+    }
+
+    public void setUseRestfulApi(boolean useRestfulApi) {
+        this.useRestfulApi = useRestfulApi;
     }
 
     public boolean isUseSqlBean() {

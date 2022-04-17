@@ -36,13 +36,13 @@ public class GenerateHelper {
      * @param tableService
      * @throws IOException
      */
-    public static void build(GenerateConfig config, TableService tableService) throws IOException {
+    public static void build(GenerateConfig config, TableService tableService) {
         List<TableInfo> tableInfoList = getTableInfoList(config, tableService);
         Map<String, String> filePaths = getFilePaths(config);
         ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build();
         ExecutorService pool = new ThreadPoolExecutor(3, 5,
                 0L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<>(1024), threadFactory, new ThreadPoolExecutor.AbortPolicy());
+                new LinkedBlockingQueue<>(1024), threadFactory, new ThreadPoolExecutor.CallerRunsPolicy());
         int num = 10;
         int size = tableInfoList.size() % num == 0 ? tableInfoList.size() / num : tableInfoList.size() / num + 1;
         for (int i = 0; i < size; i++) {

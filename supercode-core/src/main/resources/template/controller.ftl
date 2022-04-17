@@ -40,8 +40,8 @@ public class ${className}Controller<#if config.useSqlBean> extends BaseControlle
      * @return
      */
 </#if>
-    @GetMapping("getById")
-    public <#if config.useSqlBean>RS<#else>${className}</#if> getById(${id.typeName} ${id.name}) {
+    <#if config.useRestfulApi>@GetMapping("{id}")<#else>@GetMapping("getById")</#if>
+    public <#if config.useSqlBean>RS<#else>${className}</#if> getById(<#if config.useRestfulApi>@PathVariable("id")<#else>@RequestParam("id")</#if>${id.typeName} ${id.name}) {
         ${className} ${className?uncap_first} = ${className?uncap_first}Service.selectById(${id.name});
         return <#if config.useSqlBean>super.successHint("根据id查询成功", ${className?uncap_first})<#else>${className?uncap_first}</#if>;
     }
@@ -90,10 +90,10 @@ public class ${className}Controller<#if config.useSqlBean> extends BaseControlle
      * @return
      */
 </#if>
-    @PostMapping("updateById")
+    <#if config.useRestfulApi>@PostMapping("updateById")<#else>@PutMapping("updateById")</#if>
     public <#if config.useSqlBean>RS<#else>String</#if> updateById(@RequestBody ${className} ${className?uncap_first}) {
     <#if config.useSqlBean>
-        int i = ${className?uncap_first}Service.updateByBeanId(${className?uncap_first}, true, false);
+        int i = ${className?uncap_first}Service.updateByBeanId(${className?uncap_first});
     <#else>
         int i = ${className?uncap_first}Service.updateById(${className?uncap_first});
     </#if>
@@ -113,8 +113,8 @@ public class ${className}Controller<#if config.useSqlBean> extends BaseControlle
      * @return
      */
 </#if>
-    @PostMapping("deleteById")
-    public <#if config.useSqlBean>RS<#else>String</#if> deleteById(${id.typeName} ${id.name}) {
+    <#if config.useRestfulApi>@PostMapping("deleteById")<#else>@DeleteMapping("{id}")</#if>
+    public <#if config.useSqlBean>RS<#else>String</#if> deleteById(<#if config.useRestfulApi>@PathVariable("id")<#else>@RequestParam("id")</#if>${id.typeName} ${id.name}) {
         int i = ${className?uncap_first}Service.deleteById(${id.name});
         if (i > 0) {
             return <#if config.useSqlBean>super.successHint("根据id删除成功")<#else>"根据id删除成功"</#if>;
