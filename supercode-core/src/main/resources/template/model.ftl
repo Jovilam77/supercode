@@ -5,6 +5,9 @@ import cn.vonce.sql.annotation.SqlColumn;
 import cn.vonce.sql.annotation.SqlId;
 import cn.vonce.sql.annotation.SqlTable;
 </#if>
+<#if config.getJavaDocType().name() == 'Swagger'>
+import io.swagger.annotations.ApiModelProperty;
+</#if>
 <#if config.useLombok>
 import lombok.Data;
 </#if>
@@ -25,11 +28,16 @@ import ${otherType};
 public class ${className} {
 
 <#list filedInfoList as filedInfo>
+
+<#if config.getJavaDocType().name() == 'Swagger'>
+    @ApiModelProperty(value = "${filedInfo.columnInfo.comm!}")
+<#else>
     /**
      * ${filedInfo.columnInfo.comm!}
-     */<#if config.useSqlBean && filedInfo.columnInfo.pk>
-    @SqlId</#if><#if config.useSqlBean>
-    @SqlColumn(value = "${filedInfo.columnInfo.name}")</#if>
+     */
+</#if><#if config.useSqlBean && filedInfo.columnInfo.pk>
+    @SqlId
+</#if>
     private ${filedInfo.typeName} ${filedInfo.name};
 </#list>
 
