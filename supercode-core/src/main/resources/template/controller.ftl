@@ -31,7 +31,7 @@ public class ${className}Controller<#if config.useSqlBean> extends BaseControlle
     private ${className}Service ${className?uncap_first}Service;
 
 <#if config.getJavaDocType().name() == 'Swagger'>
-    @ApiOperation(value = "根据id查询")
+    @ApiOperation(value = "根据id查询", response = ${className}.class)
 <#else>
     /**
      * 根据id查询
@@ -47,7 +47,7 @@ public class ${className}Controller<#if config.useSqlBean> extends BaseControlle
     }
 
 <#if config.getJavaDocType().name() == 'Swagger'>
-    @ApiOperation(value = "查询全部")
+    @ApiOperation(value = "查询全部", response = ${className}.class)
 <#else>
     /**
      * 查询全部

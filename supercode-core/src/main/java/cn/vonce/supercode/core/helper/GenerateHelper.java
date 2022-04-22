@@ -114,9 +114,12 @@ public class GenerateHelper {
                     if (columnInfo.getPk()) {
                         classInfo.setId(filedInfo);
                     }
+                    //使用到的java.lang包下的其他类需要导入
                     if (filedInfo.getTypeFullName().indexOf("java.lang") == -1) {
                         otherTypeSet.add(filedInfo.getTypeFullName());
                     }
+                    filedInfo.setCreateTime(clazz.getSimpleName().equals("Date") && (columnInfo.getName().toLowerCase().indexOf("create") > -1 || columnInfo.getComm().equals("创建时间")));
+                    filedInfo.setUpdateTime(clazz.getSimpleName().equals("Date") && (columnInfo.getName().toLowerCase().indexOf("update") > -1 || columnInfo.getComm().equals("更新时间")));
                     filedInfoList.add(filedInfo);
                 }
                 if (classInfo.getId() == null) {

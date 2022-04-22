@@ -16,6 +16,8 @@ public class FiledInfo {
     private String typeName;
     private String typeFullName;
     private ColumnInfo columnInfo;
+    private boolean createTime;
+    private boolean updateTime;
 
     public String getName() {
         return name;
@@ -47,5 +49,21 @@ public class FiledInfo {
 
     public void setColumnInfo(ColumnInfo columnInfo) {
         this.columnInfo = columnInfo;
+    }
+
+    public boolean isCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(boolean createTime) {
+        this.createTime = createTime;
+    }
+
+    public boolean isUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(boolean updateTime) {
+        this.updateTime = updateTime;
     }
 }
