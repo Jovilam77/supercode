@@ -1,32 +1,15 @@
 package ${config.basePackage}.model;
 
-<#--如果有使用SqlBean-->
 <#if config.useSqlBean>
-import cn.vonce.sql.annotation.SqlColumn;
 import cn.vonce.sql.annotation.SqlId;
 import cn.vonce.sql.annotation.SqlTable;
-<#--SqlBean内 如果存在创建时间字段-->
-<#if filedInfo.createTime>
-import cn.vonce.sql.annotation.SqlInsertTime;
 </#if>
-<#--SqlBean内 如果存在更新时间字段-->
-<#if filedInfo.updateTime>
-import cn.vonce.sql.annotation.SqlUpdateTime;
-</#if>
-<#--SqlBean内 如果存在Id生成字段-->
-<#if filedInfo.typeName == 'Long' || filedInfo.typeName == 'String'>
-import cn.vonce.sql.enumerate.IdType;
-</#if>
-</#if>
-<#--如果生成Swagger文档-->
 <#if config.getJavaDocType().name() == 'Swagger'>
 import io.swagger.annotations.ApiModelProperty;
 </#if>
-<#--如果使用Lombok-->
 <#if config.useLombok>
 import lombok.Data;
 </#if>
-<#--引用依赖的类-->
 <#list otherTypeSet as otherType>
 import ${otherType};
 </#list>
