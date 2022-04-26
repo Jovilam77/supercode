@@ -131,7 +131,7 @@ public class ${className}Controller<#if config.useSqlBean> extends BaseControlle
     */
 </#if>
     @PostMapping("addOrEdit")
-    public Result addOrEdit(@RequestBody ${className} ${className?uncap_first}) {
+    public <#if config.useSqlBean>RS<#else>String</#if> addOrEdit(@RequestBody ${className} ${className?uncap_first}) {
         if (${className?uncap_first}.getId() == null) {
             return add(${className?uncap_first});
         }
