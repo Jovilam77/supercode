@@ -62,6 +62,23 @@ public class ${className}Controller<#if config.useSqlBean> extends BaseControlle
     }
 
 <#if config.getJavaDocType().name() == 'Swagger'>
+    @ApiOperation(value = "分页列表查询")
+<#else>
+    /**
+    * 分页列表查询
+    *
+    * @return
+    */
+</#if>
+    @GetMapping(value = "list")
+    public Map list(HttpServletRequest request) {
+        Select select = new Select();
+        ReqPageHelper<${className}> pageHelper = new ReqPageHelper(request);
+        pageHelper.paging(select, ${className?uncap_first}Service);
+        return pageHelper.result("获取列表成功");
+    }
+
+<#if config.getJavaDocType().name() == 'Swagger'>
     @ApiOperation(value = "新增")
 <#else>
     /**
@@ -101,6 +118,24 @@ public class ${className}Controller<#if config.useSqlBean> extends BaseControlle
             return <#if config.useSqlBean>super.successHint("根据id修改成功")<#else>"根据id修改成功"</#if>;
         }
         return <#if config.useSqlBean>super.othersHint("根据id修改失败")<#else>"根据id修改失败"</#if>;
+    }
+
+<#if config.getJavaDocType().name() == 'Swagger'>
+    @ApiOperation(value = "新增或根据id修改")
+<#else>
+    /**
+    * 根据id修改
+    *
+    * @param ${className?uncap_first}
+    * @return
+    */
+</#if>
+    @PostMapping("addOrEdit")
+    public Result addOrEdit(@RequestBody ${className} ${className?uncap_first}) {
+        if (${className?uncap_first}.getId() == null) {
+            return add(${className?uncap_first});
+        }
+        return updateById(${className?uncap_first});
     }
 
 <#if config.getJavaDocType().name() == 'Swagger'>
