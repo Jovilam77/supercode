@@ -1,9 +1,9 @@
 package cn.vonce.supercode.core.helper;
 
-import cn.vonce.sql.annotation.SqlInsertTime;
-import cn.vonce.sql.annotation.SqlUpdateTime;
+import cn.vonce.sql.annotation.SqlDefaultValue;
 import cn.vonce.sql.bean.ColumnInfo;
 import cn.vonce.sql.bean.TableInfo;
+import cn.vonce.sql.enumerate.FillWith;
 import cn.vonce.sql.enumerate.IdType;
 import cn.vonce.sql.service.TableService;
 import cn.vonce.sql.uitls.DateUtil;
@@ -14,7 +14,6 @@ import cn.vonce.supercode.core.model.FiledInfo;
 import cn.vonce.supercode.core.model.ClassInfo;
 import cn.vonce.supercode.core.type.JdbcDaoType;
 import cn.vonce.supercode.core.util.FreemarkerUtil;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import freemarker.template.Configuration;
 
 import java.io.File;
@@ -42,10 +41,9 @@ public class GenerateHelper {
     public static void build(GenerateConfig config, TableService tableService) {
         List<TableInfo> tableInfoList = getTableInfoList(config, tableService);
         Map<String, String> filePaths = getFilePaths(config);
-        ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build();
         ExecutorService pool = new ThreadPoolExecutor(3, 5,
                 0L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<>(1024), threadFactory, new ThreadPoolExecutor.CallerRunsPolicy());
+                new LinkedBlockingQueue<>(1024), Executors.defaultThreadFactory(), new ThreadPoolExecutor.CallerRunsPolicy());
         int num = 10;
         int size = tableInfoList.size() % num == 0 ? tableInfoList.size() / num : tableInfoList.size() / num + 1;
         for (int i = 0; i < size; i++) {
@@ -126,11 +124,9 @@ public class GenerateHelper {
                     if (filedInfo.getTypeFullName().indexOf("java.lang") == -1) {
                         otherTypeSet.add(filedInfo.getTypeFullName());
                     }
-                    if (filedInfo.isCreateTime()) {
-                        otherTypeSet.add(SqlInsertTime.class.getName());
-                    }
-                    if (filedInfo.isUpdateTime()) {
-                        otherTypeSet.add(SqlUpdateTime.class.getName());
+                    if (filedInfo.isCreateTime() || filedInfo.isUpdateTime()) {
+                        otherTypeSet.add(SqlDefaultValue.class.getName());
+                        otherTypeSet.add(FillWith.class.getName());
                     }
                     filedInfoList.add(filedInfo);
                 }
