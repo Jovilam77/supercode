@@ -37,9 +37,9 @@ public class ${className} {
 </#if><#if config.useSqlBean && filedInfo.columnInfo.pk>
     @SqlId<#if filedInfo.typeName == 'Long'>(type = IdType.SNOWFLAKE_ID_18)<#elseif filedInfo.typeName == 'String'>(type = IdType.UUID)</#if>
 </#if><#if config.useSqlBean && filedInfo.createTime>
-    @SqlInsertTime
+    @SqlDefaultValue(with = FillWith.INSERT)
 </#if><#if config.useSqlBean && filedInfo.updateTime>
-    @SqlUpdateTime
+    @SqlDefaultValue(with = FillWith.UPDATE)
 </#if>
     private ${filedInfo.typeName} ${filedInfo.name};
 </#list>
