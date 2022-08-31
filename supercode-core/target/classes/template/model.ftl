@@ -15,7 +15,7 @@ import ${otherType};
 </#list>
 
 /**
- * ${tableInfo.remarks!} 实体类
+ * ${tableInfo.comm!} 实体类
  *
  * @author ${config.author!}
  * @version ${config.version!}
@@ -29,10 +29,10 @@ public class ${className} {
 <#list filedInfoList as filedInfo>
 
 <#if config.getJavaDocType().name() == 'Swagger'>
-    @ApiModelProperty(value = "${filedInfo.columnInfo.remarks!}")
+    @ApiModelProperty(value = "${filedInfo.columnInfo.comm!}")
 <#else>
     /**
-     * ${filedInfo.columnInfo.remarks!}
+     * ${filedInfo.columnInfo.comm!}
      */
 </#if><#if config.useSqlBean && filedInfo.columnInfo.pk>
     @SqlId<#if filedInfo.typeName == 'Long'>(type = IdType.SNOWFLAKE_ID_18)<#elseif filedInfo.typeName == 'String'>(type = IdType.UUID)</#if>

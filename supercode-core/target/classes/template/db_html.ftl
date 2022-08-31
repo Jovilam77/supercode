@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>${tableInfo.name!} <#if tableInfo.remarks??>(${tableInfo.remarks!})</#if></title>
+<title>${tableInfo.name!} <#if tableInfo.comm??>(${tableInfo.comm!})</#if></title>
 <style>
 .markdown-body {
     box-sizing: border-box;
@@ -716,7 +716,7 @@ ul li.task{
 <h4 id="数据库表文档说明">数据库表文档说明</h4>
 <h6 id="作者">作者：${config.author!}</h6>
 <h6 id="日期">日期：${date?string('yyyy-MM-dd HH:mm:ss')}</h6>
-<pre><code>${tableInfo.name!} <#if tableInfo.remarks??>(${tableInfo.remarks!})</#if></code></pre>
+<pre><code>${tableInfo.name!} <#if tableInfo.comm??>(${tableInfo.comm!})</#if></code></pre>
 <table>
 <thead>
 <tr>
@@ -742,7 +742,7 @@ ul li.task{
 <td align="center"><#if (filedInfo.columnInfo.fk)??>${filedInfo.columnInfo.fk?c}</#if></td>
 <td align="center">${filedInfo.columnInfo.length!}</td>
 <td align="center">${filedInfo.columnInfo.scale!}</td>
-<td align="center">${filedInfo.columnInfo.remarks!}</td>
+<td align="center">${filedInfo.columnInfo.comm!}</td>
 </tr>
 </#list>
 </tbody>
