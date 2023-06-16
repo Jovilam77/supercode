@@ -1,9 +1,9 @@
 package cn.vonce.supercode.core.config;
 
 import cn.vonce.sql.uitls.StringUtil;
-import cn.vonce.supercode.core.type.JdbcDaoType;
-import cn.vonce.supercode.core.type.JavaDocType;
-import cn.vonce.supercode.core.type.JdbcDocType;
+import cn.vonce.supercode.core.enumeration.JdbcDaoType;
+import cn.vonce.supercode.core.enumeration.JavaDocType;
+import cn.vonce.supercode.core.enumeration.JdbcDocType;
 
 /**
  * 生成配置
@@ -58,7 +58,7 @@ public class GenerateConfig {
     /**
      * 数据库 文档类型 默认使用Html
      */
-    private JdbcDocType jdbcDocType = JdbcDocType.Html;
+    private JdbcDocType jdbcDocType = JdbcDocType.HTML;
     /**
      * Java 文档类型 默认使用SmartDoc
      */

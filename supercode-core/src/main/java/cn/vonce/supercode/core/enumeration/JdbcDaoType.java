@@ -1,4 +1,4 @@
-package cn.vonce.supercode.core.type;
+package cn.vonce.supercode.core.enumeration;
 
 /**
  * Jdbc Dao持久化框架类型

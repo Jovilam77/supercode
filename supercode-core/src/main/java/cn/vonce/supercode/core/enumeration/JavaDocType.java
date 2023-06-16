@@ -1,4 +1,4 @@
-package cn.vonce.supercode.core.type;
+package cn.vonce.supercode.core.enumeration;
 
 /**
  * Java文档生成类型
