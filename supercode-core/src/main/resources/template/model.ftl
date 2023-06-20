@@ -42,7 +42,7 @@ public class ${className} <#if baseClassName?? && baseClassName!=''>extends ${ba
 </#if><#if config.useSqlBean && filedInfo.updateTime>
     @SqlDefaultValue(with = FillWith.UPDATE)
 </#if>
-    @SqlColumn(notNull = ${filedInfo.columnInfo.notnull?c}, remarks = "${filedInfo.columnInfo.remarks}")
+    @SqlColumn(<#if filedInfo.columnInfo.notnull>notNull = ${filedInfo.columnInfo.notnull?c}, </#if>remarks = "${filedInfo.columnInfo.remarks}")
     private ${filedInfo.typeName} ${filedInfo.name};
 </#list>
 
