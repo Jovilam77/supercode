@@ -3,6 +3,7 @@ package ${config.basePackage}<#if config.module?? && config.module!=''>.${config
 <#if config.useSqlBean>
 import cn.vonce.sql.annotation.SqlId;
 import cn.vonce.sql.annotation.SqlTable;
+import cn.vonce.sql.annotation.SqlColumn;
 </#if>
 <#if config.getJavaDocType().name() == 'Swagger'>
 import io.swagger.annotations.ApiModelProperty;
