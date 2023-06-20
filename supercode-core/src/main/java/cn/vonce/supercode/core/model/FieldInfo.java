@@ -18,6 +18,7 @@ public class FieldInfo {
     private ColumnInfo columnInfo;
     private boolean createTime;
     private boolean updateTime;
+    private boolean ignore;
 
     public String getName() {
         return name;
@@ -66,4 +67,13 @@ public class FieldInfo {
     public void setUpdateTime(boolean updateTime) {
         this.updateTime = updateTime;
     }
+
+    public boolean isIgnore() {
+        return ignore;
+    }
+
+    public void setIgnore(boolean ignore) {
+        this.ignore = ignore;
+    }
+
 }

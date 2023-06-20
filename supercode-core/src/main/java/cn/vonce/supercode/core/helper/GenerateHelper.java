@@ -286,19 +286,6 @@ public class GenerateHelper {
                 classInfo.setBaseClassName(baseClassPath.substring(baseClassPath.lastIndexOf(".") + 1));
                 otherTypeSet.add(baseClassPath);
             }
-            //过滤掉基类中的字段
-            if (baseClassFiledList != null && baseClassFiledList.size() > 0) {
-                List<String> finalBaseClassFiledList = baseClassFiledList;
-                columnInfoList = columnInfoList.stream().filter(item -> {
-                    String columnName = StringUtil.underlineToHump(item.getName());
-                    for (String filedName : finalBaseClassFiledList) {
-                        if (columnName.equals(filedName)) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }).collect(Collectors.toList());
-            }
             FieldInfo filedInfo;
             for (ColumnInfo columnInfo : columnInfoList) {
                 String columnName = StringUtil.underlineToHump(columnInfo.getName());
@@ -325,6 +312,17 @@ public class GenerateHelper {
                     otherTypeSet.add(FillWith.class.getName());
                 }
                 fieldInfoList.add(filedInfo);
+            }
+            //基类中的字段设置为忽略
+            if (baseClassFiledList != null && baseClassFiledList.size() > 0) {
+                for (FieldInfo fieldInfo : fieldInfoList) {
+                    for (String filedName : baseClassFiledList) {
+                        if (fieldInfo.getName().equals(filedName)) {
+                            fieldInfo.setIgnore(true);
+                            break;
+                        }
+                    }
+                }
             }
             if (classInfo.getId() == null) {
                 classInfo.setId(fieldInfoList.get(0));

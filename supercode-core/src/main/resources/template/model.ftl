@@ -28,7 +28,7 @@ import ${otherType};
 public class ${className} <#if baseClassName?? && baseClassName!=''>extends ${baseClassName!}</#if>{
 
 <#list fieldInfoList as filedInfo>
-
+<#if !filedInfo.ignore>
 <#if config.getJavaDocType().name() == 'Swagger'>
     @ApiModelProperty(value = "${filedInfo.columnInfo.remarks!}")
 <#else>
@@ -44,6 +44,7 @@ public class ${className} <#if baseClassName?? && baseClassName!=''>extends ${ba
 </#if>
     @SqlColumn(<#if filedInfo.columnInfo.notnull?? && filedInfo.columnInfo.notnull>notNull = ${filedInfo.columnInfo.notnull?c}, </#if>remarks = "${filedInfo.columnInfo.remarks}")
     private ${filedInfo.typeName} ${filedInfo.name};
+</#if>
 </#list>
 
 <#if !config.useLombok>
