@@ -732,7 +732,7 @@ ul li.task{
 </tr>
 </thead>
 <tbody>
-<#list filedInfoList as filedInfo>
+<#list fieldInfoList as filedInfo>
 <tr>
 <td align="center">${filedInfo.columnInfo.name!}</td>
 <td align="center">${filedInfo.columnInfo.type!}</td>

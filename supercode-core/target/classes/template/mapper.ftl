@@ -1,4 +1,4 @@
-package ${config.basePackage}.<#if config.getJdbcDaoType().name() == 'MyBatis'>mapper<#else>jdbc</#if>;
+package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.<#if config.getJdbcDaoType().name() == 'MyBatis'>mapper<#else>jdbc</#if>;
 
 import ${config.basePackage}.model.${className};
 <#if config.getJdbcDaoType().name() == 'MyBatis'>
@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 /**
- * ${tableInfo.comm!} dao
+ * ${tableInfo.remarks!} dao
  *
  * @author ${config.author!}
  * @version ${config.version!}
@@ -73,9 +73,9 @@ public <#if config.getJdbcDaoType().name() == 'MyBatis'>interface<#else>class</#
      * @return
      */
     @Insert({ "INSERT INTO ${tableInfo.name} ",
-              "(<#list filedInfoList as filedInfo>${filedInfo.columnInfo.name}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list> )",
-     		  "VALUES (<#list filedInfoList as filedInfo>",
-     		  "${r"#"}{${filedInfo.name}, jdbcType=${filedInfo.columnInfo.type}}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>)" })
+              "(<#list fieldInfoList as filedInfo>${filedInfo.columnInfo.name}<#if (filedInfo_index < (fieldInfoList?size - 1))>, </#if></#list> )",
+     		  "VALUES (<#list fieldInfoList as filedInfo>",
+     		  "${r"#"}{${filedInfo.name}, jdbcType=${filedInfo.columnInfo.type}}<#if (filedInfo_index < (fieldInfoList?size - 1))>, </#if></#list>)" })
     int insert(${className} ${className?uncap_first});
 <#else>
     /**
@@ -87,9 +87,9 @@ public <#if config.getJdbcDaoType().name() == 'MyBatis'>interface<#else>class</#
      */
     public static int insert(JdbcTemplate jdbcTemplate, ${className} ${className?uncap_first}) {
     	String sql = "INSERT INTO ${tableInfo.name} " +
-    	             "(<#list filedInfoList as filedInfo>${filedInfo.columnInfo.name}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list> )" +
-		             "VALUES (<#list filedInfoList as filedInfo>?<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>)";
-		Object[] args = {<#list filedInfoList as filedInfo>${className?uncap_first}.get${filedInfo.name?cap_first}()<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>};
+    	             "(<#list fieldInfoList as filedInfo>${filedInfo.columnInfo.name}<#if (filedInfo_index < (fieldInfoList?size - 1))>, </#if></#list> )" +
+		             "VALUES (<#list fieldInfoList as filedInfo>?<#if (filedInfo_index < (fieldInfoList?size - 1))>, </#if></#list>)";
+		Object[] args = {<#list fieldInfoList as filedInfo>${className?uncap_first}.get${filedInfo.name?cap_first}()<#if (filedInfo_index < (fieldInfoList?size - 1))>, </#if></#list>};
 		return jdbcTemplate.update(sql, args);
     }
 </#if>
@@ -102,8 +102,8 @@ public <#if config.getJdbcDaoType().name() == 'MyBatis'>interface<#else>class</#
      * @return
      */
     @Update({ "UPDATE ${tableInfo.name}",
-              "SET "<#list filedInfoList as filedInfo>,
-              "${filedInfo.columnInfo.name} = ${r"#"}{${filedInfo.name},jdbcType=${filedInfo.columnInfo.type}}<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if>"</#list>,
+              "SET "<#list fieldInfoList as filedInfo>,
+              "${filedInfo.columnInfo.name} = ${r"#"}{${filedInfo.name},jdbcType=${filedInfo.columnInfo.type}}<#if (filedInfo_index < (fieldInfoList?size - 1))>, </#if>"</#list>,
      		  "WHERE ${id.columnInfo.name} = ${r"#"}{${id.name}, jdbcType=${id.columnInfo.type}}" })
     int updateById(${className} ${className?uncap_first});
 <#else>
@@ -117,9 +117,9 @@ public <#if config.getJdbcDaoType().name() == 'MyBatis'>interface<#else>class</#
     public static int updateById(JdbcTemplate jdbcTemplate, ${className} ${className?uncap_first}) {
     	String sql = "UPDATE ${tableInfo.name}" +
     	             "SET " +
-		             "<#list filedInfoList as filedInfo>${filedInfo.columnInfo.name} = ?<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>" +
+		             "<#list fieldInfoList as filedInfo>${filedInfo.columnInfo.name} = ?<#if (filedInfo_index < (fieldInfoList?size - 1))>, </#if></#list>" +
 		             "WHERE ${id.columnInfo.name} = ?";
-		Object[] args = {<#list filedInfoList as filedInfo>${className?uncap_first}.get${filedInfo.name?cap_first}()<#if (filedInfo_index < (filedInfoList?size - 1))>, </#if></#list>, ${className?uncap_first}.get${id.name?cap_first}()};
+		Object[] args = {<#list fieldInfoList as filedInfo>${className?uncap_first}.get${filedInfo.name?cap_first}()<#if (filedInfo_index < (fieldInfoList?size - 1))>, </#if></#list>, ${className?uncap_first}.get${id.name?cap_first}()};
 		return jdbcTemplate.update(sql, args);
     }
 </#if>

@@ -1,4 +1,4 @@
-package ${config.basePackage}.service.impl;
+package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.service.impl;
 
 <#if config.useSqlBean && config.getJdbcDaoType().name() == 'MyBatis'>
 import cn.vonce.sql.spring.service.MybatisSqlBeanServiceImpl;
@@ -21,7 +21,7 @@ import ${config.basePackage}.service.${className}Service;
 import org.springframework.stereotype.Service;
 
 /**
- * ${tableInfo.comm!} 业务实现
+ * ${tableInfo.remarks!} 业务实现
  *
  * @author ${config.author!}
  * @version ${config.version!}

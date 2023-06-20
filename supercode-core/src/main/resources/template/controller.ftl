@@ -1,4 +1,4 @@
-package ${config.basePackage}.controller;
+package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.controller;
 
 import ${config.basePackage}.model.${className};
 import ${config.basePackage}.service.${className}Service;
@@ -71,11 +71,10 @@ public class ${className}Controller<#if config.useSqlBean> extends BaseControlle
     */
 </#if>
     @GetMapping(value = "list")
-    public Map list(HttpServletRequest request) {
+    public RS list(int pageNum, int pageSize) {
         Select select = new Select();
-        ReqPageHelper<${className}> pageHelper = new ReqPageHelper(request);
-        pageHelper.paging(select, ${className?uncap_first}Service);
-        return pageHelper.result("获取列表成功");
+        ResultData<${className}> resultData = ${className?uncap_first}Service.paging(select, pageNum, pageSize)
+        return super.successHint("获取列表成功", resultData);
     }
 
 <#if config.getJavaDocType().name() == 'Swagger'>

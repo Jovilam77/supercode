@@ -14,7 +14,8 @@ public enum TemplateType {
     CONTROLLER("controller.ftl"),
     DB_HTML("db_html.ftl"),
     DB_MARKDOWN("db_markdown.ftl"),
-    DB_WORD("db_word.ftl");
+    DB_WORD("db_word.ftl"),
+    SQL("sql.ftl");
 
     TemplateType(String templateName) {
         this.templateName = templateName;
@@ -24,10 +25,6 @@ public enum TemplateType {
 
     public String getTemplateName() {
         return templateName;
-    }
-
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
     }
 
 }

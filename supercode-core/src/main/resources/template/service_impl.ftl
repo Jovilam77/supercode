@@ -1,4 +1,4 @@
-package ${config.basePackage}.service.impl;
+package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.service.impl;
 
 <#if config.useSqlBean && config.getJdbcDaoType().name() == 'MyBatis'>
 import cn.vonce.sql.spring.service.MybatisSqlBeanServiceImpl;

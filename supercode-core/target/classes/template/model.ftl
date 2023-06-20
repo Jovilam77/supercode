@@ -1,4 +1,4 @@
-package ${config.basePackage}.model;
+package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.model;
 
 <#if config.useSqlBean>
 import cn.vonce.sql.annotation.SqlId;
@@ -15,7 +15,7 @@ import ${otherType};
 </#list>
 
 /**
- * ${tableInfo.comm!} 实体类
+ * ${tableInfo.remarks!} 实体类
  *
  * @author ${config.author!}
  * @version ${config.version!}
@@ -23,29 +23,30 @@ import ${otherType};
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */<#if config.useLombok>
 @Data</#if><#if config.useSqlBean>
-@SqlTable("${tableInfo.name}")</#if>
-public class ${className} {
+@SqlTable(value = "${tableInfo.name}", autoAlter = true, remarks = "${tableInfo.remarks}")</#if>
+public class ${className} <#if baseClassName?? && baseClassName!=''>extends ${baseClassName!}</#if>{
 
-<#list filedInfoList as filedInfo>
+<#list fieldInfoList as filedInfo>
 
 <#if config.getJavaDocType().name() == 'Swagger'>
-    @ApiModelProperty(value = "${filedInfo.columnInfo.comm!}")
+    @ApiModelProperty(value = "${filedInfo.columnInfo.remarks!}")
 <#else>
     /**
-     * ${filedInfo.columnInfo.comm!}
+     * ${filedInfo.columnInfo.remarks!}
      */
 </#if><#if config.useSqlBean && filedInfo.columnInfo.pk>
     @SqlId<#if filedInfo.typeName == 'Long'>(type = IdType.SNOWFLAKE_ID_18)<#elseif filedInfo.typeName == 'String'>(type = IdType.UUID)</#if>
 </#if><#if config.useSqlBean && filedInfo.createTime>
-    @SqlInsertTime
+    @SqlDefaultValue(with = FillWith.INSERT)
 </#if><#if config.useSqlBean && filedInfo.updateTime>
-    @SqlUpdateTime
+    @SqlDefaultValue(with = FillWith.UPDATE)
 </#if>
+    @SqlColumn(notNull = ${filedInfo.columnInfo.notnull?c}, remarks = "${filedInfo.columnInfo.remarks}")
     private ${filedInfo.typeName} ${filedInfo.name};
 </#list>
 
 <#if !config.useLombok>
-<#list filedInfoList as filedInfo>
+<#list fieldInfoList as filedInfo>
     public ${filedInfo.typeName} get${filedInfo.name?cap_first}() {
         return ${filedInfo.name};
     }

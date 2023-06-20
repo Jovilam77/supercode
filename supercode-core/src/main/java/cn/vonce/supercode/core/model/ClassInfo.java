@@ -17,12 +17,14 @@ import java.util.Set;
 public class ClassInfo {
 
     private TableInfo tableInfo;
-    private List<FiledInfo> filedInfoList;
+    private List<FieldInfo> fieldInfoList;
     private Set<String> otherTypeSet;
-    private FiledInfo id;
+    private FieldInfo id;
     private GenerateConfig config;
     private String className;
+    private String baseClassName;
     private Date date;
+    private String sql;
 
     public TableInfo getTableInfo() {
         return tableInfo;
@@ -32,12 +34,12 @@ public class ClassInfo {
         this.tableInfo = tableInfo;
     }
 
-    public List<FiledInfo> getFiledInfoList() {
-        return filedInfoList;
+    public List<FieldInfo> getFieldInfoList() {
+        return fieldInfoList;
     }
 
-    public void setFiledInfoList(List<FiledInfo> filedInfoList) {
-        this.filedInfoList = filedInfoList;
+    public void setFieldInfoList(List<FieldInfo> fieldInfoList) {
+        this.fieldInfoList = fieldInfoList;
     }
 
     public Set<String> getOtherTypeSet() {
@@ -48,11 +50,11 @@ public class ClassInfo {
         this.otherTypeSet = otherTypeSet;
     }
 
-    public FiledInfo getId() {
+    public FieldInfo getId() {
         return id;
     }
 
-    public void setId(FiledInfo id) {
+    public void setId(FieldInfo id) {
         this.id = id;
     }
 
@@ -72,6 +74,14 @@ public class ClassInfo {
         this.className = className;
     }
 
+    public String getBaseClassName() {
+        return baseClassName;
+    }
+
+    public void setBaseClassName(String baseClassName) {
+        this.baseClassName = baseClassName;
+    }
+
     public Date getDate() {
         return date;
     }
@@ -79,4 +89,13 @@ public class ClassInfo {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    public String getSql() {
+        return sql;
+    }
+
+    public void setSql(String sql) {
+        this.sql = sql;
+    }
+
 }

@@ -1,4 +1,4 @@
-package ${config.basePackage}.service;
+package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.service;
 
 <#if config.useSqlBean>
 import cn.vonce.sql.service.SqlBeanService;
@@ -8,7 +8,7 @@ import java.util.List;
 import ${config.basePackage}.model.${className};
 
 /**
- * ${tableInfo.comm!} 业务接口
+ * ${tableInfo.remarks!} 业务接口
  *
  * @author ${config.author!}
  * @version ${config.version!}

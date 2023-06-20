@@ -10,7 +10,7 @@ import cn.vonce.sql.bean.ColumnInfo;
  * @email imjovi@qq.com
  * @date 2021-10-13 17:06:25
  */
-public class FiledInfo {
+public class FieldInfo {
 
     private String name;
     private String typeName;

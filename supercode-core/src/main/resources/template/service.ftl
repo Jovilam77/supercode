@@ -1,4 +1,4 @@
-package ${config.basePackage}.service;
+package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.service;
 
 <#if config.useSqlBean>
 import cn.vonce.sql.service.SqlBeanService;

@@ -32,6 +32,22 @@ public class GenerateConfig {
      */
     private String basePackage;
     /**
+     * 模块
+     */
+    private String module;
+    /**
+     * 基础类
+     */
+    private Class<?> baseClass;
+    /**
+     * 基础类名(如果使用baseClass则不需要设置此字段)
+     */
+    private String baseClassName;
+    /**
+     * 基础类字段(如果使用baseClass则不需要设置此字段)
+     */
+    private String[] baseClassFields;
+    /**
      * 是否使用Lombok 默认使用Lombok
      */
     private boolean useLombok = true;
@@ -73,6 +89,9 @@ public class GenerateConfig {
     private String targetPath;
 
     public String getAuthor() {
+        if (StringUtil.isBlank(author)) {
+            return System.getProperty("user.name");
+        }
         return author;
     }
 
@@ -97,11 +116,46 @@ public class GenerateConfig {
     }
 
     public String getBasePackage() {
+        if (StringUtil.isBlank(basePackage)) {
+            return "cn.vonce";
+        }
         return basePackage;
     }
 
     public void setBasePackage(String basePackage) {
         this.basePackage = basePackage;
+    }
+
+    public String getModule() {
+        return module;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
+    }
+
+    public Class<?> getBaseClass() {
+        return baseClass;
+    }
+
+    public void setBaseClass(Class<?> baseClass) {
+        this.baseClass = baseClass;
+    }
+
+    public String getBaseClassName() {
+        return baseClassName;
+    }
+
+    public void setBaseClassName(String baseClassName) {
+        this.baseClassName = baseClassName;
+    }
+
+    public String[] getBaseClassFields() {
+        return baseClassFields;
+    }
+
+    public void setBaseClassFields(String... baseClassFields) {
+        this.baseClassFields = baseClassFields;
     }
 
     public boolean isUseLombok() {

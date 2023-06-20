@@ -1,4 +1,4 @@
-package ${config.basePackage}.model;
+package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.model;
 
 <#if config.useSqlBean>
 import cn.vonce.sql.annotation.SqlId;
@@ -23,10 +23,10 @@ import ${otherType};
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */<#if config.useLombok>
 @Data</#if><#if config.useSqlBean>
-@SqlTable("${tableInfo.name}")</#if>
-public class ${className} {
+@SqlTable(value = "${tableInfo.name}", autoAlter = true, remarks = "${tableInfo.remarks}")</#if>
+public class ${className} <#if baseClassName?? && baseClassName!=''>extends ${baseClassName!}</#if>{
 
-<#list filedInfoList as filedInfo>
+<#list fieldInfoList as filedInfo>
 
 <#if config.getJavaDocType().name() == 'Swagger'>
     @ApiModelProperty(value = "${filedInfo.columnInfo.remarks!}")
@@ -41,11 +41,12 @@ public class ${className} {
 </#if><#if config.useSqlBean && filedInfo.updateTime>
     @SqlDefaultValue(with = FillWith.UPDATE)
 </#if>
+    @SqlColumn(notNull = ${filedInfo.columnInfo.notnull?c}, remarks = "${filedInfo.columnInfo.remarks}")
     private ${filedInfo.typeName} ${filedInfo.name};
 </#list>
 
 <#if !config.useLombok>
-<#list filedInfoList as filedInfo>
+<#list fieldInfoList as filedInfo>
     public ${filedInfo.typeName} get${filedInfo.name?cap_first}() {
         return ${filedInfo.name};
     }

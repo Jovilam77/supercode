@@ -4,6 +4,7 @@ import cn.vonce.sql.annotation.SqlColumn;
 import cn.vonce.sql.annotation.SqlDefaultValue;
 import cn.vonce.sql.annotation.SqlTable;
 import cn.vonce.sql.bean.ColumnInfo;
+import cn.vonce.sql.bean.Create;
 import cn.vonce.sql.bean.Table;
 import cn.vonce.sql.bean.TableInfo;
 import cn.vonce.sql.config.SqlBeanConfig;
@@ -11,6 +12,7 @@ import cn.vonce.sql.config.SqlBeanDB;
 import cn.vonce.sql.enumerate.DbType;
 import cn.vonce.sql.enumerate.FillWith;
 import cn.vonce.sql.enumerate.IdType;
+import cn.vonce.sql.helper.SqlHelper;
 import cn.vonce.sql.service.TableService;
 import cn.vonce.sql.uitls.DateUtil;
 import cn.vonce.sql.uitls.SqlBeanUtil;
@@ -19,7 +21,7 @@ import cn.vonce.supercode.core.config.GenerateConfig;
 import cn.vonce.supercode.core.enumeration.JdbcDocType;
 import cn.vonce.supercode.core.enumeration.TemplateType;
 import cn.vonce.supercode.core.map.JdbcMapJava;
-import cn.vonce.supercode.core.model.FiledInfo;
+import cn.vonce.supercode.core.model.FieldInfo;
 import cn.vonce.supercode.core.model.ClassInfo;
 import cn.vonce.supercode.core.enumeration.JdbcDaoType;
 import cn.vonce.supercode.core.util.FreemarkerUtil;
@@ -30,6 +32,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 /**
  * 生成助手
@@ -100,25 +103,26 @@ public class GenerateHelper {
     /**
      * 通过实体类 构建生成（单表）
      *
-     * @param config         生成信息配置
-     * @param dbType         数据库类型
-     * @param sqlToUpperCase SQL语句是否转大写
-     * @param bean           实体类
+     * @param config
+     * @param dbType
+     * @param sqlToUpperCase
+     * @param beanClass
      */
-    public static void build(GenerateConfig config, DbType dbType, boolean sqlToUpperCase, Class<?> bean) {
+    public static void build(GenerateConfig config, DbType dbType, boolean sqlToUpperCase, Class<?> beanClass) {
         SqlBeanDB sqlBeanDB = new SqlBeanDB();
         sqlBeanDB.setDbType(dbType);
         SqlBeanConfig sqlBeanConfig = new SqlBeanConfig();
         sqlBeanConfig.setToUpperCase(sqlToUpperCase);
         sqlBeanDB.setSqlBeanConfig(sqlBeanConfig);
         Map<String, String> filePaths = getFilePaths(config);
-        Table table = SqlBeanUtil.getTable(bean);
-        SqlTable sqlTable = SqlBeanUtil.getSqlTable(bean);
+        Table table = SqlBeanUtil.getTable(beanClass);
+        SqlTable sqlTable = SqlBeanUtil.getSqlTable(beanClass);
         TableInfo tableInfo = new TableInfo();
         tableInfo.setName(table.getName());
         tableInfo.setRemarks(sqlTable.remarks());
-        List<Field> fieldList = SqlBeanUtil.getBeanAllField(bean);
+        List<Field> fieldList = SqlBeanUtil.getBeanAllField(beanClass);
         List<ColumnInfo> columnInfoList = new ArrayList<>();
+
         for (int i = 0; i < fieldList.size(); i++) {
             Field field = fieldList.get(i);
             if (SqlBeanUtil.isIgnore(field)) {
@@ -126,8 +130,16 @@ public class GenerateHelper {
             }
             columnInfoList.add(SqlBeanUtil.getColumnInfo(sqlBeanDB, field, sqlTable, field.getAnnotation(SqlColumn.class)));
         }
+
         List<ClassInfo> classInfoList = new ArrayList<>();
-        classInfoList.add(getClassInfo(config, tableInfo, columnInfoList));
+        ClassInfo classInfo = getClassInfo(config, tableInfo, columnInfoList);
+        Create create = new Create();
+        create.setSqlBeanDB(sqlBeanDB);
+        create.setTable(beanClass);
+        create.setBeanClass(beanClass);
+        classInfo.setSql(SqlHelper.buildCreateSql(create));
+        classInfoList.add(classInfo);
+
         try {
             make(config, filePaths, classInfoList);
         } catch (IOException e) {
@@ -169,9 +181,9 @@ public class GenerateHelper {
     /**
      * 获取生成所需的对象列表
      *
-     * @param config
-     * @param tableInfo
-     * @param columnInfoList
+     * @param config         配置
+     * @param tableInfo      表信息
+     * @param columnInfoList 列信息列表
      * @return
      */
     public static ClassInfo getClassInfo(GenerateConfig config, TableInfo tableInfo, List<ColumnInfo> columnInfoList) {
@@ -179,6 +191,7 @@ public class GenerateHelper {
         ClassInfo classInfo = new ClassInfo();
         classInfo.setConfig(config);
         String newTableName;
+        //处理前缀
         if (config.isBePrefix() && StringUtil.isNotEmpty(config.getPrefix()) && tableInfo.getName().indexOf(config.getPrefix()) == 0) {
             newTableName = tableInfo.getName().substring(config.getPrefix().length());
         } else if (config.isBePrefix()) {
@@ -186,18 +199,48 @@ public class GenerateHelper {
         } else {
             newTableName = tableInfo.getName();
         }
+        //类名
         classInfo.setClassName(newTableName.substring(0, 1).toUpperCase() + StringUtil.underlineToHump(newTableName.substring(1)));
         classInfo.setTableInfo(tableInfo);
         classInfo.setDate(date);
         if (columnInfoList != null && !columnInfoList.isEmpty()) {
-            List<FiledInfo> filedInfoList = new ArrayList<>();
+            List<FieldInfo> fieldInfoList = new ArrayList<>();
+            String baseClassPath = "";
+            List<String> baseClassFiledList = null;
             Set<String> otherTypeSet = new HashSet<>();
-            FiledInfo filedInfo;
+            //处理基类
+            if (config.getBaseClass() != null) {
+                baseClassPath = config.getBaseClass().getName();
+                List<Field> fieldList = SqlBeanUtil.getBeanAllField(config.getBaseClass());
+                baseClassFiledList = fieldList.stream().map(item -> item.getName()).collect(Collectors.toList());
+            } else if (StringUtil.isNotBlank(config.getBaseClassName())) {
+                baseClassPath = config.getBasePackage() + ((StringUtil.isNotBlank(config.getModule())) ? "." + config.getModule() : "") + "." + config.getBaseClassName();
+                baseClassFiledList = Arrays.asList(config.getBaseClassFields());
+            }
+            if (StringUtil.isNotBlank(baseClassPath)) {
+                classInfo.setBaseClassName(baseClassPath.substring(baseClassPath.lastIndexOf(".") + 1));
+                otherTypeSet.add(baseClassPath);
+            }
+            //过滤掉基类中的字段
+            if (baseClassFiledList != null && baseClassFiledList.size() > 0) {
+                List<String> finalBaseClassFiledList = baseClassFiledList;
+                columnInfoList = columnInfoList.stream().filter(item -> {
+                    String columnName = StringUtil.underlineToHump(item.getName());
+                    for (String filedName : finalBaseClassFiledList) {
+                        if (columnName.equals(filedName)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }).collect(Collectors.toList());
+            }
+            FieldInfo filedInfo;
             for (ColumnInfo columnInfo : columnInfoList) {
+                String columnName = StringUtil.underlineToHump(columnInfo.getName());
                 Class<?> clazz = JdbcMapJava.getJavaType(columnInfo.getType());
-                filedInfo = new FiledInfo();
+                filedInfo = new FieldInfo();
                 filedInfo.setColumnInfo(columnInfo);
-                filedInfo.setName(StringUtil.underlineToHump(columnInfo.getName()));
+                filedInfo.setName(columnName);
                 filedInfo.setTypeName(clazz.getSimpleName());
                 filedInfo.setTypeFullName(clazz.getName());
                 if (columnInfo.getPk()) {
@@ -216,12 +259,12 @@ public class GenerateHelper {
                     otherTypeSet.add(SqlDefaultValue.class.getName());
                     otherTypeSet.add(FillWith.class.getName());
                 }
-                filedInfoList.add(filedInfo);
+                fieldInfoList.add(filedInfo);
             }
             if (classInfo.getId() == null) {
-                classInfo.setId(filedInfoList.get(0));
+                classInfo.setId(fieldInfoList.get(0));
             }
-            classInfo.setFiledInfoList(filedInfoList);
+            classInfo.setFieldInfoList(fieldInfoList);
             classInfo.setOtherTypeSet(otherTypeSet);
         }
         return classInfo;
@@ -244,6 +287,9 @@ public class GenerateHelper {
             freemarkerUtil.fprint(classInfo, TemplateType.SERVICE_IMPL.getTemplateName(), filePaths.get(TemplateType.SERVICE_IMPL.name()) + File.separator + classInfo.getClassName() + "ServiceImpl.java");
             freemarkerUtil.fprint(classInfo, TemplateType.CONTROLLER.getTemplateName(), filePaths.get(TemplateType.CONTROLLER.name()) + File.separator + classInfo.getClassName() + "Controller.java");
             freemarkerUtil.fprint(classInfo, config.getJdbcDocType().getTemplateName(), filePaths.get(JdbcDocType.class.getSimpleName()) + File.separator + classInfo.getTableInfo().getName() + config.getJdbcDocType().getSuffix());
+            if (StringUtil.isNotBlank(classInfo.getSql())) {
+                freemarkerUtil.fprint(classInfo, TemplateType.SQL.getTemplateName(), filePaths.get(TemplateType.SQL.name()) + File.separator + classInfo.getTableInfo().getName() + ".sql");
+            }
         }
     }
 
@@ -256,13 +302,10 @@ public class GenerateHelper {
     public static Map<String, String> getFilePaths(GenerateConfig config) {
         Map<String, String> filePaths = new HashMap<>();
         File targetDir;
-        File modelDir;
-        File mapperDir;
-        File serviceDir;
-        File serviceImplDir;
-        File controllerDir;
-        File sqlDocDir;
         String packPath = config.getBasePackage().replace(".", File.separator);
+        if (StringUtil.isNotBlank(config.getModule())) {
+            packPath = packPath + File.separator + config.getModule();
+        }
         String dateString = DateUtil.dateToString(new Date(), "yyyyMMddHHmmss");
         if (StringUtil.isNotEmpty(config.getTargetPath())) {
             targetDir = new File(config.getTargetPath() + File.separator + dateString);
@@ -273,24 +316,27 @@ public class GenerateHelper {
         if (!targetDir.exists()) {
             targetDir.mkdirs();
         }
-        modelDir = new File(targetDir.getAbsolutePath() + File.separator + packPath + File.separator + "model");
-        mapperDir = new File(targetDir.getAbsolutePath() + File.separator + packPath + File.separator + (config.getJdbcDaoType() == JdbcDaoType.MyBatis ? "mapper" : "jdbc"));
-        serviceDir = new File(targetDir.getAbsolutePath() + File.separator + packPath + File.separator + "service");
-        serviceImplDir = new File(targetDir.getAbsolutePath() + File.separator + packPath + File.separator + "service" + File.separator + "impl");
-        controllerDir = new File(targetDir.getAbsolutePath() + File.separator + packPath + File.separator + "controller");
-        sqlDocDir = new File(targetDir.getAbsolutePath() + File.separator + "dbDoc");
+        File modelDir = new File(targetDir.getAbsolutePath() + File.separator + packPath + File.separator + "model");
+        File mapperDir = new File(targetDir.getAbsolutePath() + File.separator + packPath + File.separator + (config.getJdbcDaoType() == JdbcDaoType.MyBatis ? "mapper" : "jdbc"));
+        File serviceDir = new File(targetDir.getAbsolutePath() + File.separator + packPath + File.separator + "service");
+        File serviceImplDir = new File(targetDir.getAbsolutePath() + File.separator + packPath + File.separator + "service" + File.separator + "impl");
+        File controllerDir = new File(targetDir.getAbsolutePath() + File.separator + packPath + File.separator + "controller");
+        File sqlDocDir = new File(targetDir.getAbsolutePath() + File.separator + "dbDoc");
+        File sqlDir = new File(targetDir.getAbsolutePath() + File.separator + "sql");
         modelDir.mkdirs();
         mapperDir.mkdirs();
         serviceDir.mkdirs();
         serviceImplDir.mkdirs();
         controllerDir.mkdirs();
         sqlDocDir.mkdirs();
+        sqlDir.mkdirs();
         filePaths.put(TemplateType.MODEL.name(), modelDir.getAbsolutePath());
         filePaths.put(TemplateType.MAPPER.name(), mapperDir.getAbsolutePath());
         filePaths.put(TemplateType.SERVICE.name(), serviceDir.getAbsolutePath());
         filePaths.put(TemplateType.SERVICE_IMPL.name(), serviceImplDir.getAbsolutePath());
         filePaths.put(TemplateType.CONTROLLER.name(), controllerDir.getAbsolutePath());
         filePaths.put(JdbcDocType.class.getSimpleName(), sqlDocDir.getAbsolutePath());
+        filePaths.put(TemplateType.SQL.name(), sqlDir.getAbsolutePath());
         return filePaths;
     }
 

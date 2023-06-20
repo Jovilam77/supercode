@@ -1,4 +1,4 @@
-package ${config.basePackage}.controller;
+package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.controller;
 
 import ${config.basePackage}.model.${className};
 import ${config.basePackage}.service.${className}Service;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * ${tableInfo.comm!} 控制器
+ * ${tableInfo.remarks!} 控制器
  *
  * @author ${config.author!}
  * @version ${config.version!}
@@ -21,7 +21,7 @@ import java.util.List;
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */
 <#if config.getJavaDocType().name() == 'Swagger'>
-@Api(tags = "${tableInfo.comm!} 控制器")
+@Api(tags = "${tableInfo.remarks!} 控制器")
 </#if>
 @RequestMapping("/${className?uncap_first}/")
 @RestController
@@ -71,11 +71,10 @@ public class ${className}Controller<#if config.useSqlBean> extends BaseControlle
     */
 </#if>
     @GetMapping(value = "list")
-    public Map list(HttpServletRequest request) {
+    public ResultData<${className}> list(int pageNum, int pageSize) {
         Select select = new Select();
-        ReqPageHelper<${className}> pageHelper = new ReqPageHelper(request);
-        pageHelper.paging(select, ${className?uncap_first}Service);
-        return pageHelper.result("获取列表成功");
+        ResultData<${className}> resultData = ${className?uncap_first}Service.paging(select, pageNum, pageSize)
+        return super.successHint("获取列表成功", resultData);
     }
 
 <#if config.getJavaDocType().name() == 'Swagger'>
