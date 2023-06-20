@@ -14,9 +14,9 @@ import java.util.List;
 /**
  * ${tableInfo.remarks!} dao
  *
- * @author ${config.author!}
- * @version ${config.version!}
- * @email ${config.email!}
+ * @author ${config.author!}<#if config.version?? && config.version!=''>
+ * @version ${config.version!}</#if><#if config.email?? && config.email!=''>
+ * @email ${config.email!}</#if>
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */
 public <#if config.getJdbcDaoType().name() == 'MyBatis'>interface<#else>class</#if> ${className}<#if config.getJdbcDaoType().name() == 'MyBatis'>Mapper<#else>Jdbc</#if> {

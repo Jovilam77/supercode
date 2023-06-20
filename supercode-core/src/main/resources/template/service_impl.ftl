@@ -23,9 +23,9 @@ import org.springframework.stereotype.Service;
 /**
  * ${tableInfo.remarks!} 业务实现
  *
- * @author ${config.author!}
- * @version ${config.version!}
- * @email ${config.email!}
+ * @author ${config.author!}<#if config.version?? && config.version!=''>
+ * @version ${config.version!}</#if><#if config.email?? && config.email!=''>
+ * @email ${config.email!}</#if>
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */
 @Service

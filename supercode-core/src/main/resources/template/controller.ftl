@@ -17,8 +17,8 @@ import java.util.List;
  * ${tableInfo.remarks!} 控制器
  *
  * @author ${config.author!}
- * @version ${config.version!}
- * @email ${config.email!}
+<#if config.version?? && config.version!=''> * @version ${config.version!}</#if>
+<#if config.email?? && config.email!=''> * @email ${config.email!}</#if>
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */
 <#if config.getJavaDocType().name() == 'Swagger'>

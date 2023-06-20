@@ -10,9 +10,9 @@ import ${config.basePackage}.model.${className};
 /**
  * ${tableInfo.remarks!} 业务接口
  *
- * @author ${config.author!}
- * @version ${config.version!}
- * @email ${config.email!}
+ * @author ${config.author!}<#if config.version?? && config.version!=''>
+ * @version ${config.version!}</#if><#if config.email?? && config.email!=''>
+ * @email ${config.email!}</#if>
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */
 public interface ${className}Service <#if config.useSqlBean>extends SqlBeanService<${className}, ${id.typeName}></#if> {
