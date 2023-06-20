@@ -3,6 +3,7 @@ package ${config.basePackage}<#if config.module?? && config.module!=''>.${config
 import ${config.basePackage}.model.${className};
 import ${config.basePackage}.service.${className}Service;
 import cn.vonce.common.base.BaseController;
+import cn.vonce.sql.bean.Select;
 import cn.vonce.common.bean.RS;
 <#if config.getJavaDocType().name() == 'Swagger'>
 import io.swagger.annotations.Api;
@@ -57,7 +58,7 @@ public class ${className}Controller<#if config.useSqlBean> extends BaseControlle
 </#if>
     @GetMapping("getAll")
     public <#if config.useSqlBean>RS<#else>List<${className}></#if> getAll() {
-        List<${className}> ${className?uncap_first}List = ${className?uncap_first}Service.selectAll();
+        List<${className}> ${className?uncap_first}List = ${className?uncap_first}Service.select();
         return <#if config.useSqlBean>super.successHint("查询全部成功", ${className?uncap_first}List)<#else>${className?uncap_first}List</#if>;
     }
 
@@ -73,7 +74,7 @@ public class ${className}Controller<#if config.useSqlBean> extends BaseControlle
     @GetMapping(value = "list")
     public RS list(int pageNum, int pageSize) {
         Select select = new Select();
-        ResultData<${className}> resultData = ${className?uncap_first}Service.paging(select, pageNum, pageSize)
+        ResultData<${className}> resultData = ${className?uncap_first}Service.paging(select, pageNum, pageSize);
         return super.successHint("获取列表成功", resultData);
     }
 
@@ -123,7 +124,7 @@ public class ${className}Controller<#if config.useSqlBean> extends BaseControlle
     @ApiOperation(value = "新增或根据id修改")
 <#else>
     /**
-    * 根据id修改
+    * 新增或编辑
     *
     * @param ${className?uncap_first}
     * @return
