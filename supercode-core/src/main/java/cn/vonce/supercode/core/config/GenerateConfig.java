@@ -88,6 +88,11 @@ public class GenerateConfig {
      */
     private String targetPath;
 
+    /**
+     * 时间戳
+     */
+    private Long timestamp = System.currentTimeMillis();
+
     public String getAuthor() {
         if (StringUtil.isBlank(author)) {
             return System.getProperty("user.name");
@@ -242,4 +247,9 @@ public class GenerateConfig {
     public void setTargetPath(String targetPath) {
         this.targetPath = targetPath;
     }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
 }

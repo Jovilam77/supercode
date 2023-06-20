@@ -24,6 +24,7 @@ import cn.vonce.supercode.core.map.JdbcMapJava;
 import cn.vonce.supercode.core.model.FieldInfo;
 import cn.vonce.supercode.core.model.ClassInfo;
 import cn.vonce.supercode.core.enumeration.JdbcDaoType;
+import cn.vonce.supercode.core.util.ClassUtil;
 import cn.vonce.supercode.core.util.FreemarkerUtil;
 import freemarker.template.Configuration;
 
@@ -72,7 +73,7 @@ public class GenerateHelper {
     }
 
     /**
-     * 通过数据库表 构建生成（单表）
+     * 通过数据库表 构建生成（批量）
      *
      * @param config         生成信息配置
      * @param tableInfo      表信息
@@ -90,23 +91,83 @@ public class GenerateHelper {
     }
 
     /**
-     * 通过实体类 构建生成（单表）
+     * 通过实体类 构建生成（批量）
      *
-     * @param config 生成信息配置
-     * @param dbType 数据库类型
-     * @param bean   实体类
+     * @param config       生成信息配置
+     * @param dbType       数据库类型
+     * @param packageNames 包名数组
      */
-    public static void build(GenerateConfig config, DbType dbType, Class<?> bean) {
-        build(config, dbType, false, bean);
+    public static void build(GenerateConfig config, DbType dbType, String... packageNames) {
+        build(config, dbType, false, packageNames);
+    }
+
+    /**
+     * 通过实体类 构建生成（批量）
+     *
+     * @param config         生成信息配置
+     * @param dbType         数据库类型
+     * @param sqlToUpperCase SQL是否转大写
+     * @param packageNames   包名数组
+     */
+    public static void build(GenerateConfig config, DbType dbType, boolean sqlToUpperCase, String... packageNames) {
+        if (packageNames == null || packageNames.length == 0) {
+            return;
+        }
+        List<Class<?>> beanClassList = new ArrayList<>();
+        for (String packageName : packageNames) {
+            beanClassList.addAll(ClassUtil.getClasses(packageName));
+        }
+        for (Class<?> beanClass : beanClassList) {
+            build(config, dbType, sqlToUpperCase, beanClass);
+        }
+    }
+
+    /**
+     * 通过实体类 构建生成（批量）
+     *
+     * @param config        生成信息配置
+     * @param dbType        数据库类型
+     * @param beanClassList 生成的实体类列表
+     */
+    public static void build(GenerateConfig config, DbType dbType, List<Class<?>> beanClassList) {
+        build(config, dbType, false, beanClassList);
+    }
+
+    /**
+     * 通过实体类 构建生成（批量）
+     *
+     * @param config         生成信息配置
+     * @param dbType         数据库类型
+     * @param sqlToUpperCase SQL是否转大写
+     * @param beanClassList  生成的实体类列表
+     */
+    public static void build(GenerateConfig config, DbType dbType, boolean sqlToUpperCase, List<Class<?>> beanClassList) {
+        if (beanClassList == null || beanClassList.size() == 0) {
+            return;
+        }
+        for (Class<?> beanClass : beanClassList) {
+            build(config, dbType, sqlToUpperCase, beanClass);
+        }
     }
 
     /**
      * 通过实体类 构建生成（单表）
      *
-     * @param config
-     * @param dbType
-     * @param sqlToUpperCase
-     * @param beanClass
+     * @param config    生成信息配置
+     * @param dbType    数据库类型
+     * @param beanClass 生成的实体类
+     */
+    public static void build(GenerateConfig config, DbType dbType, Class<?> beanClass) {
+        build(config, dbType, false, beanClass);
+    }
+
+    /**
+     * 通过实体类 构建生成（单表）
+     *
+     * @param config         生成信息配置
+     * @param dbType         数据库类型
+     * @param sqlToUpperCase SQL是否转大写
+     * @param beanClass      生成的实体类
      */
     public static void build(GenerateConfig config, DbType dbType, boolean sqlToUpperCase, Class<?> beanClass) {
         SqlBeanDB sqlBeanDB = new SqlBeanDB();
@@ -119,7 +180,7 @@ public class GenerateHelper {
         SqlTable sqlTable = SqlBeanUtil.getSqlTable(beanClass);
         TableInfo tableInfo = new TableInfo();
         tableInfo.setName(table.getName());
-        tableInfo.setRemarks(sqlTable.remarks());
+        tableInfo.setRemarks(sqlTable != null ? sqlTable.remarks() : "");
         List<Field> fieldList = SqlBeanUtil.getBeanAllField(beanClass);
         List<ColumnInfo> columnInfoList = new ArrayList<>();
 
@@ -150,7 +211,7 @@ public class GenerateHelper {
     /**
      * 获取要生成的数据表信息
      *
-     * @param tableService
+     * @param tableService 数据库连接实现类
      * @return
      */
     public static List<TableInfo> getTableInfoList(TableService tableService) {
@@ -164,7 +225,7 @@ public class GenerateHelper {
     /**
      * 获取生成所需的对象列表
      *
-     * @param config
+     * @param config        生成信息配置
      * @param tableInfoList
      * @param tableService
      * @return
@@ -181,7 +242,7 @@ public class GenerateHelper {
     /**
      * 获取生成所需的对象列表
      *
-     * @param config         配置
+     * @param config         生成信息配置
      * @param tableInfo      表信息
      * @param columnInfoList 列信息列表
      * @return
@@ -214,7 +275,11 @@ public class GenerateHelper {
                 List<Field> fieldList = SqlBeanUtil.getBeanAllField(config.getBaseClass());
                 baseClassFiledList = fieldList.stream().map(item -> item.getName()).collect(Collectors.toList());
             } else if (StringUtil.isNotBlank(config.getBaseClassName())) {
-                baseClassPath = config.getBasePackage() + ((StringUtil.isNotBlank(config.getModule())) ? "." + config.getModule() : "") + "." + config.getBaseClassName();
+                if (config.getBaseClassName().indexOf(".") > -1) {
+                    baseClassPath = config.getBaseClassName();
+                } else {
+                    baseClassPath = config.getBasePackage() + ((StringUtil.isNotBlank(config.getModule())) ? "." + config.getModule() : "") + "." + config.getBaseClassName();
+                }
                 baseClassFiledList = Arrays.asList(config.getBaseClassFields());
             }
             if (StringUtil.isNotBlank(baseClassPath)) {
@@ -273,12 +338,12 @@ public class GenerateHelper {
     /**
      * 创建要生成的文件
      *
-     * @param config
-     * @param filePaths
-     * @param classInfoList
+     * @param config        生成信息配置
+     * @param filePaths     文件生成路径
+     * @param classInfoList 类信息列表
      * @throws IOException
      */
-    public static void make(GenerateConfig config, Map<String, String> filePaths, List<ClassInfo> classInfoList) throws IOException {
+    private static void make(GenerateConfig config, Map<String, String> filePaths, List<ClassInfo> classInfoList) throws IOException {
         FreemarkerUtil freemarkerUtil = getFreemarkerUtil(config);
         for (ClassInfo classInfo : classInfoList) {
             freemarkerUtil.fprint(classInfo, TemplateType.MODEL.getTemplateName(), filePaths.get(TemplateType.MODEL.name()) + File.separator + classInfo.getClassName() + ".java");
@@ -296,7 +361,7 @@ public class GenerateHelper {
     /**
      * 获取各个文件生成的目标地址
      *
-     * @param config
+     * @param config 生成信息配置
      * @return
      */
     public static Map<String, String> getFilePaths(GenerateConfig config) {
@@ -306,7 +371,7 @@ public class GenerateHelper {
         if (StringUtil.isNotBlank(config.getModule())) {
             packPath = packPath + File.separator + config.getModule();
         }
-        String dateString = DateUtil.dateToString(new Date(), "yyyyMMddHHmmss");
+        String dateString = DateUtil.dateToString(new Date(config.getTimestamp()), "yyyyMMddHHmmss");
         if (StringUtil.isNotEmpty(config.getTargetPath())) {
             targetDir = new File(config.getTargetPath() + File.separator + dateString);
         } else {
@@ -343,7 +408,7 @@ public class GenerateHelper {
     /**
      * 获取FreemarkerUtil
      *
-     * @param config
+     * @param config 生成信息配置
      * @return
      */
     public static FreemarkerUtil getFreemarkerUtil(GenerateConfig config) throws IOException {
