@@ -189,7 +189,7 @@ public class GenerateHelper {
             if (SqlBeanUtil.isIgnore(field)) {
                 continue;
             }
-            columnInfoList.add(SqlBeanUtil.getColumnInfo(sqlBeanDB, field, sqlTable, field.getAnnotation(SqlColumn.class)));
+            columnInfoList.add(SqlBeanUtil.buildColumnInfo(sqlBeanDB, field, sqlTable, field.getAnnotation(SqlColumn.class)));
         }
 
         List<ClassInfo> classInfoList = new ArrayList<>();
