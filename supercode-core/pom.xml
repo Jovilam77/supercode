@@ -34,7 +34,7 @@
     <!-- 版本信息 -->
     <properties>
         <org.freemarker>2.3.31</org.freemarker>
-        <vonce.sqlbean.spring.version>1.6.0-beta16</vonce.sqlbean.spring.version>
+        <vonce.sqlbean.spring.version>1.6.0-beta17</vonce.sqlbean.spring.version>
     </properties>
 
     <dependencies>
