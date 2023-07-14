@@ -6,7 +6,7 @@
 
     <groupId>cn.vonce</groupId>
     <artifactId>supercode-core</artifactId>
-    <version>1.0.0-beta3</version>
+    <version>1.0.0-beta4</version>
 
     <name>supercode-core</name>
     <description>This is a code generator that can generate the corresponding business code through the database, or
