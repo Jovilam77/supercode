@@ -10,23 +10,19 @@ package cn.vonce.supercode.core.enumeration;
  */
 public enum JdbcDocType {
 
-    HTML(TemplateType.DB_HTML, ".html"), MARKDOWN(TemplateType.DB_MARKDOWN, ".md"), WORD(TemplateType.DB_WORD, ".doc");
+    HTML(Template.DB_HTML), MARKDOWN(Template.DB_MARKDOWN), WORD(Template.DB_WORD);
 
-    JdbcDocType(TemplateType templateType, String suffix) {
-        this.templateType = templateType;
-        this.suffix = suffix;
+    JdbcDocType(Template template) {
+        this.template = template;
     }
 
-    TemplateType templateType;
-    String suffix;
+    Template template;
 
-    public String getTemplateName() {
-        return templateType.templateName;
+    public Template getTemplate() {
+        return template;
     }
 
-    public String getSuffix() {
-        return suffix;
+    public void setTemplate(Template template) {
+        this.template = template;
     }
-
-
 }

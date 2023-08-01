@@ -18,12 +18,11 @@ import cn.vonce.sql.uitls.DateUtil;
 import cn.vonce.sql.uitls.SqlBeanUtil;
 import cn.vonce.sql.uitls.StringUtil;
 import cn.vonce.supercode.core.config.GenerateConfig;
-import cn.vonce.supercode.core.enumeration.JdbcDocType;
+import cn.vonce.supercode.core.enumeration.Template;
 import cn.vonce.supercode.core.enumeration.TemplateType;
 import cn.vonce.supercode.core.map.JdbcMapJava;
 import cn.vonce.supercode.core.model.FieldInfo;
 import cn.vonce.supercode.core.model.ClassInfo;
-import cn.vonce.supercode.core.enumeration.JdbcDaoType;
 import cn.vonce.supercode.core.util.ClassUtil;
 import cn.vonce.supercode.core.util.FreemarkerUtil;
 import freemarker.template.Configuration;
@@ -54,7 +53,7 @@ public class GenerateHelper {
      */
     public static void build(GenerateConfig config, TableService tableService) {
         List<TableInfo> tableInfoList = getTableInfoList(tableService);
-        Map<String, String> filePaths = getFilePaths(config);
+        File packDir = getFilePaths(config);
         ExecutorService pool = new ThreadPoolExecutor(3, 5, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(1024), Executors.defaultThreadFactory(), new ThreadPoolExecutor.CallerRunsPolicy());
         int num = 10;
         int size = tableInfoList.size() % num == 0 ? tableInfoList.size() / num : tableInfoList.size() / num + 1;
@@ -63,7 +62,7 @@ public class GenerateHelper {
             pool.execute(() -> {
                 List<ClassInfo> classInfoList = getClassInfoList(config, tableInfoList.subList(num * finalI, finalI == size - 1 ? tableInfoList.size() : num * finalI + num), tableService);
                 try {
-                    make(config, filePaths, classInfoList);
+                    make(config, packDir, classInfoList);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -80,11 +79,11 @@ public class GenerateHelper {
      * @param columnInfoList 列信息列表
      */
     public static void build(GenerateConfig config, TableInfo tableInfo, List<ColumnInfo> columnInfoList) {
-        Map<String, String> filePaths = getFilePaths(config);
+        File packDir = getFilePaths(config);
         List<ClassInfo> classInfoList = new ArrayList<>();
         classInfoList.add(getClassInfo(config, tableInfo, columnInfoList));
         try {
-            make(config, filePaths, classInfoList);
+            make(config, packDir, classInfoList);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -175,7 +174,7 @@ public class GenerateHelper {
         SqlBeanConfig sqlBeanConfig = new SqlBeanConfig();
         sqlBeanConfig.setToUpperCase(sqlToUpperCase);
         sqlBeanDB.setSqlBeanConfig(sqlBeanConfig);
-        Map<String, String> filePaths = getFilePaths(config);
+        File packDir = getFilePaths(config);
         Table table = SqlBeanUtil.getTable(beanClass);
         SqlTable sqlTable = SqlBeanUtil.getSqlTable(beanClass);
         TableInfo tableInfo = new TableInfo();
@@ -202,7 +201,7 @@ public class GenerateHelper {
         classInfoList.add(classInfo);
 
         try {
-            make(config, filePaths, classInfoList);
+            make(config, packDir, classInfoList);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -337,21 +336,25 @@ public class GenerateHelper {
      * 创建要生成的文件
      *
      * @param config        生成信息配置
-     * @param filePaths     文件生成路径
+     * @param packDir       文件生成路径
      * @param classInfoList 类信息列表
      * @throws IOException
      */
-    private static void make(GenerateConfig config, Map<String, String> filePaths, List<ClassInfo> classInfoList) throws IOException {
+    private static void make(GenerateConfig config, File packDir, List<ClassInfo> classInfoList) throws IOException {
         FreemarkerUtil freemarkerUtil = getFreemarkerUtil(config);
+        String packPath = config.getBasePackage().replace(".", File.separator);
+        if (StringUtil.isNotBlank(config.getModule())) {
+            packPath = packPath + File.separator + config.getModule();
+        }
         for (ClassInfo classInfo : classInfoList) {
-            freemarkerUtil.fprint(classInfo, TemplateType.MODEL.getTemplateName(), filePaths.get(TemplateType.MODEL.name()) + File.separator + classInfo.getClassName() + ".java");
-            freemarkerUtil.fprint(classInfo, TemplateType.MAPPER.getTemplateName(), filePaths.get(TemplateType.MAPPER.name()) + File.separator + classInfo.getClassName() + (config.getJdbcDaoType() == JdbcDaoType.MyBatis ? "Mapper.java" : "Jdbc.java"));
-            freemarkerUtil.fprint(classInfo, TemplateType.SERVICE.getTemplateName(), filePaths.get(TemplateType.SERVICE.name()) + File.separator + classInfo.getClassName() + "Service.java");
-            freemarkerUtil.fprint(classInfo, TemplateType.SERVICE_IMPL.getTemplateName(), filePaths.get(TemplateType.SERVICE_IMPL.name()) + File.separator + classInfo.getClassName() + "ServiceImpl.java");
-            freemarkerUtil.fprint(classInfo, TemplateType.CONTROLLER.getTemplateName(), filePaths.get(TemplateType.CONTROLLER.name()) + File.separator + classInfo.getClassName() + "Controller.java");
-            freemarkerUtil.fprint(classInfo, config.getJdbcDocType().getTemplateName(), filePaths.get(JdbcDocType.class.getSimpleName()) + File.separator + classInfo.getTableInfo().getName() + config.getJdbcDocType().getSuffix());
+            for (Template template : Template.values()) {
+                if (template.getType() == TemplateType.JAVA) {
+                    freemarkerUtil.fprint(classInfo, template.getName(), packDir.getAbsolutePath() + File.separator + packPath + template.getRelativePath() + classInfo.getClassName() + template.getNameSuffix() + template.getFileSuffix());
+                }
+            }
+            freemarkerUtil.fprint(classInfo, config.getJdbcDocType().getTemplate().getName(), packDir.getAbsolutePath() + config.getJdbcDocType().getTemplate().getRelativePath() + classInfo.getTableInfo().getName() + config.getJdbcDocType().getTemplate().getFileSuffix());
             if (StringUtil.isNotBlank(classInfo.getSql())) {
-                freemarkerUtil.fprint(classInfo, TemplateType.SQL.getTemplateName(), filePaths.get(TemplateType.SQL.name()) + File.separator + classInfo.getTableInfo().getName() + ".sql");
+                freemarkerUtil.fprint(classInfo, Template.SQL.getName(), packDir.getAbsolutePath() + Template.SQL.getRelativePath() + classInfo.getTableInfo().getName() + Template.SQL.getFileSuffix());
             }
         }
     }
@@ -362,8 +365,7 @@ public class GenerateHelper {
      * @param config 生成信息配置
      * @return
      */
-    public static Map<String, String> getFilePaths(GenerateConfig config) {
-        Map<String, String> filePaths = new HashMap<>();
+    public static File getFilePaths(GenerateConfig config) {
         File targetDir;
         String packPath = config.getBasePackage().replace(".", File.separator);
         if (StringUtil.isNotBlank(config.getModule())) {
@@ -379,28 +381,18 @@ public class GenerateHelper {
         if (!targetDir.exists()) {
             targetDir.mkdirs();
         }
-        File modelDir = new File(targetDir.getAbsolutePath() + File.separator + packPath + File.separator + "model");
-        File mapperDir = new File(targetDir.getAbsolutePath() + File.separator + packPath + File.separator + (config.getJdbcDaoType() == JdbcDaoType.MyBatis ? "mapper" : "jdbc"));
-        File serviceDir = new File(targetDir.getAbsolutePath() + File.separator + packPath + File.separator + "service");
-        File serviceImplDir = new File(targetDir.getAbsolutePath() + File.separator + packPath + File.separator + "service" + File.separator + "impl");
-        File controllerDir = new File(targetDir.getAbsolutePath() + File.separator + packPath + File.separator + "controller");
-        File sqlDocDir = new File(targetDir.getAbsolutePath() + File.separator + "dbDoc");
-        File sqlDir = new File(targetDir.getAbsolutePath() + File.separator + "sql");
-        modelDir.mkdirs();
-        mapperDir.mkdirs();
-        serviceDir.mkdirs();
-        serviceImplDir.mkdirs();
-        controllerDir.mkdirs();
-        sqlDocDir.mkdirs();
-        sqlDir.mkdirs();
-        filePaths.put(TemplateType.MODEL.name(), modelDir.getAbsolutePath());
-        filePaths.put(TemplateType.MAPPER.name(), mapperDir.getAbsolutePath());
-        filePaths.put(TemplateType.SERVICE.name(), serviceDir.getAbsolutePath());
-        filePaths.put(TemplateType.SERVICE_IMPL.name(), serviceImplDir.getAbsolutePath());
-        filePaths.put(TemplateType.CONTROLLER.name(), controllerDir.getAbsolutePath());
-        filePaths.put(JdbcDocType.class.getSimpleName(), sqlDocDir.getAbsolutePath());
-        filePaths.put(TemplateType.SQL.name(), sqlDir.getAbsolutePath());
-        return filePaths;
+        for (Template template : Template.values()) {
+            File dir;
+            if (template.getType() == TemplateType.JAVA) {
+                dir = new File(targetDir.getAbsolutePath() + File.separator + packPath + template.getRelativePath());
+            } else {
+                dir = new File(targetDir.getAbsolutePath() + template.getRelativePath());
+            }
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+        }
+        return targetDir;
     }
 
     /**
