@@ -32,9 +32,17 @@ public class GenerateConfig {
      */
     private String basePackage;
     /**
-     * 模块
+     * 包模块
      */
     private String module;
+    /**
+     * 是否多项目模块
+     */
+    private boolean multiProject;
+    /**
+     * 应用模块项目模块类名前缀
+     */
+    private String appProjectClassNamePrefix = "App";
     /**
      * 基础类
      */
@@ -137,6 +145,22 @@ public class GenerateConfig {
 
     public void setModule(String module) {
         this.module = module;
+    }
+
+    public boolean isMultiProject() {
+        return multiProject;
+    }
+
+    public void setMultiProject(boolean multiProject) {
+        this.multiProject = multiProject;
+    }
+
+    public String getAppProjectClassNamePrefix() {
+        return appProjectClassNamePrefix;
+    }
+
+    public void setAppProjectClassNamePrefix(String appProjectClassNamePrefix) {
+        this.appProjectClassNamePrefix = appProjectClassNamePrefix;
     }
 
     public Class<?> getBaseClass() {

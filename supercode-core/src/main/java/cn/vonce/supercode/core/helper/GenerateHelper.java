@@ -336,11 +336,11 @@ public class GenerateHelper {
      * 创建要生成的文件
      *
      * @param config        生成信息配置
-     * @param packDir       文件生成路径
+     * @param targetDir     文件生成路径
      * @param classInfoList 类信息列表
      * @throws IOException
      */
-    private static void make(GenerateConfig config, File packDir, List<ClassInfo> classInfoList) throws IOException {
+    private static void make(GenerateConfig config, File targetDir, List<ClassInfo> classInfoList) throws IOException {
         FreemarkerUtil freemarkerUtil = getFreemarkerUtil(config);
         String packPath = config.getBasePackage().replace(".", File.separator);
         if (StringUtil.isNotBlank(config.getModule())) {
@@ -349,12 +349,21 @@ public class GenerateHelper {
         for (ClassInfo classInfo : classInfoList) {
             for (Template template : Template.values()) {
                 if (template.getType() == TemplateType.JAVA) {
-                    freemarkerUtil.fprint(classInfo, template.getName(), packDir.getAbsolutePath() + File.separator + packPath + template.getRelativePath() + classInfo.getClassName() + template.getNameSuffix() + template.getFileSuffix());
+                    //如果不是多模块项目且属于多模块的模板则跳过
+                    if (!config.isMultiProject() && StringUtil.isNotBlank(template.getNamePrefix())) {
+                        continue;
+                    }
+                    String name = template.getNamePrefix() + classInfo.getClassName();
+                    if (config.isMultiProject()) {
+                        freemarkerUtil.fprint(classInfo, template.getName(), targetDir.getAbsolutePath() + File.separator + template.getProject() + File.separator + packPath + template.getRelativePath() + name + template.getNameSuffix() + template.getFileSuffix());
+                    } else {
+                        freemarkerUtil.fprint(classInfo, template.getName(), targetDir.getAbsolutePath() + File.separator + packPath + template.getRelativePath() + name + template.getNameSuffix() + template.getFileSuffix());
+                    }
                 }
             }
-            freemarkerUtil.fprint(classInfo, config.getJdbcDocType().getTemplate().getName(), packDir.getAbsolutePath() + config.getJdbcDocType().getTemplate().getRelativePath() + classInfo.getTableInfo().getName() + config.getJdbcDocType().getTemplate().getFileSuffix());
+            freemarkerUtil.fprint(classInfo, config.getJdbcDocType().getTemplate().getName(), targetDir.getAbsolutePath() + config.getJdbcDocType().getTemplate().getRelativePath() + classInfo.getTableInfo().getName() + config.getJdbcDocType().getTemplate().getFileSuffix());
             if (StringUtil.isNotBlank(classInfo.getSql())) {
-                freemarkerUtil.fprint(classInfo, Template.SQL.getName(), packDir.getAbsolutePath() + Template.SQL.getRelativePath() + classInfo.getTableInfo().getName() + Template.SQL.getFileSuffix());
+                freemarkerUtil.fprint(classInfo, Template.SQL.getName(), targetDir.getAbsolutePath() + Template.SQL.getRelativePath() + classInfo.getTableInfo().getName() + Template.SQL.getFileSuffix());
             }
         }
     }
@@ -384,7 +393,11 @@ public class GenerateHelper {
         for (Template template : Template.values()) {
             File dir;
             if (template.getType() == TemplateType.JAVA) {
-                dir = new File(targetDir.getAbsolutePath() + File.separator + packPath + template.getRelativePath());
+                if (config.isMultiProject()) {
+                    dir = new File(targetDir.getAbsolutePath() + File.separator + template.getProject() + File.separator + packPath + template.getRelativePath());
+                } else {
+                    dir = new File(targetDir.getAbsolutePath() + File.separator + packPath + template.getRelativePath());
+                }
             } else {
                 dir = new File(targetDir.getAbsolutePath() + template.getRelativePath());
             }

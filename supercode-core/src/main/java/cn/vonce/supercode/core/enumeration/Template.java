@@ -11,20 +11,28 @@ import java.io.File;
  */
 public enum Template {
 
-    MODEL("model.ftl", TemplateType.JAVA, File.separator + "model" + File.separator, "", ".java"),
-    MAPPER("mapper.ftl", TemplateType.JAVA, File.separator + "mapper" + File.separator, "Mapper", ".java"),
-    SERVICE("service.ftl", TemplateType.JAVA, File.separator + "service" + File.separator, "Service", ".java"),
-    SERVICE_IMPL("service_impl.ftl", TemplateType.JAVA, File.separator + "service" + File.separator + "impl" + File.separator, "ServiceImpl", ".java"),
-    CONTROLLER("controller.ftl", TemplateType.JAVA, File.separator + "controller" + File.separator, "Controller", ".java"),
-    DB_HTML("db_html.ftl", TemplateType.DOC, File.separator + "doc" + File.separator, "", ".html"),
-    DB_MARKDOWN("db_markdown.ftl", TemplateType.DOC, File.separator + "doc" + File.separator, "", ".md"),
-    DB_WORD("db_word.ftl", TemplateType.DOC, File.separator + "doc" + File.separator, "", ".doc"),
-    SQL("sql.ftl", TemplateType.SQL, File.separator + "sql" + File.separator, "", ".sql");
+    MODEL("model.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator, "", "", ".java"),
+    MAPPER("mapper.ftl", TemplateType.JAVA, "common", File.separator + "mapper" + File.separator, "", "Mapper", ".java"),
+    SERVICE("service.ftl", TemplateType.JAVA, "common", File.separator + "service" + File.separator, "", "Service", ".java"),
+    SERVICE_IMPL("service_impl.ftl", TemplateType.JAVA, "common", File.separator + "service" + File.separator + "impl" + File.separator, "", "ServiceImpl", ".java"),
+    CONTROLLER("controller.ftl", TemplateType.JAVA, "common", File.separator + "controller" + File.separator, "", "Controller", ".java"),
 
-    Template(String name, TemplateType type, String relativePath, String nameSuffix, String fileSuffix) {
+    APP_SERVICE("app_service.ftl", TemplateType.JAVA, "application", File.separator + "service" + File.separator, "App", "Service", ".java"),
+    APP_SERVICE_IMPL("app_service_impl.ftl", TemplateType.JAVA, "application", File.separator + "service" + File.separator + "impl" + File.separator, "App", "ServiceImpl", ".java"),
+    APP_CONTROLLER("app_controller.ftl", TemplateType.JAVA, "application", File.separator + "controller" + File.separator, "App", "Controller", ".java"),
+
+
+    DB_HTML("db_html.ftl", TemplateType.DOC, "", File.separator + "doc" + File.separator, "", "", ".html"),
+    DB_MARKDOWN("db_markdown.ftl", TemplateType.DOC, "", File.separator + "doc" + File.separator, "", "", ".md"),
+    DB_WORD("db_word.ftl", TemplateType.DOC, "", File.separator + "doc" + File.separator, "", "", ".doc"),
+    SQL("sql.ftl", TemplateType.SQL, "", File.separator + "sql" + File.separator, "", "", ".sql");
+
+    Template(String name, TemplateType type, String project, String relativePath, String namePrefix, String nameSuffix, String fileSuffix) {
         this.name = name;
         this.type = type;
+        this.project = project;
         this.relativePath = relativePath;
+        this.namePrefix = namePrefix;
         this.nameSuffix = nameSuffix;
         this.fileSuffix = fileSuffix;
     }
@@ -34,13 +42,21 @@ public enum Template {
      */
     String name;
     /**
+     * 模板类型
+     */
+    TemplateType type;
+    /**
+     * 项目
+     */
+    String project;
+    /**
      * 相对路径
      */
     String relativePath;
     /**
-     * 模板类型
+     * 名字前缀
      */
-    TemplateType type;
+    String namePrefix;
     /**
      * 名字后缀
      */
@@ -58,6 +74,22 @@ public enum Template {
         this.name = name;
     }
 
+    public TemplateType getType() {
+        return type;
+    }
+
+    public void setType(TemplateType type) {
+        this.type = type;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
+    }
+
     public String getRelativePath() {
         return relativePath;
     }
@@ -66,12 +98,12 @@ public enum Template {
         this.relativePath = relativePath;
     }
 
-    public TemplateType getType() {
-        return type;
+    public String getNamePrefix() {
+        return namePrefix;
     }
 
-    public void setType(TemplateType type) {
-        this.type = type;
+    public void setNamePrefix(String namePrefix) {
+        this.namePrefix = namePrefix;
     }
 
     public String getNameSuffix() {

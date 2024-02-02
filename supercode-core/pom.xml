@@ -34,7 +34,7 @@
     <!-- 版本信息 -->
     <properties>
         <org.freemarker>2.3.31</org.freemarker>
-        <vonce.sqlbean.spring.version>1.6.0-beta18</vonce.sqlbean.spring.version>
+        <vonce.sqlbean.spring.version>1.2.0-beta23</vonce.sqlbean.spring.version>
     </properties>
 
     <dependencies>
@@ -47,7 +47,7 @@
         <!-- SqlBean -->
         <dependency>
             <groupId>cn.vonce</groupId>
-            <artifactId>vonce-sqlbean-spring</artifactId>
+            <artifactId>vonce-sqlbean-core</artifactId>
             <version>${vonce.sqlbean.spring.version}</version>
         </dependency>
 
@@ -104,7 +104,7 @@
                 </executions>
             </plugin>
             <!--gpg加密插件-->
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>1.5</version>
@@ -117,7 +117,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
