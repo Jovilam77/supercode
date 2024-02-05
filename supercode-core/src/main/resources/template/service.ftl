@@ -5,7 +5,7 @@ import cn.vonce.sql.service.SqlBeanService;
 <#else>
 import java.util.List;
 </#if>
-import ${config.basePackage}.model.${className};
+import ${config.basePackage}.model.entity.${className};
 
 /**
  * ${tableInfo.remarks!} 业务接口

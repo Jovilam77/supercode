@@ -1,8 +1,10 @@
 package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.service.impl;
 
-<#if !config.useSqlBean>
 import java.util.List;
-</#if>
+import cn.vonce.sql.bean.Select;
+import cn.vonce.sql.page.PageHelper;
+import cn.vonce.sql.page.ResultData;
+import ${config.basePackage}.app.service.App${className}Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import ${config.basePackage}.model.${className};
 import ${config.basePackage}.service.${className}Service;
@@ -29,7 +31,7 @@ public class App${className}ServiceImpl implements App${className}Service {
 
 	@Override
     public Result<List<${className}>> getAll() {
-		return Result.success(${className?uncap_first}Service.selectAll());
+		return Result.success(${className?uncap_first}Service.select());
     }
 
     @Override
@@ -50,7 +52,7 @@ public class App${className}ServiceImpl implements App${className}Service {
 
 	@Override
     public Result<Void> updateById(${className} ${className?uncap_first}) {
-        if (${className?uncap_first}Service.updateById(${className?uncap_first}) {
+        if (${className?uncap_first}Service.updateByBeanId(${className?uncap_first}) > 0) {
             return Result.success();
         }
         return Result.fail();
@@ -66,7 +68,10 @@ public class App${className}ServiceImpl implements App${className}Service {
 
 	@Override
     public Result<Void> deleteById(${id.typeName} ${id.name}) {
-		return ${className?uncap_first}Service.deleteById(${id.name});
+        if (${className?uncap_first}Service.deleteById(${id.name}) > 0) {
+            return Result.success();
+        }
+		return Result.fail();
     }
 
 }

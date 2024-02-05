@@ -8,6 +8,7 @@ package cn.vonce.supercode.core.enumeration;
  * @date 2023/8/1 10:54
  */
 public enum TemplateType {
+
     JAVA, DOC, SQL
 
 }

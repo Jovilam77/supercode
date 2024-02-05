@@ -1,4 +1,4 @@
-package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.model;
+package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.model.entity;
 
 <#if config.useSqlBean>
 import cn.vonce.sql.annotation.SqlId;

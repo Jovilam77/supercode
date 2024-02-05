@@ -11,30 +11,34 @@ import java.io.File;
  */
 public enum Template {
 
-    MODEL("model.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator, "", "", ".java"),
-    MAPPER("mapper.ftl", TemplateType.JAVA, "common", File.separator + "mapper" + File.separator, "", "Mapper", ".java"),
-    SERVICE("service.ftl", TemplateType.JAVA, "common", File.separator + "service" + File.separator, "", "Service", ".java"),
-    SERVICE_IMPL("service_impl.ftl", TemplateType.JAVA, "common", File.separator + "service" + File.separator + "impl" + File.separator, "", "ServiceImpl", ".java"),
-    CONTROLLER("controller.ftl", TemplateType.JAVA, "common", File.separator + "controller" + File.separator, "", "Controller", ".java"),
+    MODEL_ENTITY("model_entity.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator + "entity" + File.separator, "", "", TemplateFileFormat.JAVA),
+    MODEL_CREATE_DTO("model_create_dto.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator + "dto" + File.separator, "", "CreateDto", TemplateFileFormat.JAVA),
+    MODEL_UPDATE_DTO("model_update_dto.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator + "dto" + File.separator, "", "UpdateDto", TemplateFileFormat.JAVA),
+    MODEL_QUERY_DTO("model_query_dto.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator + "dto" + File.separator, "", "QueryDto", TemplateFileFormat.JAVA),
+    MODEL_VO("model_vo.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator + "vo" + File.separator, "", "Vo", TemplateFileFormat.JAVA),
+    MAPPER("mapper.ftl", TemplateType.JAVA, "common", File.separator + "mapper" + File.separator, "", "Mapper", TemplateFileFormat.JAVA),
+    SERVICE("service.ftl", TemplateType.JAVA, "common", File.separator + "service" + File.separator, "", "Service", TemplateFileFormat.JAVA),
+    SERVICE_IMPL("service_impl.ftl", TemplateType.JAVA, "common", File.separator + "service" + File.separator + "impl" + File.separator, "", "ServiceImpl", TemplateFileFormat.JAVA),
+    CONTROLLER("controller.ftl", TemplateType.JAVA, "common", File.separator + "controller" + File.separator, "", "Controller", TemplateFileFormat.JAVA),
 
-    APP_SERVICE("app_service.ftl", TemplateType.JAVA, "application", File.separator + "service" + File.separator, "App", "Service", ".java"),
-    APP_SERVICE_IMPL("app_service_impl.ftl", TemplateType.JAVA, "application", File.separator + "service" + File.separator + "impl" + File.separator, "App", "ServiceImpl", ".java"),
-    APP_CONTROLLER("app_controller.ftl", TemplateType.JAVA, "application", File.separator + "controller" + File.separator, "App", "Controller", ".java"),
+    APP_SERVICE("app_service.ftl", TemplateType.JAVA, "application", File.separator + "service" + File.separator, "App", "Service", TemplateFileFormat.JAVA),
+    APP_SERVICE_IMPL("app_service_impl.ftl", TemplateType.JAVA, "application", File.separator + "service" + File.separator + "impl" + File.separator, "App", "ServiceImpl", TemplateFileFormat.JAVA),
+    APP_CONTROLLER("app_controller.ftl", TemplateType.JAVA, "application", File.separator + "controller" + File.separator, "App", "Controller", TemplateFileFormat.JAVA),
 
 
-    DB_HTML("db_html.ftl", TemplateType.DOC, "", File.separator + "doc" + File.separator, "", "", ".html"),
-    DB_MARKDOWN("db_markdown.ftl", TemplateType.DOC, "", File.separator + "doc" + File.separator, "", "", ".md"),
-    DB_WORD("db_word.ftl", TemplateType.DOC, "", File.separator + "doc" + File.separator, "", "", ".doc"),
-    SQL("sql.ftl", TemplateType.SQL, "", File.separator + "sql" + File.separator, "", "", ".sql");
+    DB_HTML("db_html.ftl", TemplateType.DOC, "", File.separator + "doc" + File.separator, "", "", TemplateFileFormat.HTML),
+    DB_MARKDOWN("db_markdown.ftl", TemplateType.DOC, "", File.separator + "doc" + File.separator, "", "", TemplateFileFormat.MD),
+    DB_WORD("db_word.ftl", TemplateType.DOC, "", File.separator + "doc" + File.separator, "", "", TemplateFileFormat.DOC),
+    SQL("sql.ftl", TemplateType.SQL, "", File.separator + "sql" + File.separator, "", "", TemplateFileFormat.SQL);
 
-    Template(String name, TemplateType type, String project, String relativePath, String namePrefix, String nameSuffix, String fileSuffix) {
+    Template(String name, TemplateType type, String project, String relativePath, String namePrefix, String nameSuffix, TemplateFileFormat fileFormat) {
         this.name = name;
         this.type = type;
         this.project = project;
         this.relativePath = relativePath;
         this.namePrefix = namePrefix;
         this.nameSuffix = nameSuffix;
-        this.fileSuffix = fileSuffix;
+        this.fileFormat = fileFormat;
     }
 
     /**
@@ -64,62 +68,34 @@ public enum Template {
     /**
      * 文件后缀
      */
-    String fileSuffix;
+    TemplateFileFormat fileFormat;
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public TemplateType getType() {
         return type;
     }
 
-    public void setType(TemplateType type) {
-        this.type = type;
-    }
-
     public String getProject() {
         return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
     }
 
     public String getRelativePath() {
         return relativePath;
     }
 
-    public void setRelativePath(String relativePath) {
-        this.relativePath = relativePath;
-    }
-
     public String getNamePrefix() {
         return namePrefix;
-    }
-
-    public void setNamePrefix(String namePrefix) {
-        this.namePrefix = namePrefix;
     }
 
     public String getNameSuffix() {
         return nameSuffix;
     }
 
-    public void setNameSuffix(String nameSuffix) {
-        this.nameSuffix = nameSuffix;
-    }
-
-    public String getFileSuffix() {
-        return fileSuffix;
-    }
-
-    public void setFileSuffix(String fileSuffix) {
-        this.fileSuffix = fileSuffix;
+    public String getFileFormat() {
+        return fileFormat.getFormat();
     }
 
 }

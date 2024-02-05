@@ -355,15 +355,15 @@ public class GenerateHelper {
                     }
                     String name = template.getNamePrefix() + classInfo.getClassName();
                     if (config.isMultiProject()) {
-                        freemarkerUtil.fprint(classInfo, template.getName(), targetDir.getAbsolutePath() + File.separator + template.getProject() + File.separator + packPath + template.getRelativePath() + name + template.getNameSuffix() + template.getFileSuffix());
+                        freemarkerUtil.fprint(classInfo, template.getName(), targetDir.getAbsolutePath() + File.separator + template.getProject() + File.separator + packPath + template.getRelativePath() + name + template.getNameSuffix() + template.getFileFormat());
                     } else {
-                        freemarkerUtil.fprint(classInfo, template.getName(), targetDir.getAbsolutePath() + File.separator + packPath + template.getRelativePath() + name + template.getNameSuffix() + template.getFileSuffix());
+                        freemarkerUtil.fprint(classInfo, template.getName(), targetDir.getAbsolutePath() + File.separator + packPath + template.getRelativePath() + name + template.getNameSuffix() + template.getFileFormat());
                     }
                 }
             }
-            freemarkerUtil.fprint(classInfo, config.getJdbcDocType().getTemplate().getName(), targetDir.getAbsolutePath() + config.getJdbcDocType().getTemplate().getRelativePath() + classInfo.getTableInfo().getName() + config.getJdbcDocType().getTemplate().getFileSuffix());
+            freemarkerUtil.fprint(classInfo, config.getJdbcDocType().getTemplate().getName(), targetDir.getAbsolutePath() + config.getJdbcDocType().getTemplate().getRelativePath() + classInfo.getTableInfo().getName() + config.getJdbcDocType().getTemplate().getFileFormat());
             if (StringUtil.isNotBlank(classInfo.getSql())) {
-                freemarkerUtil.fprint(classInfo, Template.SQL.getName(), targetDir.getAbsolutePath() + Template.SQL.getRelativePath() + classInfo.getTableInfo().getName() + Template.SQL.getFileSuffix());
+                freemarkerUtil.fprint(classInfo, Template.SQL.getName(), targetDir.getAbsolutePath() + Template.SQL.getRelativePath() + classInfo.getTableInfo().getName() + Template.SQL.getFileFormat());
             }
         }
     }
