@@ -736,9 +736,9 @@ ul li.task{
 <tr>
 <td align="center">${filedInfo.columnInfo.name!}</td>
 <td align="center">${filedInfo.columnInfo.type!}</td>
-<td align="center"><#if filedInfo.columnInfo.notnull?? && filedInfo.columnInfo.notnull>false<#else>true</#if></td>
+    <td align="center"><#if filedInfo.columnInfo.notnull?? && filedInfo.columnInfo.notnull><#else>是</#if></td>
 <td align="center">${filedInfo.columnInfo.dfltValue!}</td>
-<td align="center">${filedInfo.columnInfo.pk?c}</td>
+<td align="center"><#if filedInfo.columnInfo.pk?? && filedInfo.columnInfo.pk>是<#else></#if></td>
 <td align="center"><#if (filedInfo.columnInfo.fk)??>${filedInfo.columnInfo.fk?c}</#if></td>
 <td align="center">${filedInfo.columnInfo.length!}</td>
 <td align="center">${filedInfo.columnInfo.scale!}</td>

@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */
 @Service
-public class ${className}ServiceImpl <#if config.useSqlBean && config.getJdbcDaoType().name() == 'MyBatis' >extends MybatisSqlBeanServiceImpl<${className}, ${id.typeName}><#elseif config.useSqlBean && config.getJdbcDaoType().name() == 'SpringJdbc'>extends SpringJdbcSqlBeanServiceImpl <${className}, ${id.typeName}></#if> implements ${className}Service {
+public class ${className}ServiceImpl<#if config.useSqlBean && config.getJdbcDaoType().name() == 'MyBatis' > extends MybatisSqlBeanServiceImpl<${className}, ${id.typeName}><#elseif config.useSqlBean && config.getJdbcDaoType().name() == 'SpringJdbc'>extends SpringJdbcSqlBeanServiceImpl <${className}, ${id.typeName}></#if> implements ${className}Service {
 
 <#if !config.useSqlBean && config.getJdbcDaoType().name() == 'MyBatis'>
     @Autowired

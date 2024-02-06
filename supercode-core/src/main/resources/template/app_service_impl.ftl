@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ${config.basePackage}.model.${className};
 import ${config.basePackage}.service.${className}Service;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.BeanUtils;
 
 /**
  * ${tableInfo.remarks!} App业务实现
@@ -43,7 +44,9 @@ public class App${className}ServiceImpl implements App${className}Service {
     }
 
 	@Override
-    public Result<Void> add(${className} ${className?uncap_first}) {
+    public Result<Void> add(${className}CreateDto ${className?uncap_first}CreateDto) {
+        ${className} ${className?uncap_first} = new ${className}();
+        BeanUtils.copyProperties(${className?uncap_first}CreateDto, ${className?uncap_first});
         if (${className?uncap_first}Service.insert(${className?uncap_first}) > 0) {
             return Result.success();
         }
@@ -51,7 +54,9 @@ public class App${className}ServiceImpl implements App${className}Service {
     }
 
 	@Override
-    public Result<Void> updateById(${className} ${className?uncap_first}) {
+    public Result<Void> updateById(${className}UpdateDto ${className?uncap_first}UpdateDto) {
+        ${className} ${className?uncap_first} = new ${className}();
+        BeanUtils.copyProperties(${className?uncap_first}UpdateDto, ${className?uncap_first});
         if (${className?uncap_first}Service.updateByBeanId(${className?uncap_first}) > 0) {
             return Result.success();
         }
@@ -59,11 +64,13 @@ public class App${className}ServiceImpl implements App${className}Service {
     }
 
 	@Override
-    public Result<Void> addOrEdit(${className} ${className?uncap_first}) {
+    public Result<Void> addOrEdit(${className}UpdateDto ${className?uncap_first}UpdateDto) {
         if (${className?uncap_first}.getId() == null) {
-            return add(${className?uncap_first});
+            ${className}CreateDto ${className?uncap_first}CreateDto = new ${className}CreateDto();
+            BeanUtils.copyProperties(${className?uncap_first}UpdateDto, ${className?uncap_first}CreateDto);
+            return add(${className?uncap_first}CreateDto);
         }
-        return updateById(${className?uncap_first});
+        return updateById(${className?uncap_first}UpdateDto);
     }
 
 	@Override

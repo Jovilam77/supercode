@@ -82,13 +82,13 @@ public class App${className}Controller {
     /**
      * 新增
      *
-     * @param ${className?uncap_first}
+     * @param ${className?uncap_first}CreateDto
      * @return
      */
 </#if>
     @PostMapping("add")
-    public Result<Void> add(@RequestBody ${className} ${className?uncap_first}) {
-        return app${className}Service.add(${className?uncap_first});
+    public Result<Void> add(@RequestBody ${className}CreateDto ${className?uncap_first}CreateDto) {
+        return app${className}Service.add(${className?uncap_first}CreateDto);
     }
 
 <#if config.getJavaDocType().name() == 'Swagger'>
@@ -97,13 +97,13 @@ public class App${className}Controller {
     /**
      * 根据id修改
      *
-     * @param ${className?uncap_first}
+     * @param ${className?uncap_first}UpdateDto
      * @return
      */
 </#if>
     <#if config.useRestfulApi>@PutMapping("updateById")<#else>@PostMapping("updateById")</#if>
-    public Result<Void> updateById(@RequestBody ${className} ${className?uncap_first}) {
-        return app${className}Service.updateById(${className?uncap_first});
+    public Result<Void> updateById(@RequestBody ${className}UpdateDto ${className?uncap_first}UpdateDto) {
+        return app${className}Service.updateById(${className?uncap_first}UpdateDto);
     }
 
 <#if config.getJavaDocType().name() == 'Swagger'>
@@ -112,13 +112,13 @@ public class App${className}Controller {
     /**
     * 新增或根据id修改
     *
-    * @param ${className?uncap_first}
+    * @param ${className?uncap_first}UpdateDto
     * @return
     */
 </#if>
     @PostMapping("addOrEdit")
-    public Result<Void> addOrEdit(@RequestBody ${className} ${className?uncap_first}) {
-        return app${className}Service.addOrEdit(${className?uncap_first});
+    public Result<Void> addOrEdit(@RequestBody ${className}UpdateDto ${className?uncap_first}UpdateDto) {
+        return app${className}Service.addOrEdit(${className?uncap_first}UpdateDto);
     }
 
 <#if config.getJavaDocType().name() == 'Swagger'>

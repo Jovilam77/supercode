@@ -40,26 +40,26 @@ public interface App${className}Service {
     /**
       * 新增
       *
-      * @param ${className?uncap_first}
+      * @param ${className?uncap_first}CreateDto
       * @return
       */
-      Result<Void> add(${className} ${className?uncap_first});
+      Result<Void> add(${className}CreateDto ${className?uncap_first}CreateDto);
 
      /**
       * 根据id修改
       *
-      * @param ${className?uncap_first}
+      * @param ${className?uncap_first}UpdateDto
       * @return
       */
-      Result<Void> updateById(${className} ${className?uncap_first});
+      Result<Void> updateById(${className}UpdateDto ${className?uncap_first}UpdateDto);
 
      /**
       * 新增或编辑
       *
-      * @param ${className?uncap_first}
+      * @param ${className?uncap_first}UpdateDto
       * @return
       */
-      Result<Void> addOrEdit(${className} ${className?uncap_first});
+      Result<Void> addOrEdit(${className}UpdateDto ${className?uncap_first}UpdateDto);
 
      /**
       * 根据id删除

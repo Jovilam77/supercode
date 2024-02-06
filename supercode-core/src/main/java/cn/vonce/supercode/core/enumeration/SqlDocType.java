@@ -8,11 +8,11 @@ package cn.vonce.supercode.core.enumeration;
  * @email imjovi@qq.com
  * @date 2021-10-12 11:53:22
  */
-public enum JdbcDocType {
+public enum SqlDocType {
 
     HTML(Template.DB_HTML), MARKDOWN(Template.DB_MARKDOWN), WORD(Template.DB_WORD);
 
-    JdbcDocType(Template template) {
+    SqlDocType(Template template) {
         this.template = template;
     }
 

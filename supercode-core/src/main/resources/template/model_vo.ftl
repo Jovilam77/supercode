@@ -19,7 +19,6 @@ import lombok.Data;
 public class ${className}Vo {
 
 <#list fieldInfoList as filedInfo>
-<#if !filedInfo.ignore>
 <#if config.getJavaDocType().name() == 'Swagger'>
     @ApiModelProperty(value = "${filedInfo.columnInfo.remarks!}")
 <#else>
@@ -28,7 +27,6 @@ public class ${className}Vo {
      */
 </#if>
     private ${filedInfo.typeName} ${filedInfo.name};
-</#if>
 </#list>
 
 <#if !config.useLombok>

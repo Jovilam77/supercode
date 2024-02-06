@@ -3,7 +3,7 @@ package cn.vonce.supercode.core.config;
 import cn.vonce.sql.uitls.StringUtil;
 import cn.vonce.supercode.core.enumeration.JdbcDaoType;
 import cn.vonce.supercode.core.enumeration.JavaDocType;
-import cn.vonce.supercode.core.enumeration.JdbcDocType;
+import cn.vonce.supercode.core.enumeration.SqlDocType;
 
 /**
  * 生成配置
@@ -80,13 +80,13 @@ public class GenerateConfig {
      */
     private JdbcDaoType jdbcDaoType = JdbcDaoType.MyBatis;
     /**
-     * 数据库 文档类型 默认使用Html
-     */
-    private JdbcDocType jdbcDocType = JdbcDocType.HTML;
-    /**
      * Java 文档类型 默认使用SmartDoc
      */
     private JavaDocType javaDocType = JavaDocType.SmartDoc;
+    /**
+     * 数据库 文档类型 默认使用Html
+     */
+    private SqlDocType sqlDocType = SqlDocType.HTML;
     /**
      * 模板路径
      */
@@ -240,12 +240,12 @@ public class GenerateConfig {
         this.jdbcDaoType = jdbcDaoType;
     }
 
-    public JdbcDocType getJdbcDocType() {
-        return jdbcDocType;
+    public SqlDocType getSqlDocType() {
+        return sqlDocType;
     }
 
-    public void setJdbcDocType(JdbcDocType jdbcDocType) {
-        this.jdbcDocType = jdbcDocType;
+    public void setSqlDocType(SqlDocType sqlDocType) {
+        this.sqlDocType = sqlDocType;
     }
 
     public JavaDocType getJavaDocType() {

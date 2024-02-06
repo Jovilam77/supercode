@@ -25,7 +25,7 @@ import ${otherType};
  */<#if config.useLombok>
 @Data</#if><#if config.useSqlBean>
 @SqlTable(value = "${tableInfo.name}", autoAlter = true, remarks = "${tableInfo.remarks}")</#if>
-public class ${className} <#if baseClassName?? && baseClassName!=''>extends ${baseClassName!}</#if>{
+public class ${className}<#if baseClassName?? && baseClassName!=''> extends ${baseClassName!}</#if> {
 
 <#list fieldInfoList as filedInfo>
 <#if !filedInfo.ignore>

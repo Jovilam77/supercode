@@ -353,6 +353,14 @@ public class GenerateHelper {
                     if (!config.isMultiProject() && StringUtil.isNotBlank(template.getNamePrefix())) {
                         continue;
                     }
+                    //如果使用SqlBean那么跳过Mapper生成
+                    if (config.isUseSqlBean() && "mapper.ftl".equals(template.getName())) {
+                        continue;
+                    }
+                    //如果生成多模块项目，那么Controller则跳过生成
+                    if (config.isMultiProject() && "controller.ftl".equals(template.getName())) {
+                        continue;
+                    }
                     String name = template.getNamePrefix() + classInfo.getClassName();
                     if (config.isMultiProject()) {
                         freemarkerUtil.fprint(classInfo, template.getName(), targetDir.getAbsolutePath() + File.separator + template.getProject() + File.separator + packPath + template.getRelativePath() + name + template.getNameSuffix() + template.getFileFormat());
@@ -361,7 +369,7 @@ public class GenerateHelper {
                     }
                 }
             }
-            freemarkerUtil.fprint(classInfo, config.getJdbcDocType().getTemplate().getName(), targetDir.getAbsolutePath() + config.getJdbcDocType().getTemplate().getRelativePath() + classInfo.getTableInfo().getName() + config.getJdbcDocType().getTemplate().getFileFormat());
+            freemarkerUtil.fprint(classInfo, config.getSqlDocType().getTemplate().getName(), targetDir.getAbsolutePath() + config.getSqlDocType().getTemplate().getRelativePath() + classInfo.getTableInfo().getName() + config.getSqlDocType().getTemplate().getFileFormat());
             if (StringUtil.isNotBlank(classInfo.getSql())) {
                 freemarkerUtil.fprint(classInfo, Template.SQL.getName(), targetDir.getAbsolutePath() + Template.SQL.getRelativePath() + classInfo.getTableInfo().getName() + Template.SQL.getFileFormat());
             }
@@ -393,6 +401,14 @@ public class GenerateHelper {
         for (Template template : Template.values()) {
             File dir;
             if (template.getType() == TemplateType.JAVA) {
+                //如果使用SqlBean那么跳过Mapper生成
+                if (config.isUseSqlBean() && "mapper.ftl".equals(template.getName())) {
+                    continue;
+                }
+                //如果生成多模块项目，那么Controller则跳过生成
+                if (config.isMultiProject() && "controller.ftl".equals(template.getName())) {
+                    continue;
+                }
                 if (config.isMultiProject()) {
                     dir = new File(targetDir.getAbsolutePath() + File.separator + template.getProject() + File.separator + packPath + template.getRelativePath());
                 } else {
