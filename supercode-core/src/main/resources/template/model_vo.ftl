@@ -6,6 +6,11 @@ import io.swagger.annotations.ApiModelProperty;
 <#if config.useLombok>
 import lombok.Data;
 </#if>
+<#list otherTypeMap?keys as key>
+<#if otherTypeMap[key]>
+import ${key};
+</#if>
+</#list>
 
 /**
  * ${tableInfo.remarks!} Vo
