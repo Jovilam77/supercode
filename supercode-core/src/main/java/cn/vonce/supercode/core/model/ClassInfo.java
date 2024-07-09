@@ -4,6 +4,7 @@ import cn.vonce.sql.bean.TableInfo;
 import cn.vonce.supercode.core.config.GenerateConfig;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -18,7 +19,7 @@ public class ClassInfo {
 
     private TableInfo tableInfo;
     private List<FieldInfo> fieldInfoList;
-    private Set<String> otherTypeSet;
+    private Map<String, Boolean> otherTypeMap;
     private FieldInfo id;
     private GenerateConfig config;
     private String className;
@@ -42,12 +43,12 @@ public class ClassInfo {
         this.fieldInfoList = fieldInfoList;
     }
 
-    public Set<String> getOtherTypeSet() {
-        return otherTypeSet;
+    public Map<String, Boolean> getOtherTypeMap() {
+        return otherTypeMap;
     }
 
-    public void setOtherTypeSet(Set<String> otherTypeSet) {
-        this.otherTypeSet = otherTypeSet;
+    public void setOtherTypeMap(Map<String, Boolean> otherTypeMap) {
+        this.otherTypeMap = otherTypeMap;
     }
 
     public FieldInfo getId() {

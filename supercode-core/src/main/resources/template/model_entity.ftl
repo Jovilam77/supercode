@@ -11,8 +11,8 @@ import io.swagger.annotations.ApiModelProperty;
 <#if config.useLombok>
 import lombok.Data;
 </#if>
-<#list otherTypeSet as otherType>
-import ${otherType};
+<#list otherTypeMap?keys as key>
+import ${key};
 </#list>
 
 /**
@@ -35,14 +35,15 @@ public class ${className}<#if baseClassName?? && baseClassName!=''> extends ${ba
     /**
      * ${filedInfo.columnInfo.remarks!}
      */
-</#if><#if config.useSqlBean && filedInfo.columnInfo.pk>
+</#if><#if config.useSqlBean><#if filedInfo.columnInfo.pk>
     @SqlId<#if filedInfo.typeName == 'Long'>(type = IdType.SNOWFLAKE_ID_18)<#elseif filedInfo.typeName == 'String'>(type = IdType.UUID)</#if>
-</#if><#if config.useSqlBean && filedInfo.createTime>
+</#if><#if filedInfo.createTime>
     @SqlDefaultValue(with = FillWith.INSERT)
-</#if><#if config.useSqlBean && filedInfo.updateTime>
+</#if><#if filedInfo.updateTime>
     @SqlDefaultValue(with = FillWith.UPDATE)
 </#if>
     @SqlColumn(<#if filedInfo.columnInfo.notnull?? && filedInfo.columnInfo.notnull>notNull = ${filedInfo.columnInfo.notnull?c}, </#if>remarks = "${filedInfo.columnInfo.remarks}")
+</#if>
     private ${filedInfo.typeName} ${filedInfo.name};
 </#if>
 </#list>

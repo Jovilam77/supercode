@@ -47,7 +47,7 @@ public class GenerateHelper {
     /**
      * 通过数据库表 构建生成（全部）
      *
-     * @param config       生成信息配置
+     * @param config          生成信息配置
      * @param dbManageService 数据库连接实现类
      * @throws IOException
      */
@@ -224,7 +224,7 @@ public class GenerateHelper {
     /**
      * 获取生成所需的对象列表
      *
-     * @param config        生成信息配置
+     * @param config          生成信息配置
      * @param tableInfoList
      * @param dbManageService
      * @return
@@ -267,7 +267,8 @@ public class GenerateHelper {
             List<FieldInfo> fieldInfoList = new ArrayList<>();
             String baseClassPath = "";
             List<String> baseClassFiledList = null;
-            Set<String> otherTypeSet = new HashSet<>();
+            //存储其他类型（Key为类型全名，Value为是否是实体类字段的类型）
+            Map<String, Boolean> otherTypeMap = new HashMap<>();
             //处理基类
             if (config.getBaseClass() != null) {
                 baseClassPath = config.getBaseClass().getName();
@@ -283,33 +284,32 @@ public class GenerateHelper {
             }
             if (StringUtil.isNotBlank(baseClassPath)) {
                 classInfo.setBaseClassName(baseClassPath.substring(baseClassPath.lastIndexOf(".") + 1));
-                otherTypeSet.add(baseClassPath);
+                otherTypeMap.put(baseClassPath, false);
             }
             FieldInfo filedInfo;
             for (ColumnInfo columnInfo : columnInfoList) {
-                handleMybatisType(columnInfo);
                 String columnName = StringUtil.underlineToHump(columnInfo.getName());
                 Class<?> clazz = JdbcMapJava.getJavaType(columnInfo.getType());
                 filedInfo = new FieldInfo();
-                filedInfo.setColumnInfo(columnInfo);
+                filedInfo.setColumnInfo(handleMybatisType(columnInfo));
                 filedInfo.setName(columnName);
                 filedInfo.setTypeName(clazz.getSimpleName());
                 filedInfo.setTypeFullName(clazz.getName());
                 if (columnInfo.getPk()) {
                     classInfo.setId(filedInfo);
                     if (filedInfo.getTypeName().equals("Long") || filedInfo.getTypeName().equals("String")) {
-                        otherTypeSet.add(IdType.class.getName());
+                        otherTypeMap.put(IdType.class.getName(), false);
                     }
                 }
                 filedInfo.setCreateTime(clazz.getSimpleName().equals("Date") && (columnInfo.getName().toLowerCase().indexOf("create") > -1 || columnInfo.getRemarks().equals("创建时间")));
                 filedInfo.setUpdateTime(clazz.getSimpleName().equals("Date") && (columnInfo.getName().toLowerCase().indexOf("update") > -1 || columnInfo.getRemarks().equals("更新时间")));
                 //使用到的java.lang包下的其他类需要导入
                 if (filedInfo.getTypeFullName().indexOf("java.lang") == -1) {
-                    otherTypeSet.add(filedInfo.getTypeFullName());
+                    otherTypeMap.put(filedInfo.getTypeFullName(), true);
                 }
                 if (filedInfo.isCreateTime() || filedInfo.isUpdateTime()) {
-                    otherTypeSet.add(SqlDefaultValue.class.getName());
-                    otherTypeSet.add(FillWith.class.getName());
+                    otherTypeMap.put(SqlDefaultValue.class.getName(), false);
+                    otherTypeMap.put(FillWith.class.getName(), false);
                 }
                 fieldInfoList.add(filedInfo);
             }
@@ -328,7 +328,7 @@ public class GenerateHelper {
                 classInfo.setId(fieldInfoList.get(0));
             }
             classInfo.setFieldInfoList(fieldInfoList);
-            classInfo.setOtherTypeSet(otherTypeSet);
+            classInfo.setOtherTypeMap(otherTypeMap);
         }
         return classInfo;
     }
@@ -370,7 +370,9 @@ public class GenerateHelper {
                     }
                 }
             }
+            //生成sql文档
             freemarkerUtil.fprint(classInfo, config.getSqlDocType().getTemplate().getName(), targetDir.getAbsolutePath() + config.getSqlDocType().getTemplate().getRelativePath() + classInfo.getTableInfo().getName() + config.getSqlDocType().getTemplate().getFileFormat());
+            //生成sql
             if (StringUtil.isNotBlank(classInfo.getSql())) {
                 freemarkerUtil.fprint(classInfo, Template.SQL.getName(), targetDir.getAbsolutePath() + Template.SQL.getRelativePath() + classInfo.getTableInfo().getName() + Template.SQL.getFileFormat());
             }
@@ -442,13 +444,14 @@ public class GenerateHelper {
         return freemarkerUtil;
     }
 
-    public static void handleMybatisType(ColumnInfo columnInfo) {
+    public static ColumnInfo handleMybatisType(ColumnInfo columnInfo) {
         if ("DATETIME".equalsIgnoreCase(columnInfo.getType()) || "DATETIME2".equalsIgnoreCase(columnInfo.getType())) {
             columnInfo.setType("TIMESTAMP");
         }
         if ("INT".equalsIgnoreCase(columnInfo.getType())) {
             columnInfo.setType("INTEGER");
         }
+        return columnInfo;
     }
 
 }
