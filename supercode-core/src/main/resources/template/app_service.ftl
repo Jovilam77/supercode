@@ -1,6 +1,7 @@
 package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.service;
 
 import java.util.List;
+import cn.vonce.sql.page.ResultData;
 import ${config.basePackage}.model.${className};
 
 /**

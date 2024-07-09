@@ -2,10 +2,7 @@ package ${config.basePackage}<#if config.module?? && config.module!=''>.${config
 
 import ${config.basePackage}.model.${className};
 <#if config.getJdbcDaoType().name() == 'MyBatis'>
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 <#else>
 import org.springframework.jdbc.core.JdbcTemplate;
 </#if>
@@ -19,6 +16,7 @@ import java.util.List;
  * @email ${config.email!}</#if>
  * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
  */
+@Mapper
 public <#if config.getJdbcDaoType().name() == 'MyBatis'>interface<#else>class</#if> ${className}<#if config.getJdbcDaoType().name() == 'MyBatis'>Mapper<#else>Jdbc</#if> {
 
 <#if config.getJdbcDaoType().name() == 'MyBatis'>

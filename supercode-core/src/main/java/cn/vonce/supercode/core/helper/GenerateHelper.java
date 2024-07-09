@@ -13,7 +13,7 @@ import cn.vonce.sql.enumerate.DbType;
 import cn.vonce.sql.enumerate.FillWith;
 import cn.vonce.sql.enumerate.IdType;
 import cn.vonce.sql.helper.SqlHelper;
-import cn.vonce.sql.service.TableService;
+import cn.vonce.sql.service.DbManageService;
 import cn.vonce.sql.uitls.DateUtil;
 import cn.vonce.sql.uitls.SqlBeanUtil;
 import cn.vonce.sql.uitls.StringUtil;
@@ -48,11 +48,11 @@ public class GenerateHelper {
      * 通过数据库表 构建生成（全部）
      *
      * @param config       生成信息配置
-     * @param tableService 数据库连接实现类
+     * @param dbManageService 数据库连接实现类
      * @throws IOException
      */
-    public static void build(GenerateConfig config, TableService tableService) {
-        List<TableInfo> tableInfoList = getTableInfoList(tableService);
+    public static void build(GenerateConfig config, DbManageService dbManageService) {
+        List<TableInfo> tableInfoList = getTableInfoList(dbManageService);
         File packDir = getFilePaths(config);
         ExecutorService pool = new ThreadPoolExecutor(3, 5, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(1024), Executors.defaultThreadFactory(), new ThreadPoolExecutor.CallerRunsPolicy());
         int num = 10;
@@ -60,7 +60,7 @@ public class GenerateHelper {
         for (int i = 0; i < size; i++) {
             int finalI = i;
             pool.execute(() -> {
-                List<ClassInfo> classInfoList = getClassInfoList(config, tableInfoList.subList(num * finalI, finalI == size - 1 ? tableInfoList.size() : num * finalI + num), tableService);
+                List<ClassInfo> classInfoList = getClassInfoList(config, tableInfoList.subList(num * finalI, finalI == size - 1 ? tableInfoList.size() : num * finalI + num), dbManageService);
                 try {
                     make(config, packDir, classInfoList);
                 } catch (IOException e) {
@@ -210,11 +210,11 @@ public class GenerateHelper {
     /**
      * 获取要生成的数据表信息
      *
-     * @param tableService 数据库连接实现类
+     * @param dbManageService 数据库连接实现类
      * @return
      */
-    public static List<TableInfo> getTableInfoList(TableService tableService) {
-        List<TableInfo> tableInfoList = tableService.getTableList(null);
+    public static List<TableInfo> getTableInfoList(DbManageService dbManageService) {
+        List<TableInfo> tableInfoList = dbManageService.getTableList(null);
         if (tableInfoList == null || tableInfoList.isEmpty()) {
             return null;
         }
@@ -226,13 +226,13 @@ public class GenerateHelper {
      *
      * @param config        生成信息配置
      * @param tableInfoList
-     * @param tableService
+     * @param dbManageService
      * @return
      */
-    public static List<ClassInfo> getClassInfoList(GenerateConfig config, List<TableInfo> tableInfoList, TableService tableService) {
+    public static List<ClassInfo> getClassInfoList(GenerateConfig config, List<TableInfo> tableInfoList, DbManageService dbManageService) {
         List<ClassInfo> classInfoList = new ArrayList<>();
         for (TableInfo tableInfo : tableInfoList) {
-            List<ColumnInfo> columnInfoList = tableService.getColumnInfoList(tableInfo.getName());
+            List<ColumnInfo> columnInfoList = dbManageService.getColumnInfoList(tableInfo.getName());
             classInfoList.add(getClassInfo(config, tableInfo, columnInfoList));
         }
         return classInfoList;
@@ -287,6 +287,7 @@ public class GenerateHelper {
             }
             FieldInfo filedInfo;
             for (ColumnInfo columnInfo : columnInfoList) {
+                handleMybatisType(columnInfo);
                 String columnName = StringUtil.underlineToHump(columnInfo.getName());
                 Class<?> clazz = JdbcMapJava.getJavaType(columnInfo.getType());
                 filedInfo = new FieldInfo();
@@ -440,4 +441,14 @@ public class GenerateHelper {
         }
         return freemarkerUtil;
     }
+
+    public static void handleMybatisType(ColumnInfo columnInfo) {
+        if ("DATETIME".equalsIgnoreCase(columnInfo.getType()) || "DATETIME2".equalsIgnoreCase(columnInfo.getType())) {
+            columnInfo.setType("TIMESTAMP");
+        }
+        if ("INT".equalsIgnoreCase(columnInfo.getType())) {
+            columnInfo.setType("INTEGER");
+        }
+    }
+
 }

@@ -65,7 +65,7 @@ public class App${className}ServiceImpl implements App${className}Service {
 
 	@Override
     public Result<Void> addOrEdit(${className}UpdateDto ${className?uncap_first}UpdateDto) {
-        if (${className?uncap_first}.getId() == null) {
+        if (${className?uncap_first}UpdateDto.getId() == null) {
             ${className}CreateDto ${className?uncap_first}CreateDto = new ${className}CreateDto();
             BeanUtils.copyProperties(${className?uncap_first}UpdateDto, ${className?uncap_first}CreateDto);
             return add(${className?uncap_first}CreateDto);
