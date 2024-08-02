@@ -6,7 +6,7 @@
 
     <groupId>cn.vonce</groupId>
     <artifactId>supercode-core</artifactId>
-    <version>1.0.0-beta7</version>
+    <version>1.0.0-beta8</version>
 
     <name>supercode-core</name>
     <description>This is a code generator that can generate the corresponding business code through the database, or
@@ -34,7 +34,7 @@
     <!-- 版本信息 -->
     <properties>
         <org.freemarker>2.3.31</org.freemarker>
-        <vonce.sqlbean.spring.version>1.2.0-beta26</vonce.sqlbean.spring.version>
+        <vonce.sqlbean.spring.version>1.2.1</vonce.sqlbean.spring.version>
     </properties>
 
     <dependencies>
