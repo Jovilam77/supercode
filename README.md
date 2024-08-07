@@ -3,6 +3,7 @@
 #### 介绍
 ###### 超级代码生成器(嗯，想成为超级代码生成器)
 ###### 目前可生成SqlBean的项目风格代码，也可以生成常规的Spring+Mybatis项目风格代码，具体使用请查看GenerateConfig类的方法。
+###### SqlBean ORM插件项目👉 [https://gitee.com/iJovi/vonce-sqlbean](https://gitee.com/iJovi/vonce-sqlbean "vonce-sqlbean")
 ###### SqlBean使用实例以及代码生成点击这里👉 [https://gitee.com/iJovi/sqlbean-example](https://gitee.com/iJovi/sqlbean-example "sqlbean-example")
 
 #### 快速开始
