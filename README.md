@@ -12,8 +12,8 @@
 
 	<dependency>
 		<groupId>cn.vonce</groupId>
-		<artifactId>vonce-sqlbean-spring</artifactId>
-		<version>1.6.1</version>
+		<artifactId>supercode-core</artifactId>
+		<version>1.0.0-beta8</version>
 	</dependency>
 
 
