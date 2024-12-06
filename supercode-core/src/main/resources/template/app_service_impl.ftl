@@ -14,10 +14,8 @@ import org.springframework.beans.BeanUtils;
 /**
  * ${tableInfo.remarks!} App业务实现
  *
- * @author ${config.author!}<#if config.version?? && config.version!=''>
- * @version ${config.version!}</#if><#if config.email?? && config.email!=''>
- * @email ${config.email!}</#if>
- * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
+ * @author ${config.author!}<#if config.email?? && config.email!=''>《${config.email!}》</#if>
+ * @version ${config.version!}《${date?string('yyyy-MM-dd HH:mm:ss')}》
  */
 @Service
 public class App${className}ServiceImpl implements App${className}Service {

@@ -3,10 +3,8 @@ package ${config.basePackage}<#if config.module?? && config.module!=''>.${config
 /**
  * 结果集
  *
- * @author ${config.author!}<#if config.version?? && config.version!=''>
- * @version ${config.version!}</#if><#if config.email?? && config.email!=''>
- * @email ${config.email!}</#if>
- * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
+ * @author ${config.author!}<#if config.email?? && config.email!=''>《${config.email!}》</#if>
+ * @version ${config.version!}《${date?string('yyyy-MM-dd HH:mm:ss')}》
  */
 public class Result<T> {
 

@@ -18,10 +18,8 @@ import java.util.List;
 /**
  * ${tableInfo.remarks!} App控制器
  *
- * @author ${config.author!}
-<#if config.version?? && config.version!=''> * @version ${config.version!}</#if>
-<#if config.email?? && config.email!=''> * @email ${config.email!}</#if>
- * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
+ * @author ${config.author!}<#if config.email?? && config.email!=''>《${config.email!}》</#if>
+ * @version ${config.version!}《${date?string('yyyy-MM-dd HH:mm:ss')}》
  */
 <#if config.getJavaDocType().name() == 'Swagger'>
 @Api(tags = "${tableInfo.remarks!} 控制器")

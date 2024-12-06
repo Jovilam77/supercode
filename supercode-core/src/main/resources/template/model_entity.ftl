@@ -18,10 +18,8 @@ import ${key};
 /**
  * ${tableInfo.remarks!} 实体类
  *
- * @author ${config.author!}<#if config.version?? && config.version!=''>
- * @version ${config.version!}</#if><#if config.email?? && config.email!=''>
- * @email ${config.email!}</#if>
- * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
+ * @author ${config.author!}<#if config.email?? && config.email!=''>《${config.email!}》</#if>
+ * @version ${config.version!}《${date?string('yyyy-MM-dd HH:mm:ss')}》
  */<#if config.useLombok>
 @Data</#if><#if config.useSqlBean>
 @SqlTable(value = "${tableInfo.name}", autoAlter = true, remarks = "${tableInfo.remarks}")</#if>

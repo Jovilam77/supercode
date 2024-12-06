@@ -23,10 +23,8 @@ import org.springframework.stereotype.Service;
 /**
  * ${tableInfo.remarks!} 业务实现
  *
- * @author ${config.author!}<#if config.version?? && config.version!=''>
- * @version ${config.version!}</#if><#if config.email?? && config.email!=''>
- * @email ${config.email!}</#if>
- * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
+ * @author ${config.author!}<#if config.email?? && config.email!=''>《${config.email!}》</#if>
+ * @version ${config.version!}《${date?string('yyyy-MM-dd HH:mm:ss')}》
  */
 @Service
 public class ${className}ServiceImpl<#if config.useSqlBean && config.getJdbcDaoType().name() == 'MyBatis' > extends MybatisSqlBeanServiceImpl<${className}, ${id.typeName}><#elseif config.useSqlBean && config.getJdbcDaoType().name() == 'SpringJdbc'>extends SpringJdbcSqlBeanServiceImpl <${className}, ${id.typeName}></#if> implements ${className}Service {

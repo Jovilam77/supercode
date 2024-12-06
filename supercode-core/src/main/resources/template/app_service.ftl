@@ -7,10 +7,8 @@ import ${config.basePackage}.model.${className};
 /**
  * ${tableInfo.remarks!} ${config.appProjectClassNamePrefix}业务接口
  *
- * @author ${config.author!}<#if config.version?? && config.version!=''>
- * @version ${config.version!}</#if><#if config.email?? && config.email!=''>
- * @email ${config.email!}</#if>
- * @date ${date?string('yyyy-MM-dd HH:mm:ss')}
+ * @author ${config.author!}<#if config.email?? && config.email!=''>《${config.email!}》</#if>
+ * @version ${config.version!}《${date?string('yyyy-MM-dd HH:mm:ss')}》
  */
 public interface App${className}Service {
 
