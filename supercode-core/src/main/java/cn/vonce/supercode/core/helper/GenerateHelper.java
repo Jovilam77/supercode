@@ -15,6 +15,7 @@ import cn.vonce.sql.enumerate.IdType;
 import cn.vonce.sql.helper.SqlHelper;
 import cn.vonce.sql.service.DbManageService;
 import cn.vonce.sql.uitls.DateUtil;
+import cn.vonce.sql.uitls.JavaParserUtil;
 import cn.vonce.sql.uitls.SqlBeanUtil;
 import cn.vonce.sql.uitls.StringUtil;
 import cn.vonce.supercode.core.config.GenerateConfig;
@@ -25,9 +26,11 @@ import cn.vonce.supercode.core.model.FieldInfo;
 import cn.vonce.supercode.core.model.ClassInfo;
 import cn.vonce.supercode.core.util.ClassUtil;
 import cn.vonce.supercode.core.util.FreemarkerUtil;
+import com.github.javaparser.ast.body.FieldDeclaration;
+import com.github.javaparser.ast.body.TypeDeclaration;
 import freemarker.template.Configuration;
-
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -51,7 +54,7 @@ public class GenerateHelper {
      * @param dbManageService 数据库连接实现类
      * @throws IOException
      */
-    public static void build(GenerateConfig config, DbManageService dbManageService) {
+    public static void build(GenerateConfig config, DbManageService<?> dbManageService) {
         List<TableInfo> tableInfoList = getTableInfoList(dbManageService);
         File packDir = getFilePaths(config);
         ExecutorService pool = new ThreadPoolExecutor(3, 5, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(1024), Executors.defaultThreadFactory(), new ThreadPoolExecutor.CallerRunsPolicy());
@@ -180,15 +183,40 @@ public class GenerateHelper {
         TableInfo tableInfo = new TableInfo();
         tableInfo.setName(table.getName());
         tableInfo.setRemarks(sqlTable != null ? sqlTable.remarks() : "");
+        List<FieldDeclaration> fieldDeclarationList = null;
+        //如果未显性指定表备注，则根据类注释读取
+        if (StringUtil.isEmpty(tableInfo.getRemarks())) {
+            String classPath = beanClass.getProtectionDomain().getCodeSource().getLocation().getPath();
+            if (StringUtil.isNotBlank(classPath)) {
+                classPath = classPath.replaceFirst("^/", ""); // 去掉前导的斜杠（在Windows上）
+                classPath = classPath.replaceAll("%20", " "); // 将URL编码的空格转回正常显示
+                String sourceRoot = classPath.substring(0, classPath.lastIndexOf("/target/classes/")) + File.separator + "src" + File.separator + "main" + File.separator + "java" + File.separator;
+                String javaFilePath = sourceRoot + beanClass.getPackage().getName().replace(".", File.separator) + File.separator + beanClass.getSimpleName() + ".java";
+                try {
+                    JavaParserUtil.Declaration declaration = JavaParserUtil.getFieldDeclarationList(sourceRoot, javaFilePath);
+                    TypeDeclaration<?> typeDeclaration = declaration.getTypeDeclaration();
+                    fieldDeclarationList = declaration.getFieldDeclarationList();
+                    if (typeDeclaration != null && typeDeclaration.getComment().isPresent()) {
+                        tableInfo.setRemarks(JavaParserUtil.getCommentContent(typeDeclaration.getComment().get().getContent()));
+                    }
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         List<Field> fieldList = SqlBeanUtil.getBeanAllField(beanClass);
         List<ColumnInfo> columnInfoList = new ArrayList<>();
 
-        for (int i = 0; i < fieldList.size(); i++) {
-            Field field = fieldList.get(i);
+        for (Field field : fieldList) {
             if (SqlBeanUtil.isIgnore(field)) {
                 continue;
             }
-            columnInfoList.add(SqlBeanUtil.buildColumnInfo(sqlBeanDB, field, sqlTable, field.getAnnotation(SqlColumn.class)));
+            ColumnInfo columnInfo = SqlBeanUtil.buildColumnInfo(sqlBeanDB, field, sqlTable, field.getAnnotation(SqlColumn.class), null);
+            //如果数据库字段没有备注，则根据Java字段注释读取
+            if (StringUtil.isEmpty(columnInfo.getRemarks())) {
+                columnInfo.setRemarks(JavaParserUtil.getFieldCommentContent(field.getName(), fieldDeclarationList));
+            }
+            columnInfoList.add(columnInfo);
         }
 
         List<ClassInfo> classInfoList = new ArrayList<>();
@@ -213,7 +241,7 @@ public class GenerateHelper {
      * @param dbManageService 数据库连接实现类
      * @return
      */
-    public static List<TableInfo> getTableInfoList(DbManageService dbManageService) {
+    public static List<TableInfo> getTableInfoList(DbManageService<?> dbManageService) {
         List<TableInfo> tableInfoList = dbManageService.getTableList(null);
         if (tableInfoList == null || tableInfoList.isEmpty()) {
             return null;
@@ -229,7 +257,7 @@ public class GenerateHelper {
      * @param dbManageService
      * @return
      */
-    public static List<ClassInfo> getClassInfoList(GenerateConfig config, List<TableInfo> tableInfoList, DbManageService dbManageService) {
+    public static List<ClassInfo> getClassInfoList(GenerateConfig config, List<TableInfo> tableInfoList, DbManageService<?> dbManageService) {
         List<ClassInfo> classInfoList = new ArrayList<>();
         for (TableInfo tableInfo : tableInfoList) {
             List<ColumnInfo> columnInfoList = dbManageService.getColumnInfoList(tableInfo.getName());
