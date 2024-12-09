@@ -1,6 +1,7 @@
 package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.controller;
 
-import ${config.basePackage}.model.${className};
+import cn.vonce.sql.page.ResultData;
+import ${config.basePackage}.model.entity.${className};
 import ${config.basePackage}.service.${className}Service;
 import cn.vonce.sql.bean.Select;
 import ${config.basePackage}.model.Result;
