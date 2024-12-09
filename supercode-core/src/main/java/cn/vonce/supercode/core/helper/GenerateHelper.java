@@ -29,6 +29,7 @@ import cn.vonce.supercode.core.util.FreemarkerUtil;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import freemarker.template.Configuration;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -383,11 +384,15 @@ public class GenerateHelper {
                         continue;
                     }
                     //如果使用SqlBean那么跳过Mapper生成
-                    if (config.isUseSqlBean() && "mapper.ftl".equals(template.getName())) {
+                    if (config.isUseSqlBean() && Template.MAPPER.getName().equals(template.getName())) {
                         continue;
                     }
                     //如果生成多模块项目，那么Controller则跳过生成
-                    if (config.isMultiProject() && "controller.ftl".equals(template.getName())) {
+                    if (config.isMultiProject() && Template.CONTROLLER.getName().equals(template.getName())) {
+                        continue;
+                    }
+                    //如果是base_entity.ftl和result.ftl则跳过
+                    if (Template.BASE_ENTITY.getName().equals(template.getName()) || Template.RESULT.getName().equals(template.getName())) {
                         continue;
                     }
                     String name = template.getNamePrefix() + classInfo.getClassName();
@@ -404,6 +409,16 @@ public class GenerateHelper {
             if (StringUtil.isNotBlank(classInfo.getSql())) {
                 freemarkerUtil.fprint(classInfo, Template.SQL.getName(), targetDir.getAbsolutePath() + Template.SQL.getRelativePath() + classInfo.getTableInfo().getName() + Template.SQL.getFileFormat());
             }
+        }
+        //输出BaseEntity和Result
+        String baseEntityName = StringUtil.firstToUpperCase(StringUtil.underlineToHump(Template.BASE_ENTITY.name().toLowerCase()));
+        String resultName = StringUtil.firstToUpperCase(StringUtil.underlineToHump(Template.RESULT.name().toLowerCase()));
+        if (config.isMultiProject()) {
+            freemarkerUtil.fprint(classInfoList.get(0), Template.BASE_ENTITY.getName(), targetDir.getAbsolutePath() + File.separator + Template.BASE_ENTITY.getProject() + File.separator + packPath + Template.BASE_ENTITY.getRelativePath() + baseEntityName + Template.BASE_ENTITY.getFileFormat());
+            freemarkerUtil.fprint(classInfoList.get(0), Template.RESULT.getName(), targetDir.getAbsolutePath() + File.separator + Template.BASE_ENTITY.getProject() + File.separator + packPath + Template.BASE_ENTITY.getRelativePath() + resultName + Template.BASE_ENTITY.getFileFormat());
+        } else {
+            freemarkerUtil.fprint(classInfoList.get(0), Template.BASE_ENTITY.getName(), targetDir.getAbsolutePath() + File.separator + packPath + Template.RESULT.getRelativePath() + baseEntityName + Template.RESULT.getFileFormat());
+            freemarkerUtil.fprint(classInfoList.get(0), Template.RESULT.getName(), targetDir.getAbsolutePath() + File.separator + packPath + Template.RESULT.getRelativePath() + resultName + Template.RESULT.getFileFormat());
         }
     }
 

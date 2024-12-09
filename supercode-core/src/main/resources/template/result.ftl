@@ -1,4 +1,4 @@
-package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.model.vo;
+package ${config.basePackage}<#if config.module?? && config.module!=''>.${config.module!}</#if>.model;
 
 /**
  * 结果集

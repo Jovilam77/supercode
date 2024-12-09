@@ -11,6 +11,9 @@ import java.io.File;
  */
 public enum Template {
 
+    BASE_ENTITY("base_entity.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator, "", "", TemplateFileFormat.JAVA),
+    RESULT("result.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator, "", "", TemplateFileFormat.JAVA),
+
     MODEL_ENTITY("model_entity.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator + "entity" + File.separator, "", "", TemplateFileFormat.JAVA),
     MODEL_CREATE_DTO("model_create_dto.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator + "dto" + File.separator, "", "CreateDto", TemplateFileFormat.JAVA),
     MODEL_UPDATE_DTO("model_update_dto.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator + "dto" + File.separator, "", "UpdateDto", TemplateFileFormat.JAVA),
@@ -44,31 +47,31 @@ public enum Template {
     /**
      * 模板文件名
      */
-    String name;
+    final String name;
     /**
      * 模板类型
      */
-    TemplateType type;
+    final TemplateType type;
     /**
      * 项目
      */
-    String project;
+    final String project;
     /**
      * 相对路径
      */
-    String relativePath;
+    final String relativePath;
     /**
      * 名字前缀
      */
-    String namePrefix;
+    final String namePrefix;
     /**
      * 名字后缀
      */
-    String nameSuffix;
+    final String nameSuffix;
     /**
      * 文件后缀
      */
-    TemplateFileFormat fileFormat;
+    final TemplateFileFormat fileFormat;
 
     public String getName() {
         return name;

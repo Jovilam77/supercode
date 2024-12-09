@@ -3,8 +3,7 @@ package ${config.basePackage}<#if config.module?? && config.module!=''>.${config
 import ${config.basePackage}.model.${className};
 import cn.vonce.sql.page.ResultData;
 import ${config.basePackage}.app.service.App${className}Service;
-import com.fangte.anime.entity.Result;
-import com.fangte.anime.entity.model.AnswerRecordDetail;
+import ${config.basePackage}.model.Result;
 import cn.vonce.sql.bean.Select;
 import cn.vonce.common.bean.RS;
 <#if config.getJavaDocType().name() == 'Swagger'>
