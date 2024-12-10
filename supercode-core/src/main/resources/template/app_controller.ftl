@@ -23,7 +23,7 @@ import java.util.List;
 <#if config.getJavaDocType().name() == 'Swagger'>
 @Api(tags = "${tableInfo.remarks!} 控制器")
 </#if>
-@RequestMapping("/app/${className?uncap_first}/")
+@RequestMapping("${config.urlPrefix!}/${className?uncap_first}/")
 @RestController
 public class App${className}Controller {
 

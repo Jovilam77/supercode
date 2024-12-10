@@ -99,7 +99,11 @@ public class GenerateConfig {
     /**
      * 时间戳
      */
-    private Long timestamp = System.currentTimeMillis();
+    private final Long timestamp = System.currentTimeMillis();
+    /**
+     * url前缀
+     */
+    private String urlPrefix;
 
     public String getAuthor() {
         if (StringUtil.isBlank(author)) {
@@ -274,6 +278,14 @@ public class GenerateConfig {
 
     public long getTimestamp() {
         return timestamp;
+    }
+
+    public String getUrlPrefix() {
+        return urlPrefix;
+    }
+
+    public void setUrlPrefix(String urlPrefix) {
+        this.urlPrefix = urlPrefix;
     }
 
 }
