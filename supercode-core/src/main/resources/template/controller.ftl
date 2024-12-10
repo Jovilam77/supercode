@@ -40,7 +40,7 @@ public class ${className}Controller {
      */
 </#if>
     <#if config.useRestfulApi>@GetMapping("{id}")<#else>@GetMapping("getById")</#if>
-    public <#if config.useSqlBean>Result<#else>${className}</#if> getById(<#if config.useRestfulApi>@PathVariable("id") <#else>@RequestParam("id") </#if>${id.typeName} ${id.name}) {
+    public Result<${className}> getById(<#if config.useRestfulApi>@PathVariable("id") <#else>@RequestParam("id") </#if>${id.typeName} ${id.name}) {
         ${className} ${className?uncap_first} = ${className?uncap_first}Service.selectById(${id.name});
         return <#if config.useSqlBean>Result.success("根据id查询成功", ${className?uncap_first})<#else>${className?uncap_first}</#if>;
     }
@@ -55,7 +55,7 @@ public class ${className}Controller {
      */
 </#if>
     @GetMapping("getAll")
-    public <#if config.useSqlBean>Result<#else>List<${className}></#if> getAll() {
+    public Result<List<${className}>> getAll() {
         List<${className}> ${className?uncap_first}List = ${className?uncap_first}Service.select();
         return <#if config.useSqlBean>Result.success("查询全部成功", ${className?uncap_first}List)<#else>${className?uncap_first}List</#if>;
     }
@@ -70,7 +70,7 @@ public class ${className}Controller {
     */
 </#if>
     @GetMapping(value = "list")
-    public Result list(int pageNum, int pageSize) {
+    public Result<ResultData<${className}>> list(int pageNum, int pageSize) {
         Select select = new Select();
         ResultData<${className}> resultData = ${className?uncap_first}Service.paging(select, pageNum, pageSize);
         return Result.success("获取列表成功", resultData);
@@ -87,7 +87,7 @@ public class ${className}Controller {
      */
 </#if>
     @PostMapping("add")
-    public <#if config.useSqlBean>Result<#else>String</#if> add(@RequestBody ${className} ${className?uncap_first}) {
+    public Result<?> add(@RequestBody ${className} ${className?uncap_first}) {
         int i = ${className?uncap_first}Service.insert(${className?uncap_first});
         if (i > 0) {
             return <#if config.useSqlBean>Result.success("新增成功")<#else>"新增成功"</#if>;
@@ -106,7 +106,7 @@ public class ${className}Controller {
      */
 </#if>
     <#if config.useRestfulApi>@PutMapping("updateById")<#else>@PostMapping("updateById")</#if>
-    public <#if config.useSqlBean>Result<#else>String</#if> updateById(@RequestBody ${className} ${className?uncap_first}) {
+    public Result<?> updateById(@RequestBody ${className} ${className?uncap_first}) {
     <#if config.useSqlBean>
         int i = ${className?uncap_first}Service.updateByBeanId(${className?uncap_first});
     <#else>
@@ -129,7 +129,7 @@ public class ${className}Controller {
     */
 </#if>
     @PostMapping("addOrEdit")
-    public <#if config.useSqlBean>Result<#else>String</#if> addOrEdit(@RequestBody ${className} ${className?uncap_first}) {
+    public Result<?> addOrEdit(@RequestBody ${className} ${className?uncap_first}) {
         if (${className?uncap_first}.getId() == null) {
             return add(${className?uncap_first});
         }
@@ -147,7 +147,7 @@ public class ${className}Controller {
      */
 </#if>
     <#if config.useRestfulApi>@DeleteMapping("deleteById")<#else>@PostMapping("deleteById")</#if>
-    public <#if config.useSqlBean>Result<#else>String</#if> deleteById(@RequestParam("id") ${id.typeName} ${id.name}) {
+    public Result<?> deleteById(@RequestParam("id") ${id.typeName} ${id.name}) {
         int i = ${className?uncap_first}Service.deleteById(${id.name});
         if (i > 0) {
             return <#if config.useSqlBean>Result.success("根据id删除成功")<#else>"根据id删除成功"</#if>;
