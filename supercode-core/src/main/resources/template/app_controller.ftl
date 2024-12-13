@@ -69,7 +69,7 @@ public class App${className}Controller {
     */
 </#if>
     @GetMapping(value = "list")
-    public Result<ResultData<${className}>> list(int pageNum, int pageSize) {
+    public Result<ResultData<${className}>> list(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         return app${className}Service.list(pageNum, pageSize);
     }
 

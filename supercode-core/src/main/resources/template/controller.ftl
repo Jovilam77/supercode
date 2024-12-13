@@ -70,7 +70,7 @@ public class ${className}Controller {
     */
 </#if>
     @GetMapping(value = "list")
-    public Result<ResultData<${className}>> list(int pageNum, int pageSize) {
+    public Result<ResultData<${className}>> list(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         Select select = new Select();
         ResultData<${className}> resultData = ${className?uncap_first}Service.paging(select, pageNum, pageSize);
         return Result.success("获取列表成功", resultData);
