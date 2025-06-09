@@ -40,7 +40,7 @@ public class App${className}Controller {
      * @return
      */
 </#if>
-    <#if config.useRestfulApi>@GetMapping("{id}")<#else>@GetMapping("getById")</#if>
+    <#if config.useRestfulApi>@GetMapping("{id}")<#else>@GetMapping("info")</#if>
     public Result<${className}> getById(<#if config.useRestfulApi>@PathVariable("id") <#else>@RequestParam("id") </#if>${id.typeName} ${id.name}) {
         return app${className}Service.getById(${id.name});
     }
@@ -54,8 +54,8 @@ public class App${className}Controller {
      * @return
      */
 </#if>
-    @GetMapping("getAll")
-    public Result<List<${className}>> getAll() {
+    @GetMapping("all")
+    public Result<List<${className}>> all() {
         return app${className}Service.getAll();
     }
 
@@ -83,7 +83,7 @@ public class App${className}Controller {
      * @return
      */
 </#if>
-    @PostMapping("add")
+    <#if config.useRestfulApi>@PostMapping<#else>@PostMapping("add")</#if>
     public Result<Void> add(@RequestBody ${className}CreateDto ${className?uncap_first}CreateDto) {
         return app${className}Service.add(${className?uncap_first}CreateDto);
     }
@@ -98,7 +98,7 @@ public class App${className}Controller {
      * @return
      */
 </#if>
-    <#if config.useRestfulApi>@PutMapping("updateById")<#else>@PostMapping("updateById")</#if>
+    <#if config.useRestfulApi>@PutMapping<#else>@PostMapping("updateById")</#if>
     public Result<Void> updateById(@RequestBody ${className}UpdateDto ${className?uncap_first}UpdateDto) {
         return app${className}Service.updateById(${className?uncap_first}UpdateDto);
     }
@@ -128,7 +128,7 @@ public class App${className}Controller {
      * @return
      */
 </#if>
-    <#if config.useRestfulApi>@DeleteMapping("deleteById")<#else>@PostMapping("deleteById")</#if>
+    <#if config.useRestfulApi>@DeleteMapping<#else>@PostMapping("deleteById")</#if>
     public Result<Void> deleteById(@RequestParam("id") ${id.typeName} ${id.name}) {
         return app${className}Service.deleteById(${id.name});
     }

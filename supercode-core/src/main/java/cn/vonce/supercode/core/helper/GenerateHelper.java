@@ -8,7 +8,7 @@ import cn.vonce.sql.bean.Create;
 import cn.vonce.sql.bean.Table;
 import cn.vonce.sql.bean.TableInfo;
 import cn.vonce.sql.config.SqlBeanConfig;
-import cn.vonce.sql.config.SqlBeanDB;
+import cn.vonce.sql.config.SqlBeanMeta;
 import cn.vonce.sql.enumerate.DbType;
 import cn.vonce.sql.enumerate.FillWith;
 import cn.vonce.sql.enumerate.IdType;
@@ -173,7 +173,7 @@ public class GenerateHelper {
      * @param beanClass      生成的实体类
      */
     public static void build(GenerateConfig config, DbType dbType, boolean sqlToUpperCase, Class<?> beanClass) {
-        SqlBeanDB sqlBeanDB = new SqlBeanDB();
+        SqlBeanMeta sqlBeanDB = new SqlBeanMeta();
         sqlBeanDB.setDbType(dbType);
         SqlBeanConfig sqlBeanConfig = new SqlBeanConfig();
         sqlBeanConfig.setToUpperCase(sqlToUpperCase);
@@ -223,7 +223,7 @@ public class GenerateHelper {
         List<ClassInfo> classInfoList = new ArrayList<>();
         ClassInfo classInfo = getClassInfo(config, tableInfo, columnInfoList);
         Create create = new Create();
-        create.setSqlBeanDB(sqlBeanDB);
+        create.setSqlBeanMeta(sqlBeanDB);
         create.setTable(beanClass);
         create.setBeanClass(beanClass);
         classInfo.setSql(SqlHelper.buildCreateSql(create));

@@ -39,8 +39,8 @@ public class ${className}Controller {
      * @return
      */
 </#if>
-    <#if config.useRestfulApi>@GetMapping("{id}")<#else>@GetMapping("getById")</#if>
-    public Result<${className}> getById(<#if config.useRestfulApi>@PathVariable("id") <#else>@RequestParam("id") </#if>${id.typeName} ${id.name}) {
+    <#if config.useRestfulApi>@GetMapping("{id}")<#else>@GetMapping("info")</#if>
+    public Result<${className}> info(<#if config.useRestfulApi>@PathVariable("id") <#else>@RequestParam("id") </#if>${id.typeName} ${id.name}) {
         ${className} ${className?uncap_first} = ${className?uncap_first}Service.selectById(${id.name});
         return <#if config.useSqlBean>Result.success("根据id查询成功", ${className?uncap_first})<#else>${className?uncap_first}</#if>;
     }
@@ -54,8 +54,8 @@ public class ${className}Controller {
      * @return
      */
 </#if>
-    @GetMapping("getAll")
-    public Result<List<${className}>> getAll() {
+    @GetMapping("all")
+    public Result<List<${className}>> all() {
         List<${className}> ${className?uncap_first}List = ${className?uncap_first}Service.select();
         return <#if config.useSqlBean>Result.success("查询全部成功", ${className?uncap_first}List)<#else>${className?uncap_first}List</#if>;
     }
@@ -86,7 +86,7 @@ public class ${className}Controller {
      * @return
      */
 </#if>
-    @PostMapping("add")
+    <#if config.useRestfulApi>@PostMapping<#else>@PostMapping("add")</#if>
     public Result<?> add(@RequestBody ${className} ${className?uncap_first}) {
         int i = ${className?uncap_first}Service.insert(${className?uncap_first});
         if (i > 0) {
@@ -105,7 +105,7 @@ public class ${className}Controller {
      * @return
      */
 </#if>
-    <#if config.useRestfulApi>@PutMapping("updateById")<#else>@PostMapping("updateById")</#if>
+    <#if config.useRestfulApi>@PutMapping<#else>@PostMapping("updateById")</#if>
     public Result<?> updateById(@RequestBody ${className} ${className?uncap_first}) {
     <#if config.useSqlBean>
         int i = ${className?uncap_first}Service.updateByBeanId(${className?uncap_first});
@@ -146,7 +146,7 @@ public class ${className}Controller {
      * @return
      */
 </#if>
-    <#if config.useRestfulApi>@DeleteMapping("deleteById")<#else>@PostMapping("deleteById")</#if>
+    <#if config.useRestfulApi>@DeleteMapping<#else>@PostMapping("deleteById")</#if>
     public Result<?> deleteById(@RequestParam("id") ${id.typeName} ${id.name}) {
         int i = ${className?uncap_first}Service.deleteById(${id.name});
         if (i > 0) {
