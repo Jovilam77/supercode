@@ -90,7 +90,7 @@ public class ${className}Controller {
     public Result<?> add(@RequestBody ${className} ${className?uncap_first}) {
         int i = ${className?uncap_first}Service.insert(${className?uncap_first});
         if (i > 0) {
-            return <#if config.useSqlBean>Result.success("新增成功")<#else>"新增成功"</#if>;
+            return <#if config.useSqlBean>Result.success()<#else>"新增成功"</#if>;
         }
         return <#if config.useSqlBean>Result.fail("新增失败")<#else>"新增失败"</#if>;
     }
@@ -150,7 +150,7 @@ public class ${className}Controller {
     public Result<?> deleteById(<#if config.useRestfulApi>@PathVariable("{id}")<#else>@RequestParam("id")</#if> ${id.typeName} ${id.name}) {
         int i = ${className?uncap_first}Service.deleteById(${id.name});
         if (i > 0) {
-            return <#if config.useSqlBean>Result.success("根据id删除成功")<#else>"根据id删除成功"</#if>;
+            return <#if config.useSqlBean>Result.success()<#else>"根据id删除成功"</#if>;
         }
         return <#if config.useSqlBean>Result.fail("根据id删除失败")<#else>"根据id删除失败"</#if>;
     }
