@@ -113,7 +113,7 @@ public class ${className}Controller {
         int i = ${className?uncap_first}Service.updateById(${className?uncap_first});
     </#if>
         if (i > 0) {
-            return <#if config.useSqlBean>Result.success("根据id修改成功")<#else>"根据id修改成功"</#if>;
+            return <#if config.useSqlBean>Result.success()<#else>"根据id修改成功"</#if>;
         }
         return <#if config.useSqlBean>Result.fail("根据id修改失败")<#else>"根据id修改失败"</#if>;
     }
