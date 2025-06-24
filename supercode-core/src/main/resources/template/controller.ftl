@@ -147,7 +147,7 @@ public class ${className}Controller {
      */
 </#if>
     <#if config.useRestfulApi>@DeleteMapping("{id}")<#else>@PostMapping("deleteById")</#if>
-    public Result<?> deleteById(<#if config.useRestfulApi>@PathVariable("{id}")<#else>@RequestParam("id")</#if> ${id.typeName} ${id.name}) {
+    public Result<?> deleteById(<#if config.useRestfulApi>@PathVariable("id")<#else>@RequestParam("id")</#if> ${id.typeName} ${id.name}) {
         int i = ${className?uncap_first}Service.deleteById(${id.name});
         if (i > 0) {
             return <#if config.useSqlBean>Result.success()<#else>"根据id删除成功"</#if>;

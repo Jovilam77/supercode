@@ -129,7 +129,7 @@ public class App${className}Controller {
      */
 </#if>
     <#if config.useRestfulApi>@DeleteMapping("{id}")<#else>@PostMapping("deleteById")</#if>
-    public Result<Void> deleteById(<#if config.useRestfulApi>@PathVariable("{id}")<#else>@RequestParam("id")</#if> ${id.typeName} ${id.name}) {
+    public Result<Void> deleteById(<#if config.useRestfulApi>@PathVariable("id")<#else>@RequestParam("id")</#if> ${id.typeName} ${id.name}) {
         return app${className}Service.deleteById(${id.name});
     }
 
