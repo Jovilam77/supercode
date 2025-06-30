@@ -13,6 +13,7 @@ public enum Template {
 
     BASE_ENTITY("base_entity.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator, "", "", TemplateFileFormat.JAVA),
     RESULT("result.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator, "", "", TemplateFileFormat.JAVA),
+    PAGE_DTO("page_dto.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator, "", "", TemplateFileFormat.JAVA),
 
     MODEL_ENTITY("model_entity.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator + "entity" + File.separator, "", "", TemplateFileFormat.JAVA),
     MODEL_CREATE_DTO("model_create_dto.ftl", TemplateType.JAVA, "common", File.separator + "model" + File.separator + "dto" + File.separator, "", "CreateDto", TemplateFileFormat.JAVA),

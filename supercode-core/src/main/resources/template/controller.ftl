@@ -2,6 +2,9 @@ package ${config.basePackage}<#if config.module?? && config.module!=''>.${config
 
 import cn.vonce.sql.page.ResultData;
 import ${config.basePackage}.model.entity.${className};
+import ${config.basePackage}.model.dto.${className}CreateDto;
+import ${config.basePackage}.model.dto.${className}QueryDto;
+import ${config.basePackage}.model.dto.${className}UpdateDto;
 import ${config.basePackage}.service.${className}Service;
 import cn.vonce.sql.bean.Select;
 import ${config.basePackage}.model.Result;
@@ -12,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import org.springframework.beans.BeanUtils;
 
 /**
  * ${tableInfo.remarks!} 控制器
@@ -66,13 +70,14 @@ public class ${className}Controller {
     /**
     * 分页列表查询
     *
+    * @param dto
     * @return
     */
 </#if>
     @GetMapping(value = "/list")
-    public Result<ResultData<${className}>> list(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+    public Result<ResultData<${className}>> list(${className}QueryDto dto) {
         Select select = new Select();
-        ResultData<${className}> resultData = ${className?uncap_first}Service.paging(select, pageNum, pageSize);
+        ResultData<${className}> resultData = ${className?uncap_first}Service.paging(select, dto.getPageNum(), dto.getPageSize());
         return Result.success("获取列表成功", resultData);
     }
 
@@ -82,12 +87,14 @@ public class ${className}Controller {
     /**
      * 新增
      *
-     * @param ${className?uncap_first}
+     * @param dto
      * @return
      */
 </#if>
     <#if config.useRestfulApi>@PostMapping<#else>@PostMapping("/add")</#if>
-    public Result<?> add(@RequestBody ${className} ${className?uncap_first}) {
+    public Result<?> add(@RequestBody ${className}CreateDto dto) {
+        ${className} ${className?uncap_first} = new ${className}();
+        BeanUtils.copyProperties(dto, ${className?uncap_first});
         int i = ${className?uncap_first}Service.insert(${className?uncap_first});
         if (i > 0) {
             return <#if config.useSqlBean>Result.success()<#else>"新增成功"</#if>;
@@ -101,12 +108,14 @@ public class ${className}Controller {
     /**
      * 根据id修改
      *
-     * @param ${className?uncap_first}
+     * @param dto
      * @return
      */
 </#if>
     <#if config.useRestfulApi>@PutMapping<#else>@PostMapping("/updateById")</#if>
-    public Result<?> updateById(@RequestBody ${className} ${className?uncap_first}) {
+    public Result<?> updateById(@RequestBody ${className}UpdateDto dto) {
+        ${className} ${className?uncap_first} = new ${className}();
+        BeanUtils.copyProperties(dto, ${className?uncap_first});
     <#if config.useSqlBean>
         int i = ${className?uncap_first}Service.updateByBeanId(${className?uncap_first});
     <#else>
@@ -124,16 +133,17 @@ public class ${className}Controller {
     /**
     * 新增或编辑
     *
-    * @param ${className?uncap_first}
+    * @param dto
     * @return
     */
 </#if>
     @PostMapping("/addOrEdit")
-    public Result<?> addOrEdit(@RequestBody ${className} ${className?uncap_first}) {
-        if (${className?uncap_first}.getId() == null) {
-            return add(${className?uncap_first});
+    public Result<?> addOrEdit(@RequestBody ${className}UpdateDto dto) {
+        if (dto.getId() == null) {
+            ${className}CreateDto createDto = new ${className}CreateDto();
+            return add(createDto);
         }
-        return updateById(${className?uncap_first});
+        return updateById(dto);
     }
 
 <#if config.getJavaDocType().name() == 'Swagger'>
