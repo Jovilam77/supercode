@@ -23,7 +23,7 @@ import java.util.List;
 <#if config.getJavaDocType().name() == 'Swagger'>
 @Api(tags = "${tableInfo.remarks!} 控制器")
 </#if>
-@RequestMapping("${config.urlPrefix!}/${className?uncap_first}/")
+@RequestMapping("${config.urlPrefix!}/${className?uncap_first}")
 @RestController
 public class App${className}Controller {
 
@@ -40,7 +40,7 @@ public class App${className}Controller {
      * @return
      */
 </#if>
-    <#if config.useRestfulApi>@GetMapping("{id}")<#else>@GetMapping("info")</#if>
+    <#if config.useRestfulApi>@GetMapping("/{id}")<#else>@GetMapping("/info")</#if>
     public Result<${className}> getById(<#if config.useRestfulApi>@PathVariable("id") <#else>@RequestParam("id") </#if>${id.typeName} ${id.name}) {
         return app${className}Service.getById(${id.name});
     }
@@ -54,7 +54,7 @@ public class App${className}Controller {
      * @return
      */
 </#if>
-    @GetMapping("all")
+    @GetMapping("/all")
     public Result<List<${className}>> all() {
         return app${className}Service.getAll();
     }
@@ -68,7 +68,7 @@ public class App${className}Controller {
     * @return
     */
 </#if>
-    @GetMapping(value = "list")
+    @GetMapping(value = "/list")
     public Result<ResultData<${className}>> list(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         return app${className}Service.list(pageNum, pageSize);
     }
@@ -83,7 +83,7 @@ public class App${className}Controller {
      * @return
      */
 </#if>
-    <#if config.useRestfulApi>@PostMapping<#else>@PostMapping("add")</#if>
+    <#if config.useRestfulApi>@PostMapping<#else>@PostMapping("/add")</#if>
     public Result<Void> add(@RequestBody ${className}CreateDto ${className?uncap_first}CreateDto) {
         return app${className}Service.add(${className?uncap_first}CreateDto);
     }
@@ -98,7 +98,7 @@ public class App${className}Controller {
      * @return
      */
 </#if>
-    <#if config.useRestfulApi>@PutMapping<#else>@PostMapping("updateById")</#if>
+    <#if config.useRestfulApi>@PutMapping<#else>@PostMapping("/updateById")</#if>
     public Result<Void> updateById(@RequestBody ${className}UpdateDto ${className?uncap_first}UpdateDto) {
         return app${className}Service.updateById(${className?uncap_first}UpdateDto);
     }
@@ -113,7 +113,7 @@ public class App${className}Controller {
     * @return
     */
 </#if>
-    @PostMapping("addOrEdit")
+    @PostMapping("/addOrEdit")
     public Result<Void> addOrEdit(@RequestBody ${className}UpdateDto ${className?uncap_first}UpdateDto) {
         return app${className}Service.addOrEdit(${className?uncap_first}UpdateDto);
     }
@@ -128,7 +128,7 @@ public class App${className}Controller {
      * @return
      */
 </#if>
-    <#if config.useRestfulApi>@DeleteMapping("{id}")<#else>@PostMapping("deleteById")</#if>
+    <#if config.useRestfulApi>@DeleteMapping("/{id}")<#else>@PostMapping("/deleteById")</#if>
     public Result<Void> deleteById(<#if config.useRestfulApi>@PathVariable("id")<#else>@RequestParam("id")</#if> ${id.typeName} ${id.name}) {
         return app${className}Service.deleteById(${id.name});
     }

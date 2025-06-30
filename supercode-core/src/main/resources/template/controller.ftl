@@ -22,7 +22,7 @@ import java.util.List;
 <#if config.getJavaDocType().name() == 'Swagger'>
 @Api(tags = "${tableInfo.remarks!} 控制器")
 </#if>
-@RequestMapping("${config.urlPrefix!}/${className?uncap_first}/")
+@RequestMapping("${config.urlPrefix!}/${className?uncap_first}")
 @RestController
 public class ${className}Controller {
 
@@ -39,7 +39,7 @@ public class ${className}Controller {
      * @return
      */
 </#if>
-    <#if config.useRestfulApi>@GetMapping("{id}")<#else>@GetMapping("info")</#if>
+    <#if config.useRestfulApi>@GetMapping("/{id}")<#else>@GetMapping("/info")</#if>
     public Result<${className}> info(<#if config.useRestfulApi>@PathVariable("id") <#else>@RequestParam("id") </#if>${id.typeName} ${id.name}) {
         ${className} ${className?uncap_first} = ${className?uncap_first}Service.selectById(${id.name});
         return <#if config.useSqlBean>Result.success("根据id查询成功", ${className?uncap_first})<#else>${className?uncap_first}</#if>;
@@ -69,7 +69,7 @@ public class ${className}Controller {
     * @return
     */
 </#if>
-    @GetMapping(value = "list")
+    @GetMapping(value = "/list")
     public Result<ResultData<${className}>> list(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         Select select = new Select();
         ResultData<${className}> resultData = ${className?uncap_first}Service.paging(select, pageNum, pageSize);
@@ -86,7 +86,7 @@ public class ${className}Controller {
      * @return
      */
 </#if>
-    <#if config.useRestfulApi>@PostMapping<#else>@PostMapping("add")</#if>
+    <#if config.useRestfulApi>@PostMapping<#else>@PostMapping("/add")</#if>
     public Result<?> add(@RequestBody ${className} ${className?uncap_first}) {
         int i = ${className?uncap_first}Service.insert(${className?uncap_first});
         if (i > 0) {
@@ -105,7 +105,7 @@ public class ${className}Controller {
      * @return
      */
 </#if>
-    <#if config.useRestfulApi>@PutMapping<#else>@PostMapping("updateById")</#if>
+    <#if config.useRestfulApi>@PutMapping<#else>@PostMapping("/updateById")</#if>
     public Result<?> updateById(@RequestBody ${className} ${className?uncap_first}) {
     <#if config.useSqlBean>
         int i = ${className?uncap_first}Service.updateByBeanId(${className?uncap_first});
@@ -128,7 +128,7 @@ public class ${className}Controller {
     * @return
     */
 </#if>
-    @PostMapping("addOrEdit")
+    @PostMapping("/addOrEdit")
     public Result<?> addOrEdit(@RequestBody ${className} ${className?uncap_first}) {
         if (${className?uncap_first}.getId() == null) {
             return add(${className?uncap_first});
@@ -146,7 +146,7 @@ public class ${className}Controller {
      * @return
      */
 </#if>
-    <#if config.useRestfulApi>@DeleteMapping("{id}")<#else>@PostMapping("deleteById")</#if>
+    <#if config.useRestfulApi>@DeleteMapping("/{id}")<#else>@PostMapping("/deleteById")</#if>
     public Result<?> deleteById(<#if config.useRestfulApi>@PathVariable("id")<#else>@RequestParam("id")</#if> ${id.typeName} ${id.name}) {
         int i = ${className?uncap_first}Service.deleteById(${id.name});
         if (i > 0) {
