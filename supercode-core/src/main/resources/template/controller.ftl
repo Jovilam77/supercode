@@ -58,7 +58,7 @@ public class ${className}Controller {
      * @return
      */
 </#if>
-    @GetMapping("all")
+    @GetMapping("/all")
     public Result<List<${className}>> all() {
         List<${className}> ${className?uncap_first}List = ${className?uncap_first}Service.select();
         return <#if config.useSqlBean>Result.success("查询全部成功", ${className?uncap_first}List)<#else>${className?uncap_first}List</#if>;
