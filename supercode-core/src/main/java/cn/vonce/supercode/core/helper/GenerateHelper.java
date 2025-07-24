@@ -34,6 +34,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -85,7 +87,11 @@ public class GenerateHelper {
     public static void build(GenerateConfig config, TableInfo tableInfo, List<ColumnInfo> columnInfoList) {
         File packDir = getFilePaths(config);
         List<ClassInfo> classInfoList = new ArrayList<>();
-        classInfoList.add(getClassInfo(config, tableInfo, columnInfoList));
+        Map<ColumnInfo, Field> columnInfoClassMap = new HashMap<>();
+        for (ColumnInfo columnInfo : columnInfoList) {
+            columnInfoClassMap.put(columnInfo, null);
+        }
+        classInfoList.add(getClassInfo(config, tableInfo, columnInfoClassMap));
         try {
             make(config, packDir, classInfoList);
         } catch (IOException e) {
@@ -206,7 +212,7 @@ public class GenerateHelper {
             }
         }
         List<Field> fieldList = SqlBeanUtil.getBeanAllField(beanClass);
-        List<ColumnInfo> columnInfoList = new ArrayList<>();
+        Map<ColumnInfo, Field> columnInfoClassMap = new HashMap<>();
 
         for (Field field : fieldList) {
             if (SqlBeanUtil.isIgnore(field)) {
@@ -217,11 +223,11 @@ public class GenerateHelper {
             if (StringUtil.isEmpty(columnInfo.getRemarks())) {
                 columnInfo.setRemarks(JavaParserUtil.getFieldCommentContent(field.getName(), fieldDeclarationList));
             }
-            columnInfoList.add(columnInfo);
+            columnInfoClassMap.put(columnInfo, field);
         }
 
         List<ClassInfo> classInfoList = new ArrayList<>();
-        ClassInfo classInfo = getClassInfo(config, tableInfo, columnInfoList);
+        ClassInfo classInfo = getClassInfo(config, tableInfo, columnInfoClassMap);
         Create create = new Create();
         create.setSqlBeanMeta(sqlBeanDB);
         create.setTable(beanClass);
@@ -262,7 +268,11 @@ public class GenerateHelper {
         List<ClassInfo> classInfoList = new ArrayList<>();
         for (TableInfo tableInfo : tableInfoList) {
             List<ColumnInfo> columnInfoList = dbManageService.getColumnInfoList(tableInfo.getName());
-            classInfoList.add(getClassInfo(config, tableInfo, columnInfoList));
+            Map<ColumnInfo, Field> columnInfoClassMap = new HashMap<>();
+            for (ColumnInfo columnInfo : columnInfoList) {
+                columnInfoClassMap.put(columnInfo, null);
+            }
+            classInfoList.add(getClassInfo(config, tableInfo, columnInfoClassMap));
         }
         return classInfoList;
     }
@@ -270,12 +280,12 @@ public class GenerateHelper {
     /**
      * 获取生成所需的对象列表
      *
-     * @param config         生成信息配置
-     * @param tableInfo      表信息
-     * @param columnInfoList 列信息列表
+     * @param config             生成信息配置
+     * @param tableInfo          表信息
+     * @param columnInfoClassMap 列信息列表
      * @return
      */
-    public static ClassInfo getClassInfo(GenerateConfig config, TableInfo tableInfo, List<ColumnInfo> columnInfoList) {
+    public static ClassInfo getClassInfo(GenerateConfig config, TableInfo tableInfo, Map<ColumnInfo, Field> columnInfoClassMap) {
         Date date = new Date();
         ClassInfo classInfo = new ClassInfo();
         classInfo.setConfig(config);
@@ -292,7 +302,7 @@ public class GenerateHelper {
         classInfo.setClassName(newTableName.substring(0, 1).toUpperCase() + StringUtil.underlineToHump(newTableName.substring(1)));
         classInfo.setTableInfo(tableInfo);
         classInfo.setDate(date);
-        if (columnInfoList != null && !columnInfoList.isEmpty()) {
+        if (columnInfoClassMap != null && !columnInfoClassMap.isEmpty()) {
             List<FieldInfo> fieldInfoList = new ArrayList<>();
             String baseClassPath = "";
             List<String> baseClassFiledList = null;
@@ -316,14 +326,36 @@ public class GenerateHelper {
                 otherTypeMap.put(baseClassPath, false);
             }
             FieldInfo filedInfo;
-            for (ColumnInfo columnInfo : columnInfoList) {
-                String columnName = StringUtil.underlineToHump(columnInfo.getName());
-                Class<?> clazz = JdbcMapJava.getJavaType(columnInfo.getType());
+            for (ColumnInfo columnInfo : columnInfoClassMap.keySet()) {
                 filedInfo = new FieldInfo();
+                String columnName = StringUtil.underlineToHump(columnInfo.getName());
+                Field field = columnInfoClassMap.get(columnInfo);
+                Class<?> clazz = JdbcMapJava.getJavaType(columnInfo.getType());
+                if (field != null) {
+                    clazz = field.getType();
+                    Type type = field.getGenericType();
+                    filedInfo.setTypeName(clazz.getSimpleName());
+                    filedInfo.setTypeFullName(clazz.getName());
+                    if (type instanceof ParameterizedType) {
+                        List<Class<?>> classes = SqlBeanUtil.getGenericType(new Type[]{type});
+                        StringBuffer sb = new StringBuffer();
+                        for (int i = 0; i < classes.size(); i++) {
+                            if (classes.get(i).getName().indexOf("java.lang") == -1) {
+                                otherTypeMap.put(filedInfo.getTypeFullName(), true);
+                            }
+                            sb.append(classes.get(i).getSimpleName());
+                            if (i < classes.size() - 1) {
+                                sb.append(", ");
+                            }
+                        }
+                        filedInfo.setTypeName(filedInfo.getTypeName() + "<" + sb + ">");
+                    }
+                } else {
+                    filedInfo.setTypeName(clazz.getSimpleName());
+                    filedInfo.setTypeFullName(clazz.getName());
+                }
                 filedInfo.setColumnInfo(handleMybatisType(columnInfo));
                 filedInfo.setName(columnName);
-                filedInfo.setTypeName(clazz.getSimpleName());
-                filedInfo.setTypeFullName(clazz.getName());
                 if (columnInfo.getPk()) {
                     classInfo.setId(filedInfo);
                     if (filedInfo.getTypeName().equals("Long") || filedInfo.getTypeName().equals("String")) {
