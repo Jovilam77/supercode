@@ -13,7 +13,7 @@
 	<dependency>
 		<groupId>cn.vonce</groupId>
 		<artifactId>supercode-core</artifactId>
-		<version>1.0.0-beta18</version>
+		<version>1.0.0-beta19</version>
 	</dependency>
 
 
