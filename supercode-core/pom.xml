@@ -6,7 +6,7 @@
 
     <groupId>cn.vonce</groupId>
     <artifactId>supercode-core</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <name>supercode-core</name>
     <description>This is a code generator that can generate the corresponding business code through the database, or
@@ -34,7 +34,7 @@
     <!-- 版本信息 -->
     <properties>
         <org.freemarker>2.3.31</org.freemarker>
-        <vonce.sqlbean.version>1.7.0</vonce.sqlbean.version>
+        <flexsql.version>1.7.0</flexsql.version>
     </properties>
 
     <dependencies>
@@ -47,8 +47,8 @@
         <!-- SqlBean -->
         <dependency>
             <groupId>cn.vonce</groupId>
-            <artifactId>vonce-sqlbean-core</artifactId>
-            <version>${vonce.sqlbean.version}</version>
+            <artifactId>flexsql-core</artifactId>
+            <version>${flexsql.version}</version>
         </dependency>
 
     </dependencies>
