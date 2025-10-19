@@ -34,7 +34,7 @@
     <!-- 版本信息 -->
     <properties>
         <org.freemarker>2.3.31</org.freemarker>
-        <flexsql.version>1.7.1-beta2</flexsql.version>
+        <flexsql.version>1.7.1-beta3</flexsql.version>
     </properties>
 
     <dependencies>
@@ -104,7 +104,7 @@
                 </executions>
             </plugin>
             <!--gpg加密插件-->
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>1.5</version>
@@ -117,7 +117,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
