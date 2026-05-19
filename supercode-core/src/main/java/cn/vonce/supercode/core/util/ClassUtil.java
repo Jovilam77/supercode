@@ -33,6 +33,9 @@ public class ClassUtil {
                     if (dir.exists() && dir.isDirectory()) {
                         // 自定义过滤规则
                         File[] dirFiles = dir.listFiles(file -> file.getName().endsWith(".class"));
+                        if (dirFiles == null || dirFiles.length == 0) {
+                            continue;
+                        }
                         for (File file : dirFiles) {
                             // 如果是java类文件 去掉后面的.class 只留下类名
                             String className = file.getName().substring(0, file.getName().length() - 6);

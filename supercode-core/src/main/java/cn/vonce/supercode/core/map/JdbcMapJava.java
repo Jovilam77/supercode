@@ -50,8 +50,8 @@ public class JdbcMapJava {
         map.put("LONGBLOB", String.class);
         map.put("LONGTEXT", String.class);
         //日期类型
-        map.put("DATE", java.sql.Date.class);
-        map.put("TIME", java.sql.Time.class);
+        map.put("DATE", java.util.Date.class);
+        map.put("TIME", java.util.Date.class);
         map.put("YEAR", Integer.class);
         map.put("DATETIME", java.util.Date.class);
         map.put("DATETIME2", java.util.Date.class);

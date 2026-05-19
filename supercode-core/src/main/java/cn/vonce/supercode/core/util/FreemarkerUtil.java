@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Freemarker工具
@@ -20,6 +22,8 @@ public class FreemarkerUtil {
     private static FreemarkerUtil freemarkerUtil;
 
     private static Configuration configuration;
+
+    private static final Map<String, Template> templateCache = new ConcurrentHashMap<>();
 
     private FreemarkerUtil() {
     }
@@ -49,9 +53,13 @@ public class FreemarkerUtil {
      */
     public static FreemarkerUtil getInstance(String versionNo, File templatePath) throws IOException {
         if (null == freemarkerUtil) {
-            configuration = new Configuration(new Version(versionNo));
-            configuration.setDirectoryForTemplateLoading(templatePath);
-            freemarkerUtil = new FreemarkerUtil();
+            synchronized (FreemarkerUtil.class) {
+                if (null == freemarkerUtil) {
+                    configuration = new Configuration(new Version(versionNo));
+                    configuration.setDirectoryForTemplateLoading(templatePath);
+                    freemarkerUtil = new FreemarkerUtil();
+                }
+            }
         }
         return freemarkerUtil;
     }
@@ -64,9 +72,13 @@ public class FreemarkerUtil {
      */
     public static FreemarkerUtil getInstance(String versionNo, Object servletContext, String templatePath) throws IOException {
         if (null == freemarkerUtil) {
-            configuration = new Configuration(new Version(versionNo));
-            configuration.setServletContextForTemplateLoading(servletContext, templatePath);
-            freemarkerUtil = new FreemarkerUtil();
+            synchronized (FreemarkerUtil.class) {
+                if (null == freemarkerUtil) {
+                    configuration = new Configuration(new Version(versionNo));
+                    configuration.setServletContextForTemplateLoading(servletContext, templatePath);
+                    freemarkerUtil = new FreemarkerUtil();
+                }
+            }
         }
         return freemarkerUtil;
     }
@@ -76,8 +88,18 @@ public class FreemarkerUtil {
      * @return
      */
     private Template getTemplate(String templateName) {
+        // 先从缓存获取
+        Template cachedTemplate = templateCache.get(templateName);
+        if (cachedTemplate != null) {
+            return cachedTemplate;
+        }
+        
         try {
-            return configuration.getTemplate(templateName);
+            Template template = configuration.getTemplate(templateName);
+            if (template != null) {
+                templateCache.put(templateName, template);
+            }
+            return template;
         } catch (TemplateNotFoundException e) {
             e.printStackTrace();
         } catch (MalformedTemplateNameException e) {
@@ -111,8 +133,11 @@ public class FreemarkerUtil {
      * @param filePath     输出文件路径
      */
     public void fprint(Object dataModel, String templateName, String filePath) {
-        try {
-            this.getTemplate(templateName).process(dataModel, new FileWriter(filePath));
+        try (FileWriter writer = new FileWriter(filePath)) {
+            Template template = this.getTemplate(templateName);
+            if (template != null) {
+                template.process(dataModel, writer);
+            }
         } catch (TemplateException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -126,8 +151,11 @@ public class FreemarkerUtil {
      * @param filePath     输出文件路径
      */
     public void fprint(Object dataModel, String templateName, File filePath) {
-        try {
-            this.getTemplate(templateName).process(dataModel, new FileWriter(filePath));
+        try (FileWriter writer = new FileWriter(filePath)) {
+            Template template = this.getTemplate(templateName);
+            if (template != null) {
+                template.process(dataModel, writer);
+            }
         } catch (TemplateException e) {
             e.printStackTrace();
         } catch (IOException e) {

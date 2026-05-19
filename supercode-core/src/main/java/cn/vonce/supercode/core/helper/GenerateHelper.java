@@ -1,5 +1,8 @@
 package cn.vonce.supercode.core.helper;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 import cn.vonce.sql.annotation.SqlColumn;
 import cn.vonce.sql.annotation.SqlDefaultValue;
 import cn.vonce.sql.annotation.SqlTable;
@@ -50,6 +53,8 @@ import java.util.stream.Collectors;
  */
 public class GenerateHelper {
 
+    private static final Logger logger = Logger.getLogger(GenerateHelper.class.getName());
+
     /**
      * 通过数据库表 构建生成（全部）
      *
@@ -75,6 +80,19 @@ public class GenerateHelper {
             });
         }
         pool.shutdown();
+        try {
+            if (!pool.awaitTermination(60, TimeUnit.SECONDS)) {
+                pool.shutdownNow();
+                if (!pool.awaitTermination(60, TimeUnit.SECONDS)) {
+                    logger.log(Level.WARNING, "线程池未正常关闭");
+                }
+            }
+            logger.log(Level.INFO, "代码生成完成，共处理 {0} 张表", tableInfoList.size());
+        } catch (InterruptedException ie) {
+            pool.shutdownNow();
+            Thread.currentThread().interrupt();
+            logger.log(Level.WARNING, "线程池关闭被中断", ie);
+        }
     }
 
     /**
@@ -94,8 +112,9 @@ public class GenerateHelper {
         classInfoList.add(getClassInfo(config, tableInfo, columnInfoClassMap));
         try {
             make(config, packDir, classInfoList);
+            logger.log(Level.INFO, "代码生成完成，表: {0}", tableInfo.getName());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "代码生成失败，表: " + tableInfo.getName(), e);
         }
     }
 
@@ -126,9 +145,7 @@ public class GenerateHelper {
         for (String packageName : packageNames) {
             beanClassList.addAll(ClassUtil.getClasses(packageName));
         }
-        for (Class<?> beanClass : beanClassList) {
-            build(config, dbType, sqlToUpperCase, beanClass);
-        }
+        buildFromBeanClassList(config, dbType, sqlToUpperCase, beanClassList);
     }
 
     /**
@@ -151,6 +168,18 @@ public class GenerateHelper {
      * @param beanClassList  生成的实体类列表
      */
     public static void build(GenerateConfig config, DbType dbType, boolean sqlToUpperCase, List<Class<?>> beanClassList) {
+        buildFromBeanClassList(config, dbType, sqlToUpperCase, beanClassList);
+    }
+
+    /**
+     * 从实体类列表构建生成（内部方法）
+     *
+     * @param config         生成信息配置
+     * @param dbType         数据库类型
+     * @param sqlToUpperCase SQL是否转大写
+     * @param beanClassList  生成的实体类列表
+     */
+    private static void buildFromBeanClassList(GenerateConfig config, DbType dbType, boolean sqlToUpperCase, List<Class<?>> beanClassList) {
         if (beanClassList == null || beanClassList.size() == 0) {
             return;
         }
